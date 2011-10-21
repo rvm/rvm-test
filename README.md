@@ -1,4 +1,11 @@
-This is the official RVM testing suite. This suite is designed to test everything from installation of RVM itself, to ruby installs, to gem installations.
+*** IMPORTANT NOTICE ***
+
+This is an unofficial repo. There are two opposing methodologies of implementing this. I'm going one way, the other the other way.
+Use whichever makes more sense to you.
+
+---
+
+This suite is designed to test everything from installation of RVM itself, to ruby installs, to gem installations.
 
 Currently, this suite is written specifically in Ruby and Bash. However, the Ruby portion is currently the section under heavy development, and the Bash section is wonky at best.
 
