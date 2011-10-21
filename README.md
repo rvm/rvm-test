@@ -1,7 +1,7 @@
 *** IMPORTANT NOTICE ***
 
-This is an unofficial repo. There are two opposing methodologies of implementing this. I'm going one way, the other the other way.
-Use whichever makes more sense to you.
+__This is *not* the official rvm-test repo.__ There are two opposing methodologies of implementing this test suite.
+I'm going one way, the other the other way. Use whichever one makes more sense to you.
 
 ---
 
