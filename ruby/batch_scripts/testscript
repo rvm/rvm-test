@@ -1,2 +1,5 @@
+rvm --install --create use 1.9.2@testrun
+bundle install
 rvm info
 rvm --version
+rvm gemset --force delete testrun 
