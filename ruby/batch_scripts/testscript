@@ -16,3 +16,4 @@ rvm --version
 
 # Forcefully delete the created gemset
 rvm gemset --force delete testrun
+rvm remove 1.9.2
