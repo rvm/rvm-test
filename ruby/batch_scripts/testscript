@@ -1,5 +1,13 @@
+# Testing installation of a Ruby, and creation+use of a gemset within that
+# Ruby. Also tests option chaining.
 rvm --install --create use 1.9.2@testrun
+
+# Build gemset loadout
 bundle install
+
+# Verify RVM enviornment and version for this currently selected Ruby.
 rvm info
 rvm --version
-rvm gemset --force delete testrun 
+
+# Forcefully delete the created gemset
+rvm gemset --force delete testrun
