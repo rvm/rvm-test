@@ -84,18 +84,15 @@ elsif cmdline.options[:script]
           
           # Assign the command found to the cmd variable
           @command = @test_report.run_command cmd
-          p @command.inspect
           
           puts "Before record_timings"
           puts "Command Object is as follows"
-          p @command.inspect
           
           # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
           puts "After record_timings"
           puts "Saving @test_report"
           @test_report.save
           puts "Command Object is now as follows"
-          p @command.inspect
         end
       rescue Errno::ENOENT => e
         # The file wasn't found so display the help and abort.
@@ -127,9 +124,7 @@ else
 
   puts "After @test_report.save - TestReport Object is as follows"
 
-  p @test_report.inspect
   puts "After @test_report.save - Command Object is as follows"
-  p @command.inspect
   puts "Timing for command was"
   puts "#{@command.timings.to_s}"
 
@@ -148,7 +143,7 @@ end
 # TODO Optmize this with custom SQL in the future.
 @commands.each do |command|
   if command.sysname == %x[uname -n].strip
-    puts "SYSTEM: " + "#{command.sysname} - " + "Previous cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
+    puts "Test Report for : " + "#{command.sysname} - " + "Previous cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
   end
 end
 
