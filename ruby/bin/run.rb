@@ -132,9 +132,7 @@ end
 # since we'll also be storing data from the other machines in the cluster as well.
 # TODO Optmize this with custom SQL in the future.
 @test_report.commands.each do |command|
-  if command.sysname == %x[uname -n].strip
-    puts "Test Report for : " + "#{command.sysname} - " + "Previous cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
-  end
+  puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
 end
 
 # Explicitly return 0 for success if we've made it here.
