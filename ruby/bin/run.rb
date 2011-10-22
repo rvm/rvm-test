@@ -85,14 +85,8 @@ elsif cmdline.options[:script]
           # Assign the command found to the cmd variable
           @command = @test_report.run_command cmd
           
-          puts "Before record_timings"
-          puts "Command Object is as follows"
-          
           # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
-          puts "After record_timings"
-          puts "Saving @test_report"
           @test_report.save
-          puts "Command Object is now as follows"
         end
       rescue Errno::ENOENT => e
         # The file wasn't found so display the help and abort.
@@ -121,10 +115,6 @@ else
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed
   @test_report.run_command cmd
-
-  puts "After @test_report.save - TestReport Object is as follows"
-
-  puts "After @test_report.save - Command Object is as follows"
   puts "Timing for command was"
   puts "#{@command.timings.to_s}"
 
@@ -135,13 +125,13 @@ end
 @commands = @test_report.commands.sort
 
 # Next, we sort the commands on the ID field so it displays right.
-@commands.sort! { |old,cur| old.id <=> cur.id }
+@test_report.commands.sort! { |old,cur| old.id <=> cur.id }
 
 # Now, for each of the previously executed commands on this particular system, display them.
 # Only display the commands for this particular machine, but not the currently executed command,
 # since we'll also be storing data from the other machines in the cluster as well.
 # TODO Optmize this with custom SQL in the future.
-@commands.each do |command|
+@test_report.commands.each do |command|
   if command.sysname == %x[uname -n].strip
     puts "Test Report for : " + "#{command.sysname} - " + "Previous cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
   end
