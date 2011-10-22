@@ -2,6 +2,8 @@
 # RVM is usually already installed as part of the per-user-rvm-install and multi-user-rvm-install scripts on each testing node.
 # We also usually have pre-installed latest Ruby 1.8.7 stable tree for use.
 #
+# This gemset is also prepopulated with rake, bundler, pry, and ruby-debug* plus dependencies
+rvm use 1.8.7@testrun
 
 # Testing installation of a Ruby, and creation+use of a gemset within that
 # Ruby. Also tests option chaining.
