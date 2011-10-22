@@ -1,3 +1,8 @@
+# ENVIRONMENTAL NOTE:
+# RVM is usually already installed as part of the per-user-rvm-install and multi-user-rvm-install scripts on each testing node.
+# We also usually have pre-installed latest Ruby 1.8.7 stable tree for use.
+#
+
 # Testing installation of a Ruby, and creation+use of a gemset within that
 # Ruby. Also tests option chaining.
 rvm --install --create use 1.9.2@testrun
