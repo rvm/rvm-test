@@ -31,7 +31,7 @@ end
 # Now create both a Github and a Report object
 #
 # So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
-load "config/github.rb"
+load File.dirname(__FILE__) + "/../config/github.rb"
 
 puts "login: #{@logion_string}"
 # You define it such as follows for a Github object
