@@ -14,6 +14,8 @@ require 'active_support'
 require 'benchmark'
 include Benchmark
 
+# Github API interface
+require 'github_api'
 
 # Now, connect to the database using ActiveRecord
 ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
@@ -26,8 +28,11 @@ Dir[File.dirname(__FILE__) + "/../app/models/*.rb"].each do |filename|
 end
 
 
-# Now create both a Command and a Report object
-#@command = Command.new
+# Now create both a Github and a Report object
+#
+# You define it such as follows for a Github object
+# There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
+# eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
 @test_report = TestReport.new
 
 
