@@ -7,6 +7,10 @@ class TestReport < ActiveRecord::Base
     end
   end
 
+  def github
+    Github.new(:basic_auth => "#{@login_string}", :repo => "rvm-test")    
+  end
+
   def run_command( cmd )
     command = commands.build
     command.run( cmd )
