@@ -32,4 +32,8 @@ class TestReport < ActiveRecord::Base
       puts  "\nCOMMAND OUTPUT: #{command.cmd_output}\n"
     end
   end
+  
+  def gist_it
+    # TODO Implement api.github.com gisting 
+  end
 end
