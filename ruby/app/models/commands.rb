@@ -15,5 +15,7 @@ class Command < ActiveRecord::Base
         self.cmd_output = %x[ #{self.cmd} 2>&1 ]
       end
     end
+    self.gist_url = @github.gists.create_gist(:description => "#{self.cmd}", :public => true, :files => { "console.sh" => { :content => %x[#{self.cmd_output}] } } ).html_url
   end
+  
 end
