@@ -2,25 +2,29 @@
 # RVM is usually already installed as part of the per-user-rvm-install and multi-user-rvm-install scripts on each testing node.
 # We also usually have pre-installed latest Ruby 1.8.7 stable tree for use.
 #
+# Display the RVM version for this system
+rvm --version
+
 # This gemset is also prepopulated with rake, bundler, pry, and ruby-debug* plus dependencies
 rvm use 1.8.7@testrun
 
 # Testing installation of a Ruby, and creation+use of a gemset within that
-# Ruby. Also tests option chaining.
+# Ruby. Also tests option chaining. Because of the fact that each command is executed separately
+# from the previous or next command (each one is a new spawn for isolation) you have have to chain
+# commands together on a single line that you want taking place in a specific environment like we
+# do here. Here, we install readline, install ruby 1.9.2 if it isn't already installed, create a gemset
+# all in one like while telling the build process which readline library to use. Then we change to that gemset.
+# Once in the new gemset and ruby, do an rvm info to see that we've successfuly changed into the new environment.
 rvm pkg install readline
-echo yes | rvm --install --create use 1.9.2@testrun -- --with-readline-dir=$rvm_path/usr
+echo yes | rvm --install --create 1.9.2@testrun -- --with-readline-dir=$rvm_path/usr
+rvm 1.9.2@testrun do rvm info
 
-rvm info
-# Build gemset loadout
-bundle install
-
-# Verify RVM enviornment and version for this currently selected Ruby.
-rvm info
-rvm --version
+# cd to the ruby directory where the Gemfile is, now build gemset loadout
+cd ruby && rvm 1.9.2@testrun do bundle install
 
 # Switch back to default ruby+gemset
-rvm use default
+rvm use default && rvm info
 
 # Forcefully delete the created gemset. Since this has a yes/no 'are you sure' check, we preface with 'echo y |' to make it go through. 
-#'echo yes | rvm 1.9.2 do rvm gemset delete testrun --force' 
+echo yes | rvm 1.9.2 do rvm gemset delete testrun --force
 #rvm remove 1.9.2
