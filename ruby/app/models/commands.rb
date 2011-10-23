@@ -15,6 +15,8 @@ class Command < ActiveRecord::Base
         self.cmd_output = %x[ #{self.cmd} 2>&1 ]
       end
     end
+    # TODO - handle nil in self.cmd_output in usage for :content population
+    # Just using the " || ' '" in the string to roughly handle nil valued self.cmd_output
     gist = @@github.gists.create_gist :description => "#{self.cmd}", :public => true, :files => { "console.sh" => { :content => "#{self.cmd_output} || ' '" }}
     self.gist_url = "#{gist.html_url}"
   end

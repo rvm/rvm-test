@@ -109,7 +109,7 @@ elsif cmdline.options[:script]
       @test_report.save!
       
       # Now we artistically display a report of every command processed in the batch.
-      @test_report.display_long_report
+      @test_report.display_short_report
       
 else
   # PROCESS SINGLE COMMAND

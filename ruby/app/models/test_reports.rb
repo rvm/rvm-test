@@ -20,7 +20,7 @@ class TestReport < ActiveRecord::Base
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
+      puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
     end
   end
   
@@ -31,7 +31,7 @@ class TestReport < ActiveRecord::Base
     
     self.commands.each do |command|
       puts "\t\t\t\t*************** [ TESTING REPORT FOR #{command.sysname} ] ***************\t\t\t\t\n\n"
-      puts " REPORT ID #: #{self.id}\n COMMAND ID #: #{command.id}\n SYSTEM TYPE: #{command.os_type}\n EXECUTED COMMAND: #{command.cmd}\n TIMINGS: "
+      puts " REPORT ID #: #{self.id}\n COMMAND ID #: #{command.id}\n SYSTEM TYPE: #{command.os_type}\n EXECUTED COMMAND: #{command.cmd}\n Gist URL: #{command.gist_url}\n TIMINGS: "
       puts "#{command.timings} "
       puts  "\nCOMMAND OUTPUT: #{command.cmd_output}\n"
     end
