@@ -9,8 +9,5 @@ gem 'clint'
 gem 'notes'
 gem 'json'
 gem 'jsonpretty'
-gem 'github'
-gem 'github_api'
-#gem 'github-v3-api'
-gem 'github-api-client'
+gem 'github_api', '0.2.0' #covers GitHub APIv3
 
