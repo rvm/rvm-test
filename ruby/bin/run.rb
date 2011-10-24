@@ -38,7 +38,7 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
 # @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
 @test_report = TestReport.new
-@@github = @test_report.github
+@@github = @test_report.github(@login_string)
 
 puts @@github.inspect
 
