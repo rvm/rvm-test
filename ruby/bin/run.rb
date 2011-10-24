@@ -14,6 +14,8 @@ require 'active_support'
 require 'benchmark'
 include Benchmark
 
+# Github API interface
+require 'github_api'
 
 # Now, connect to the database using ActiveRecord
 ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
@@ -26,10 +28,19 @@ Dir[File.dirname(__FILE__) + "/../app/models/*.rb"].each do |filename|
 end
 
 
-# Now create both a Command and a Report object
-#@command = Command.new
-@test_report = TestReport.new
+# Now create both a Github and a Report object
+#
+# So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
+load File.dirname(__FILE__) + "/../config/github.rb"
 
+# You define it such as follows for a Github object
+# There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
+# eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
+# @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
+@test_report = TestReport.new
+@@github = @test_report.github(@login_string)
+
+puts @@github.inspect
 
 # Create a commandline parser object
 cmdline = Clint.new
@@ -83,19 +94,10 @@ elsif cmdline.options[:script]
           next if cmd =~ /^#/ or cmd.empty?
           
           # Assign the command found to the cmd variable
-          @command = @test_report.run_command cmd
-          p @command.inspect
-          
-          puts "Before record_timings"
-          puts "Command Object is as follows"
-          p @command.inspect
+          @test_report.run_command cmd
           
           # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
-          puts "After record_timings"
-          puts "Saving @test_report"
           @test_report.save
-          puts "Command Object is now as follows"
-          p @command.inspect
         end
       rescue Errno::ENOENT => e
         # The file wasn't found so display the help and abort.
@@ -105,51 +107,18 @@ elsif cmdline.options[:script]
       # BATCH HAS BEEN PROCESSED
       # Now that all the commands in the batch have been processed and added to test_report,
       # now is when to save the Test Report, immediately following the processing of all commands.
-      puts "We've processed all commands in the batch file."
-      puts "Saving @test_report completely"
       @test_report.save!
       
       # Now we artistically display a report of every command processed in the batch.
-      puts "Starting on-screen report generation"
-      @test_report.commands.each do |command|
-        puts "\t\t\t\t*************** [ TESTING REPORT FOR #{command.sysname} ] ***************\t\t\t\t\n\n"
-        puts " REPORT ID #: #{@test_report.id}\n COMMAND ID #: #{command.id}\n SYSTEM TYPE: #{command.os_type}\n EXECUTED COMMAND: #{command.cmd}\n TIMINGS: "
-        puts "#{command.timings} "
-        puts  "\nCOMMAND OUTPUT: #{command.cmd_output}\n"
-        # END OF ALL BATCH PROCESSING
-      end
-
+      @test_report.display_short_report
+      
 else
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
-  # not a script, is passed
-  @test_report.run_command cmd
+  # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
+  @test_report.run_command ARGV[0]
+  @test_report.display_short_report
 
-  puts "After @test_report.save - TestReport Object is as follows"
-
-  p @test_report.inspect
-  puts "After @test_report.save - Command Object is as follows"
-  p @command.inspect
-  puts "Timing for command was"
-  puts "#{@command.timings.to_s}"
-
-end
-
-
-# Now lets find all the previously stored runs.
-@commands = @test_report.commands.sort
-
-# Next, we sort the commands on the ID field so it displays right.
-@commands.sort! { |old,cur| old.id <=> cur.id }
-
-# Now, for each of the previously executed commands on this particular system, display them.
-# Only display the commands for this particular machine, but not the currently executed command,
-# since we'll also be storing data from the other machines in the cluster as well.
-# TODO Optmize this with custom SQL in the future.
-@commands.each do |command|
-  if command.sysname == %x[uname -n].strip
-    puts "SYSTEM: " + "#{command.sysname} - " + "Previous cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}"
-  end
 end
 
 # Explicitly return 0 for success if we've made it here.

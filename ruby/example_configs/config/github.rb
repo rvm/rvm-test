@@ -1,0 +1,1 @@
+@login_string = { :login => "username", :user => "username", :password => "your_password", :repo => "repo_you_want" }
