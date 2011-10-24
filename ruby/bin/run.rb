@@ -14,6 +14,8 @@ require 'active_support'
 require 'benchmark'
 include Benchmark
 
+# Github API interface
+require 'github_api'
 
 # Now, connect to the database using ActiveRecord
 ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
@@ -26,10 +28,19 @@ Dir[File.dirname(__FILE__) + "/../app/models/*.rb"].each do |filename|
 end
 
 
-# Now create both a Command and a Report object
-#@command = Command.new
-@test_report = TestReport.new
+# Now create both a Github and a Report object
+#
+# So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
+load File.dirname(__FILE__) + "/../config/github.rb"
 
+# You define it such as follows for a Github object
+# There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
+# eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
+# @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
+@test_report = TestReport.new
+@@github = @test_report.github(@login_string)
+
+puts @@github.inspect
 
 # Create a commandline parser object
 cmdline = Clint.new
@@ -99,7 +110,7 @@ elsif cmdline.options[:script]
       @test_report.save!
       
       # Now we artistically display a report of every command processed in the batch.
-      @test_report.display_long_report
+      @test_report.display_short_report
       
 else
   # PROCESS SINGLE COMMAND
