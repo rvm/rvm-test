@@ -39,7 +39,21 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 # @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
 # We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
 # But, we need to instantiate the TestReport object first in order to gain access to the method/action.
+#
+# Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
+
+# Remove all put and p calls when done debugging.
+# There are more in the object actions themselves.
+puts "Just before load_obj_store\n"
+p @test_report.inspect
+@test_report = @test_report.load_obj_store
+puts "Outside load_obj_store\n"
+p @test_report.inspect
+
+# However, the above code causes a 
+# bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
+# This string has not changed. Are we somehow wiping out the github (or not recording it)?
 @@github = @test_report.github(@login_string)
 
 
@@ -109,18 +123,20 @@ elsif cmdline.options[:script]
       # Now that all the commands in the batch have been processed and added to test_report,
       # now is when to save the Test Report, immediately following the processing of all commands.
       @test_report.save!
-      
-      # Now we artistically display a report of every command processed in the batch.
-      @test_report.display_short_report
-      
+            
 else
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0]
-  @test_report.display_short_report
 
 end
+
+# We've primed our TestReport, so lets gist and display.
+# We do this by artistically displaying every command processed in the batch on gist.github.com,
+# returning the printed url of the combined report. The report includes the individual command gists.
+#@test_report.display_combined_gist_report
+@test_report.dump_obj_store
 
 # Explicitly return 0 for success if we've made it here.
 exit 0

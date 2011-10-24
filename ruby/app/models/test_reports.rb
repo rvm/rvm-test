@@ -18,26 +18,37 @@ class TestReport < ActiveRecord::Base
     self.sysname = command.sysname
   end
   
+  def display_combined_gist_report
+      self.report = self.display_short_report()
+      
+      pretty_print "The Complete report URL is: #{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence.to_s || "Cmd had no output" }}).html_url}"
+  end
+  
   def display_short_report
     self.commands.each do |command|
       puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
     end
   end
   
-  def display_long_report
-    # Next, we sort this particular report's commands on the ID field, then we can promise to display them in the order they were issued.
-    # We only want the commands associated with this particular TestReport object, so we use self to build the command.
-    self.commands.sort! { |old,cur| old.id <=> cur.id }
-    
-    self.commands.each do |command|
-      puts "\t\t\t\t*************** [ TESTING REPORT FOR #{command.sysname} ] ***************\t\t\t\t\n\n"
-      puts " REPORT ID #: #{self.id}\n COMMAND ID #: #{command.id}\n SYSTEM TYPE: #{command.os_type}\n EXECUTED COMMAND: #{command.cmd}\n Gist URL: #{command.gist_url}\n TIMINGS: "
-      puts "#{command.timings} "
-      puts  "\nCOMMAND OUTPUT: #{command.cmd_output}\n"
+  def dump_obj_store
+    File.open('db/marshalled.rvm', 'w+') do |report_obj|
+      Marshal.dump(self, report_obj)
     end
   end
   
-  def gist_it
-    # TODO Implement api.github.com gisting 
+  def load_obj_store
+    File.open'db/marshalled.rvm' do |report_obj|
+      @test_report = Marshal.load(report_obj)
+      
+      puts "Inside load_obj_store - at p self\n"
+      p self # What do *I* look like?
+  
+      # What does the newly loaded @test_report look like (this should be this object, referred to by its name rather than self.)
+      puts "Inside load_obj_store - at p @test_report.commands.inspect\n"
+      p @test_report.commands.inspect
+      
+    end
   end
+  
+  
 end
