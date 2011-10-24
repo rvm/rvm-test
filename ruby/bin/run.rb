@@ -37,10 +37,11 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 # There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
 # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
 # @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
+# We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
+# But, we need to instantiate the TestReport object first in order to gain access to the method/action.
 @test_report = TestReport.new
 @@github = @test_report.github(@login_string)
 
-puts @@github.inspect
 
 # Create a commandline parser object
 cmdline = Clint.new
