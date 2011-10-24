@@ -8,7 +8,7 @@ class TestReport < ActiveRecord::Base
   end
 
   def github
-    Github.new(:basic_auth => "#{@login_string}", :repo => "rvm-test")    
+    Github.new(:login => "#{@login_string[:login]}", :user => "#{@login_string[:user]}", :password => "#{@login_string[:password]}", :repo => "rvm-test")    
   end
 
   def run_command( cmd )
@@ -20,7 +20,7 @@ class TestReport < ActiveRecord::Base
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
+      puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + "Gist URL: #{command.gist_url}"
     end
   end
   
