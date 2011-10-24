@@ -31,8 +31,11 @@ class TestReport < ActiveRecord::Base
   end
   
   def dump_obj_store
-    File.open('db/marshalled.rvm', 'w+') do |report_obj|
+    File.open('db/testreport_marshalled.rvm', 'w+') do |report_obj|
       Marshal.dump(self, report_obj)
+    end
+    File.open('db/github_marshalled.rvm', 'w+') do |github_obj|
+      Marshal.dump(@@github, github_obj)
     end
   end
   
@@ -47,6 +50,10 @@ class TestReport < ActiveRecord::Base
       puts "Inside load_obj_store - at p @test_report.commands.inspect\n"
       p @test_report.commands.inspect
       
+    end
+
+    File.open'db/github_marshalled.rvm' do |github_obj|
+      @@github = Marshal.load(github_obj)
     end
   end
   
