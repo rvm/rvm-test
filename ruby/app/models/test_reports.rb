@@ -7,8 +7,8 @@ class TestReport < ActiveRecord::Base
     end
   end
 
-  def github
-    Github.new(:login => "#{@login_string[:login]}", :user => "#{@login_string[:user]}", :password => "#{@login_string[:password]}", :repo => "rvm-test")    
+  def github(login_string)
+    Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
   end
 
   def run_command( cmd )
