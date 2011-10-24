@@ -1,1 +1,1 @@
-@login_string = "username/token:api_key_for_login"
+@login_string = { :login => "username", :user => "username", :password => "your_password" }
