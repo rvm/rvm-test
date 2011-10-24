@@ -33,13 +33,14 @@ end
 # So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
 load File.dirname(__FILE__) + "/../config/github.rb"
 
-puts "login: #{@logion_string}"
 # You define it such as follows for a Github object
 # There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
 # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
 # @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
 @test_report = TestReport.new
 @@github = @test_report.github
+
+puts @@github.inspect
 
 # Create a commandline parser object
 cmdline = Clint.new
