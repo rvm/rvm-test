@@ -45,12 +45,12 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 
 # Remove all put and p calls when done debugging.
 # There are more in the object actions themselves.
-puts "Just before load_obj_store\n"
-p @test_report.inspect
-@test_report = @test_report.load_obj_store
-puts "Outside load_obj_store\n"
-p @test_report.inspect
-
+# puts "Just before load_obj_store\n"
+# p @test_report.inspect
+# @test_report = @test_report.load_obj_store
+# puts "Outside load_obj_store\n"
+# p @test_report.inspect
+# p @test_report.github.inspect
 # However, the above code causes a 
 # bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
 # This string has not changed. Are we somehow wiping out the github (or not recording it)?
