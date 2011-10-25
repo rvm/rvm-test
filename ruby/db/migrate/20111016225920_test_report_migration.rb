@@ -3,6 +3,8 @@ class TestReportMigration < ActiveRecord::Migration
     create_table :test_reports do |t|
       t.string  :sysname
       t.string  :timings
+      t.text    :report
+      t.string  :gist_url
       t.timestamps
     end
   end
