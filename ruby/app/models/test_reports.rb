@@ -1,5 +1,6 @@
 class TestReport < ActiveRecord::Base
-  has_many :commands
+  has_and_belongs_to_many :commands
+  # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
     
   def record_timings(&cmds)
     Benchmark.benchmark(CAPTION) do |x|
