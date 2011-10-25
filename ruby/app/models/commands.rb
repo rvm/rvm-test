@@ -24,4 +24,17 @@ class Command < ActiveRecord::Base
     self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
   end
   
+  def dump_obj_store
+    File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
+      Marshal.dump(self, report_obj)
+    end
+  end
+  
+  def load_obj_store
+    File.open'db/commands_marshalled.rvm' do |report_obj|
+      test_report.commands = Marshal.load(report_obj)      
+      return test_report.commands
+    end
+  end
+  
 end
