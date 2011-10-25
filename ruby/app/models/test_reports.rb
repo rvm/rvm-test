@@ -26,7 +26,7 @@ class TestReport < ActiveRecord::Base
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for : " + "#{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
+      puts "Test Report for : #{command.test_report_id}" + "on #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
     end
   end
   
@@ -34,26 +34,20 @@ class TestReport < ActiveRecord::Base
     File.open('db/testreport_marshalled.rvm', 'w+') do |report_obj|
       Marshal.dump(self, report_obj)
     end
-    File.open('db/github_marshalled.rvm', 'w+') do |github_obj|
-      Marshal.dump(@@github, github_obj)
-    end
   end
   
   def load_obj_store
     File.open'db/marshalled.rvm' do |report_obj|
-      @test_report = Marshal.load(report_obj)
+      test_report = Marshal.load(report_obj)
       
       puts "Inside load_obj_store - at p self\n"
       p self # What do *I* look like?
   
       # What does the newly loaded @test_report look like (this should be this object, referred to by its name rather than self.)
-      puts "Inside load_obj_store - at p @test_report.commands.inspect\n"
-      p @test_report.commands.inspect
+      puts "Inside load_obj_store - at p test_report.commands.inspect\n"
+      p test_report.commands.inspect
       
-    end
-
-    File.open'db/github_marshalled.rvm' do |github_obj|
-      @@github = Marshal.load(github_obj)
+      return test_report
     end
   end
   
