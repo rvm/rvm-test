@@ -25,22 +25,22 @@ class TestReport < ActiveRecord::Base
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for : #{command.test_report_id}" + "on #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
+      puts "Test Report for : #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
     end
   end
   
   def dump_obj_store
     File.open('db/testreport_marshalled.rvm', 'w+') do |report_obj|
-      puts "\nDumping TestReport object store\n"
+      puts "\nDumping TestReport object store"
       Marshal.dump(self, report_obj)
     end
-    puts "\nDumping Command object store\n"
+    puts "Dumping Command object store\n"
     self.commands.each do |cmd|
       cmd.dump_obj_store
     end
   end
   
-  def load_obj_store
+  def load_and_replay_obj_store
     File.open'db/testreport_marshalled.rvm' do |report_obj|
       puts "\nLoading TestReport object store\n"
       @test_report = Marshal.load(report_obj)
@@ -56,8 +56,15 @@ class TestReport < ActiveRecord::Base
     p @test_report
     puts "\nCalling p @test_report.commands\n"
     p @test_report.commands
-    puts "\nExiting load_obj_store - Returning @test_report"
-    return @test_report
+    
+    puts "Replaying commands "
+    @test_report.commands.each do |cmd|
+      cmd.run cmd.cmd
+    end
+    
+    # Recreate a gisted report of this new run based off the marshalled object(s)
+    @test_report.display_combined_gist_report
+    puts "\nExiting load_obj_store\n"
   end
   
   
