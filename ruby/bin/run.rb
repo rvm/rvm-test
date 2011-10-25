@@ -124,37 +124,21 @@ elsif cmdline.options[:script]
       # Now that all the commands in the batch have been processed and added to test_report,
       # now is when to save the Test Report, immediately following the processing of all commands.
       @test_report.save!
+      @test_report.display_combined_gist_report
+      @test_report.dump_obj_store
             
 elsif cmdline.options[:marshal]
-      puts "In Marshal parameter"
-      @test_report.load_obj_store
-      puts "Out of @test_report.load_obj_save\n\n"
-      puts "Expecting @test_report.commands to be populated. Checking for populated commmands array"
-      p @test_report.commands
-      puts "BROKEN: @test_report.commands array of hashed command objects is not making it through load_obj_store\n"
-      puts "        @test_report looks like:\n"
-      puts "Current TestReport ID is: " "#{@test_report.id}"
-      p @test_report
-      puts "\nBROKEN: Calling @test_report.commands.each - This fails because commands array is empty.\n"
-      @testreport.commands.each do |cmd|
-        cmd.load_obj_store
-        p cmd.inspect
-      end
+      puts "Loading and Re-executing previous session"
+      @test_report.load_and_replay_obj_store
+      puts "Repeat execution of previous session complete!\n"
 else
-  
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0]
+  @test_report.display_short_report
 
 end
-
-# We've primed our TestReport, so lets gist and display.
-# We do this by artistically displaying every command processed in the batch on gist.github.com,
-# returning the printed url of the combined report. The report includes the individual command gists.
-#@test_report.display_combined_gist_report
-@test_report.display_short_report
-@test_report.dump_obj_store
 
 # Explicitly return 0 for success if we've made it here.
 exit 0
