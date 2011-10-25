@@ -4,6 +4,7 @@ class TestReportMigration < ActiveRecord::Migration
       t.string  :sysname
       t.string  :timings
       t.text    :report
+      t.string  :gist_url
       t.timestamps
     end
   end
