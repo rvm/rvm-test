@@ -20,7 +20,8 @@ class TestReport < ActiveRecord::Base
   
   def display_combined_gist_report
       self.report = self.display_short_report()
-      puts "The Complete report URL is: #{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
+      self.gist_url = "#{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
+      puts "The Complete report URL is: " + "#{self.gist_url}" 
   end
   
   def display_short_report

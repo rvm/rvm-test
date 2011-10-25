@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
     t.string   "sysname"
     t.string   "timings"
     t.text     "report"
+    t.string   "gist_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
