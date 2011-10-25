@@ -125,14 +125,20 @@ elsif cmdline.options[:script]
       # now is when to save the Test Report, immediately following the processing of all commands.
       @test_report.save!
             
-elsif cmdine.options[:marshal]
+elsif cmdline.options[:marshal]
       puts "In Marshal parameter"
       @test_report.load_obj_store
-      puts "loaded obj_store"
-      @test_report.save
-      puts "before commands.each\n"
+      puts "Out of @test_report.load_obj_save\n\n"
+      puts "Expecting @test_report.commands to be populated. Checking for populated commmands array"
+      p @test_report.commands
+      puts "BROKEN: @test_report.commands array of hashed command objects is not making it through load_obj_store\n"
+      puts "        @test_report looks like:\n"
+      puts "Current TestReport ID is: " "#{@test_report.id}"
+      p @test_report
+      puts "\nBROKEN: Calling @test_report.commands.each - This fails because commands array is empty.\n"
       @testreport.commands.each do |cmd|
-        p cmd
+        cmd.load_obj_store
+        p cmd.inspect
       end
 else
   
