@@ -8,17 +8,33 @@ class Command < ActiveRecord::Base
   end
 
   def run( cmd )
-    self.cmd = cmd
+    # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
+    self.cmd = cmd.strip
     
     Benchmark.benchmark(CAPTION) do |x|
+      # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
+        # Set cmd_output on self, for later processing, to the returned cmd output.
         self.cmd_output = %x[ #{self.cmd} 2>&1 ]
       end
     end
-    # TODO - handle nil in self.cmd_output in usage for :content population
-    # Just using the " || ' '" in the string to roughly handle nil valued self.cmd_output
-    gist = @@github.gists.create_gist :description => self.cmd, :public => true, :files => { "console.sh" => { :content => self.cmd_output.blank? ? "Cmd had no output" : self.cmd_output }}
-    self.gist_url = "#{gist.html_url}"
+
+    # Create the gist, take the returned json object from Github and use the value html_url on that object
+    # to set self's gist_url variable for later processing.
+    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
+  end
+  
+  def dump_obj_store
+    File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
+      Marshal.dump(self, report_obj)
+    end
+  end
+  
+  def load_obj_store
+    File.open'db/commands_marshalled.rvm' do |report_obj|
+      test_report.commands = Marshal.load(report_obj)      
+      return test_report.commands
+    end
   end
   
 end
