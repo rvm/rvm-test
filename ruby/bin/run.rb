@@ -42,6 +42,7 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 #
 # Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
+@test_report.save!
 
 # Remove all put and p calls when done debugging.
 # There are more in the object actions themselves.
@@ -77,7 +78,7 @@ end
 # Define the potential options
 cmdline.options :help => false, :h => :help
 cmdline.options :script => false, :s => :script
-
+cmdline.options :marshal => false, :m => :marshal
 
 # Parse the actual commandline arguments
 cmdline.parse ARGV
@@ -124,7 +125,17 @@ elsif cmdline.options[:script]
       # now is when to save the Test Report, immediately following the processing of all commands.
       @test_report.save!
             
+elsif cmdine.options[:marshal]
+      puts "In Marshal parameter"
+      @test_report.load_obj_store
+      puts "loaded obj_store"
+      @test_report.save
+      puts "before commands.each\n"
+      @testreport.commands.each do |cmd|
+        p cmd
+      end
 else
+  
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
@@ -136,6 +147,7 @@ end
 # We do this by artistically displaying every command processed in the batch on gist.github.com,
 # returning the printed url of the combined report. The report includes the individual command gists.
 #@test_report.display_combined_gist_report
+@test_report.display_short_report
 @test_report.dump_obj_store
 
 # Explicitly return 0 for success if we've made it here.
