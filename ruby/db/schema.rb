@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
   create_table "test_reports", :force => true do |t|
     t.string   "sysname"
     t.string   "timings"
+    t.text     "report"
+    t.string   "gist_url"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

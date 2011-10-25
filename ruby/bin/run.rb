@@ -37,10 +37,26 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 # There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
 # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
 # @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
+# We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
+# But, we need to instantiate the TestReport object first in order to gain access to the method/action.
+#
+# Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
+@test_report.save!
+
+# Remove all put and p calls when done debugging.
+# There are more in the object actions themselves.
+# puts "Just before load_obj_store\n"
+# p @test_report.inspect
+# @test_report = @test_report.load_obj_store
+# puts "Outside load_obj_store\n"
+# p @test_report.inspect
+# p @test_report.github.inspect
+# However, the above code causes a 
+# bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
+# This string has not changed. Are we somehow wiping out the github (or not recording it)?
 @@github = @test_report.github(@login_string)
 
-puts @@github.inspect
 
 # Create a commandline parser object
 cmdline = Clint.new
@@ -62,7 +78,7 @@ end
 # Define the potential options
 cmdline.options :help => false, :h => :help
 cmdline.options :script => false, :s => :script
-
+cmdline.options :marshal => false, :m => :marshal
 
 # Parse the actual commandline arguments
 cmdline.parse ARGV
@@ -108,10 +124,13 @@ elsif cmdline.options[:script]
       # Now that all the commands in the batch have been processed and added to test_report,
       # now is when to save the Test Report, immediately following the processing of all commands.
       @test_report.save!
-      
-      # Now we artistically display a report of every command processed in the batch.
-      @test_report.display_short_report
-      
+      @test_report.display_combined_gist_report
+      @test_report.dump_obj_store
+            
+elsif cmdline.options[:marshal]
+      puts "Loading and Re-executing previous session"
+      @test_report.load_and_replay_obj_store
+      puts "Repeat execution of previous session complete!\n"
 else
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
