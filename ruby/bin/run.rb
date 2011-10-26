@@ -110,7 +110,7 @@ elsif cmdline.options[:script]
           next if cmd =~ /^#/ or cmd.empty?
           
           # Assign the command found to the cmd variable
-          @test_report.run_command cmd
+          @test_report.commands.create(@test_report.run_command cmd)
           
           # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
           @test_report.save
@@ -135,10 +135,11 @@ else
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
-  @test_report.run_command ARGV[0]
+  @test_report.run_command ARGV[0].strip
+  @test_report.save
   @test_report.display_short_report
 
 end
 
 # Explicitly return 0 for success if we've made it here.
-exit 0
+#exit 0

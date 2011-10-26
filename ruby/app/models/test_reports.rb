@@ -1,5 +1,6 @@
 class TestReport < ActiveRecord::Base
   has_many :commands
+  # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
     
   def record_timings(&cmds)
     Benchmark.benchmark(CAPTION) do |x|
@@ -26,7 +27,7 @@ class TestReport < ActiveRecord::Base
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for : #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
+      puts "Test Report for: #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
     end
   end
   

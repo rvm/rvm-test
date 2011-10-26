@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111016225920) do
+ActiveRecord::Schema.define(:version => 20111025211700) do
 
   create_table "commands", :force => true do |t|
     t.integer  "test_report_id"
@@ -23,6 +23,11 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
     t.string   "gist_url"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "commands_test_reports", :id => false, :force => true do |t|
+    t.integer "test_report_id"
+    t.integer "command_id"
   end
 
   create_table "test_reports", :force => true do |t|
