@@ -135,17 +135,8 @@ else
   # PROCESS SINGLE COMMAND
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
-  @test_report.commands.new
-  @test_report.run_command ARGV[0]
+  @test_report.run_command ARGV[0].strip
   @test_report.save
-  @test_report.commands.each do |cmd|
-    cmd.test_report = @test_report
-  end
-  puts "Test Report inspection"
-  p @test_report
-  puts "Test Report / Commands inspection"
-  p @test_report.commands
-  
   @test_report.display_short_report
 
 end

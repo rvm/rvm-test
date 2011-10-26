@@ -1,5 +1,5 @@
 class Command < ActiveRecord::Base
-  belongs_to :test_report
+  belongs_to :test_reports
 
   before_create do |command|
     # Capture the system's name and its OS
