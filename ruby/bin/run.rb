@@ -3,6 +3,9 @@
 # RubyGems
 require 'rubygems'
 
+# Require pry for debugging
+require 'pry'
+
 # Commandline options parser
 require 'clint'
 
@@ -136,6 +139,7 @@ else
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0].strip
+  binding.pry
   @test_report.save
   @test_report.display_short_report
 
