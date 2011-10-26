@@ -110,7 +110,7 @@ elsif cmdline.options[:script]
           next if cmd =~ /^#/ or cmd.empty?
           
           # Assign the command found to the cmd variable
-          @test_report.commands.create(@test_report.run_command cmd)
+          @test_report.run_command cmd
           
           # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
           @test_report.save
