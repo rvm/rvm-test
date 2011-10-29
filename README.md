@@ -1,5 +1,5 @@
 
-This suite is designed to test everything from installation of RVM itself, to ruby installs, to gem installations.
+This suite is designed to test everything from installation of RVM itself, to ruby installs and gem installations.
 
 Currently, this suite is written specifically in Ruby and Bash. However, the Ruby portion is currently the section under heavy development, and the Bash section is wonky at best.
 
@@ -16,6 +16,7 @@ To work with the suite you will need to create a database. Currently, the exampl
 ```shell
 rake db:create && rake db:migrate
 ```
+
 Should you need to reset the database, for whatever reason, do:
 
 ```shell
@@ -35,11 +36,13 @@ Usage: run.rb [-h|--help]  ['rvm command_to_run'] [-s|--script rvm_test_script]
   -h, --help	show this help message
 Note: RVM command sets not in a batching file must be surrounded by '' - e.g. run.rb 'rvm info'
 ```
+
 The suite is able to take either a single command, or a batch file as stated at the beginning of this document. The batch file should contain a list of commands you wish executed, one per line. The batch file can be anywhere and should be passed to the -s or --script parameter. We stick the file in batch_scripts/ for purposes of clarity, and our example is called 'testscript'.
 
 ```shell
 ruby bin/run.rb --script batch_scripts/testscript
 ```
+
 When the commands have finished you will see each command's output shown along with the associated Report ID and the Command ID. Do not be confused! This is the actual report detailing the information and not a double display of the output.
 
 The suite is also able to replay previously saved sessions. To do this, you need to make sure you deploy the previous saved-session files to the db/ directory. These will usually be named db/testreport_marshalled.rvm and db/commands_marshalled.rvm for the two respective peices of each Test Report.

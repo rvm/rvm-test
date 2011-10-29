@@ -72,5 +72,8 @@ class TestReport < ActiveRecord::Base
     puts "\nExiting load_obj_store\n"
   end
   
+  def open_session
+    
+  end
   
 end

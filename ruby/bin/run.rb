@@ -5,9 +5,13 @@ require 'rubygems'
 
 # Require pry for debugging
 require 'pry'
+require 'pry-doc'
 
 # Commandline options parser
 require 'clint'
+
+# Require open3 for file handling
+require 'open3'
 
 # ActiveRecord since models are AR backed
 require 'active_record'
@@ -103,32 +107,47 @@ elsif cmdline.options[:script]
         # dumped and the remaining argument(s) are shifted down in the ARGV array.
         # So now the script name is ARGV[0] rather than the normal ARGV[1]
         # We'll have to do this over and over as we keep processing deeper in the
-        # options parsing if there were more options allowed / left.
-        File.foreach(ARGV[0]) do |cmd|
+        # options parsing if there were more options allowed / left.        
+        
+          @commands = []
+          File.foreach(ARGV[0]) do |cmd|
+            cmd.strip!
+            next if cmd =~ /^#/ or cmd.empty?
+            @commands << cmd
+          end
+        
+          Open3.popen3('/usr/bin/env bash') {|stdin, stdout, stderr, wait_thr|
+            pid = wait_thr[:pid]
+          
+            puts "Shell PID is: #{pid}"
+            p @commands
+            
+            @commands.each do |cmd|
 
-          # Strip off the ending '\n'
-          cmd.strip!
+              # Assign the command found to the cmd variable
+              @test_report.run_command cmd
           
-          # Skip any comment lines
-          next if cmd =~ /^#/ or cmd.empty?
-          
-          # Assign the command found to the cmd variable
-          @test_report.run_command cmd
-          
-          # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
-          @test_report.save
+              # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
+              @test_report.save
+            end
+          stdin.close
+          stdout.close
+          stderr.close
+          exit_status = wait_thr.value
+          puts "Exit status is: #{exit_status}"
+          }
+            
+        rescue Errno::ENOENT => e
+          # The file wasn't found so display the help and abort.
+          cmdline.help
+          abort
         end
-      rescue Errno::ENOENT => e
-        # The file wasn't found so display the help and abort.
-        cmdline.help
-        abort
-      end
-      # BATCH HAS BEEN PROCESSED
-      # Now that all the commands in the batch have been processed and added to test_report,
-      # now is when to save the Test Report, immediately following the processing of all commands.
-      @test_report.save!
-      @test_report.display_combined_gist_report
-      @test_report.dump_obj_store
+        # BATCH HAS BEEN PROCESSED
+        # Now that all the commands in the batch have been processed and added to test_report,
+        # now is when to save the Test Report, immediately following the processing of all commands.
+        @test_report.save!
+        @test_report.display_combined_gist_report
+        @test_report.dump_obj_store
             
 elsif cmdline.options[:marshal]
       puts "Loading and Re-executing previous session"
@@ -139,7 +158,6 @@ else
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0].strip
-  binding.pry
   @test_report.save
   @test_report.display_short_report
 
