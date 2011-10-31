@@ -25,12 +25,12 @@ class TestReport < ActiveRecord::Base
   def display_combined_gist_report
       self.report = self.display_short_report()
       self.gist_url = "#{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
-      puts "The Complete report URL is: " + "#{self.gist_url}" 
+      puts "The Complete report URL is: #{self.gist_url} - Report Exit Status: #{self.exit_status}" 
   end
   
   def display_short_report
     self.commands.each do |command|
-      puts "Test Report for: #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}"
+      puts "Test Report for: #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}" + " Cmd exit code: #{command.exit_status}"
     end
   end
   

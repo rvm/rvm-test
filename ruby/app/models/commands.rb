@@ -21,7 +21,7 @@ class Command < ActiveRecord::Base
       end  
       self.cmd_output = stdout.string.strip!
       self.exit_status = bash.status
-      puts "BASH EXIT STATUS: #{self.exit_status}"
+      puts "command.run EXIT STATUS: #{self.exit_status}"
     end
 
     # Create the gist, take the returned json object from Github and use the value html_url on that object
