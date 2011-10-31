@@ -51,19 +51,9 @@ class TestReport < ActiveRecord::Base
     File.open'db/testreport_marshalled.rvm' do |report_obj|
       puts "\nLoading TestReport object store\n"
       @test_report = Marshal.load(report_obj)
-      puts "\nHere are test_report and test_report.commands\n"
-      p @test_report
-      p "\n"
-      p @test_report.commands
     end
     
-    puts "\nStill in load_obj_store - Calling p @test_report\n"
-    puts "Loaded TestReport ID is: " "#{@test_report.id}"
-    puts "@test_report is of class " + "#{@test_report.class}\n"    
-    p @test_report
-    puts "\nCalling p @test_report.commands\n"
-    p @test_report.commands
-    
+    puts "Loaded TestReport ID is: " "#{@test_report.id}"    
     puts "Replaying commands "
     @test_report.commands.each do |cmd, bash|
       cmd.run cmd.cmd, @bash

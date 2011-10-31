@@ -10,8 +10,7 @@ require 'pry-doc'
 # Commandline options parser
 require 'clint'
 
-# Require open3 for file handling
-require 'open3'
+# Require session gem for shelled commands
 require 'session'
 
 # ActiveRecord since models are AR backed
