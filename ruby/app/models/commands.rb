@@ -12,6 +12,8 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
+    self.env_initial = bash.execute "/usr/bin/printenv"
+    puts 'Captured initial environment - #{self.env_initial}'
     bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
@@ -23,8 +25,9 @@ class Command < ActiveRecord::Base
       self.error_msg = stderr.string.strip!
       self.exit_status = bash.status
       puts "command.run EXIT STATUS: #{self.exit_status}"
+      self.env_closing = bash.execute "/usr/bin/printenv"
+      puts 'Captured closing environment - #{self.env_closing}'
     end
-
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
     self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
