@@ -109,32 +109,23 @@ elsif cmdline.options[:script]
         # We'll have to do this over and over as we keep processing deeper in the
         # options parsing if there were more options allowed / left.        
         
-          @commands = []
-          File.foreach(ARGV[0]) do |cmd|
-            cmd.strip!
-            next if cmd =~ /^#/ or cmd.empty?
-            @commands << cmd
-          end
         
-          Open3.popen3('/usr/bin/env bash') {|stdin, stdout, stderr, wait_thr|
-            pid = wait_thr[:pid]
-          
-            puts "Shell PID is: #{pid}"
-            p @commands
-            
-            @commands.each do |cmd|
-
-              # Assign the command found to the cmd variable
-              @test_report.run_command cmd
-          
-              # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
-              @test_report.save
+          Open3.popen3('/usr/bin/env bash') {|bash|
+            t1 = Thread.new do
+              puts ARGV[0] # shows bastchscripts/testscript as it sould
+              File.foreach(ARGV[0]) do |cmd|
+                cmd.strip!
+                next if cmd =~ /^#/ or cmd.empty?
+                puts "Outputting cmd"
+                p cmd
+                @test_report.run_command cmd                  
+                # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
+                @test_report.save
+                p @test_report.commands
+              end
+            p t1
+            t1.join
             end
-          stdin.close
-          stdout.close
-          stderr.close
-          exit_status = wait_thr.value
-          puts "Exit status is: #{exit_status}"
           }
             
         rescue Errno::ENOENT => e
