@@ -15,9 +15,9 @@ class TestReport < ActiveRecord::Base
     Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
   end
 
-  def run_command( cmd )
+  def run_command( cmd, bash, github )
     command = commands.build
-    command.run( cmd )
+    command.run( cmd, bash, github )
     command.save
     self.sysname = command.sysname
   end
@@ -46,6 +46,8 @@ class TestReport < ActiveRecord::Base
   end
   
   def load_and_replay_obj_store
+    @bash = Session::Bash.new
+    
     File.open'db/testreport_marshalled.rvm' do |report_obj|
       puts "\nLoading TestReport object store\n"
       @test_report = Marshal.load(report_obj)
@@ -63,8 +65,8 @@ class TestReport < ActiveRecord::Base
     p @test_report.commands
     
     puts "Replaying commands "
-    @test_report.commands.each do |cmd|
-      cmd.run cmd.cmd
+    @test_report.commands.each do |cmd, bash|
+      cmd.run cmd.cmd, @bash
     end
     
     # Recreate a gisted report of this new run based off the marshalled object(s)

@@ -7,16 +7,21 @@ class Command < ActiveRecord::Base
     command.os_type = %x[uname -s].strip
   end
 
-  def run( cmd )
-    # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
-    self.cmd = cmd.strip
+  def run( cmd, bash )
+    stdout, stderr = StringIO::new, StringIO::new
     
+    # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
+    self.cmd = cmd
+    bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
-        self.cmd_output = %x[ #{self.cmd} 2>&1 ]
-      end
+        #self.cmd_output = %x[ #{self.cmd} 2>&1 ]
+      end  
+      self.cmd_output = stdout.string.strip!
+      self.exit_status = bash.status
+      puts "BASH EXIT STATUS: #{self.exit_status}"
     end
 
     # Create the gist, take the returned json object from Github and use the value html_url on that object

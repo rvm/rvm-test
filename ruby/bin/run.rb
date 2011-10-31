@@ -12,6 +12,7 @@ require 'clint'
 
 # Require open3 for file handling
 require 'open3'
+require 'session'
 
 # ActiveRecord since models are AR backed
 require 'active_record'
@@ -108,25 +109,15 @@ elsif cmdline.options[:script]
         # So now the script name is ARGV[0] rather than the normal ARGV[1]
         # We'll have to do this over and over as we keep processing deeper in the
         # options parsing if there were more options allowed / left.        
-        
-        
-          Open3.popen3('/usr/bin/env bash') {|bash|
-            t1 = Thread.new do
-              puts ARGV[0] # shows bastchscripts/testscript as it sould
-              File.foreach(ARGV[0]) do |cmd|
-                cmd.strip!
-                next if cmd =~ /^#/ or cmd.empty?
-                puts "Outputting cmd"
-                p cmd
-                @test_report.run_command cmd                  
-                # Save @test_report so its ID is generated. This also saves @command and associates it wiith this @test_report
-                @test_report.save
-                p @test_report.commands
-              end
-            p t1
-            t1.join
-            end
-          }
+
+        @bash = Session::Bash.new
+          File.foreach(ARGV[0]) do |cmd|
+            cmd.strip!
+            next if cmd =~ /^#/ or cmd.empty?
+            @test_report.run_command cmd, @bash
+          end
+        @test_report.exit_status = @bash.status
+        puts "TEST REPORT - Exit Status: #{@test_report.exit_status}"
             
         rescue Errno::ENOENT => e
           # The file wasn't found so display the help and abort.
