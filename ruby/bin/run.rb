@@ -98,7 +98,7 @@ if cmdline.options[:help] || ARGV[0] == nil
   cmdline.help
   abort
 elsif cmdline.options[:script]
-    # PROCESS BATCH FILE
+    # PROCESS BATCH FILE - Open a bash session first. Will be passed in for use.
     # Open the script and parse. Should something go wrong with the file handler
     # display the help and abort. Wrap in a begin/rescue to handle it gracefully.
     # This executes each line storing that command's returned data in the database.
@@ -114,10 +114,9 @@ elsif cmdline.options[:script]
           File.foreach(ARGV[0]) do |cmd|
             cmd.strip!
             next if cmd =~ /^#/ or cmd.empty?
-            @test_report.run_command cmd, @bash
+            @test_report.run_command( cmd, @bash)
           end
-        @test_report.exit_status = @bash.status
-        puts "TEST REPORT - Exit Status: #{@test_report.exit_status}"
+        puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
             
         rescue Errno::ENOENT => e
           # The file wasn't found so display the help and abort.
@@ -132,11 +131,12 @@ elsif cmdline.options[:script]
         @test_report.dump_obj_store
             
 elsif cmdline.options[:marshal]
+      # Sessioned - encapsulated within load_and_replay_obj_store
       puts "Loading and Re-executing previous session"
       @test_report.load_and_replay_obj_store
       puts "Repeat execution of previous session complete!\n"
 else
-  # PROCESS SINGLE COMMAND
+  # PROCESS SINGLE COMMAND - No Session support - Meant for one-off commands play.
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0].strip
@@ -144,6 +144,3 @@ else
   @test_report.display_short_report
 
 end
-
-# Explicitly return 0 for success if we've made it here.
-#exit 0
