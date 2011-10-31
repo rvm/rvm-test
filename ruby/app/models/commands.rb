@@ -20,6 +20,7 @@ class Command < ActiveRecord::Base
         #self.cmd_output = %x[ #{self.cmd} 2>&1 ]
       end  
       self.cmd_output = stdout.string.strip!
+      self.error_msg = stderr.string.strip!
       self.exit_status = bash.status
       puts "command.run EXIT STATUS: #{self.exit_status}"
     end

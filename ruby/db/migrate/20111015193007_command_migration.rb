@@ -9,6 +9,7 @@ class CommandMigration < ActiveRecord::Migration
       t.string  :timings
       t.string  :gist_url
       t.integer :exit_status
+      t.text  :error_msg
       t.timestamps
     end
   end

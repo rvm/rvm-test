@@ -117,7 +117,6 @@ elsif cmdline.options[:script]
             @test_report.run_command cmd, @bash
           end
         @test_report.exit_status = @bash.status
-        @test_report.save
         puts "TEST REPORT - Exit Status: #{@test_report.exit_status}"
             
         rescue Errno::ENOENT => e
@@ -141,7 +140,7 @@ else
   # All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @test_report.run_command ARGV[0].strip
-  @test_report.save
+  @test_report.save!
   @test_report.display_short_report
 
 end
