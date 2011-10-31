@@ -15,9 +15,9 @@ class TestReport < ActiveRecord::Base
     Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
   end
 
-  def run_command( cmd, bash, github )
+  def run_command( cmd, bash )
     command = commands.build
-    command.run( cmd, bash, github )
+    command.run( cmd, bash )
     command.save
     self.sysname = command.sysname
   end
