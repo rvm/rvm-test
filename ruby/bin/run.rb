@@ -135,10 +135,12 @@ elsif cmdline.options[:marshal]
       @test_report.load_and_replay_obj_store
       puts "Repeat execution of previous session complete!\n"
 else
-  # PROCESS SINGLE COMMAND - No Session support - Meant for one-off commands play.
-  # All is good so onwards and upwards! This handles when just a single command,
+  # PROCESS SINGLE COMMAND - Meant for one-off commands play.
+  # Not that its wrong, maybe a bit of a waste of resources, but sessioning had to be added due to how we rely on
+  # run commands through the structure. Oh, well. All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
-  @test_report.run_command ARGV[0].strip
+  @bash = Session::Bash.new
+  @test_report.run_command(ARGV[0].strip, @bash)
   @test_report.save!
   @test_report.display_short_report
 
