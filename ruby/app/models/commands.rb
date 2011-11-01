@@ -28,25 +28,19 @@ class Command < ActiveRecord::Base
         # Set cmd_output on self, for later processing, to the returned cmd output.
         bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
         
-        self.exit_status = bash.status
-        self.cmd_output = stdout.string
-        self.error_msg = stderr.string
-        
-      end  
+      end
+      # Capture pertinent information  
+      self.exit_status = bash.status
+      self.cmd_output = stdout.string
+      self.error_msg = stderr.string
       puts "command.run EXIT STATUS: #{self.exit_status}"
+      # Now, capture and display that we captured ENV from the shell for this command.
       self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       puts 'Captured closing environment - #{self.env_closing}'
-      self.env_closing = env_to_bash(self.env_closing)
-      p self.env_closing.keys
-         # String
-        # Returned a array of strings like: "rvm_dump_environment_flag=0"
-        # Want to split on '=' for each string entry and make left side the key, right the value
-        #p Hash.new(env.split().map{|line| line.split('=')})
-        # BLEH - Failing to figure how to convert.
-      end
-      puts "CLOSING HASH"
-      p self.env_closing.values
+      # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
+      self.env_closing = env_to_hash(self.env_closing[0])    
     end
+    
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
     self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
