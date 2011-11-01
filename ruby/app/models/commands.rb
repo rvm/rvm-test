@@ -12,7 +12,6 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
-    self.env_initial = bash.execute "/usr/bin/printenv"
     puts 'Captured initial environment - #{self.env_initial}'
     bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
     Benchmark.benchmark(CAPTION) do |x|

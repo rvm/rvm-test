@@ -17,6 +17,7 @@ class TestReport < ActiveRecord::Base
 
   def run_command( cmd, bash )
     command = commands.build
+    command.env_initial = bash.execute "/usr/bin/printenv"
     command.run( cmd, bash )
     command.save
     self.sysname = command.sysname
