@@ -10,7 +10,6 @@ class CommandMigration < ActiveRecord::Migration
       t.string  :gist_url
       t.integer :exit_status
       t.text  :error_msg
-      t.text  :env_initial
       t.text  :env_closing
       t.timestamps
     end

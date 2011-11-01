@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
     t.string   "gist_url"
     t.integer  "exit_status"
     t.text     "error_msg"
-    t.text     "env_initial"
     t.text     "env_closing"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -35,6 +34,7 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
     t.text     "report"
     t.string   "gist_url"
     t.integer  "exit_status"
+    t.text     "env_initial"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
