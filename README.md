@@ -53,6 +53,7 @@ To replay the files, simply execute the following:
 
 This will reload the previous session, play it out again, and return a Completed Report gist url of that run. It should be a duplicate content-wise of the original session.
 
+Also, let it be known that both TestReport and Command generate their own capture of the shell's environment. TestReport does it just before starting to execute commands in the session, and each Command captures after it has executed. You can access them as TestReport.env_initial (@test_report.env_initial.keys) and Command.env_closing (@test_report.commands.each do |cmd| { puts cmd.env_closing.keys })
 
 Now, go yee forth and .. Have fun with it!
 
