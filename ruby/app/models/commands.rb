@@ -12,7 +12,6 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
-    puts 'Captured initial environment - #{self.env_initial}'
     bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.

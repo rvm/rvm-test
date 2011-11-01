@@ -17,6 +17,7 @@ class TestReport < ActiveRecord::Base
 
   def run_command( cmd, bash )
     command = commands.build
+    puts 'Captured initial environment - #{command.env_initial}'
     command.env_initial = bash.execute "/usr/bin/printenv"
     command.run( cmd, bash )
     command.save
