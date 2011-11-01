@@ -12,16 +12,17 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
-    bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
-        #self.cmd_output = %x[ #{self.cmd} 2>&1 ]
+        bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
+        
+        self.exit_status = bash.status
+        self.cmd_output = stdout.string.strip!
+        self.error_msg = stderr.string.strip!
+        
       end  
-      self.cmd_output = stdout.string.strip!
-      self.error_msg = stderr.string.strip!
-      self.exit_status = bash.status
       puts "command.run EXIT STATUS: #{self.exit_status}"
       self.env_closing = bash.execute "/usr/bin/printenv"
       puts 'Captured closing environment - #{self.env_closing}'
