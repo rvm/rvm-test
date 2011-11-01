@@ -19,13 +19,20 @@ class Command < ActiveRecord::Base
         bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
         
         self.exit_status = bash.status
-        self.cmd_output = stdout.string.strip!
-        self.error_msg = stderr.string.strip!
+        self.cmd_output = stdout.string
+        self.error_msg = stderr.string
         
       end  
       puts "command.run EXIT STATUS: #{self.exit_status}"
-      self.env_closing = bash.execute "/usr/bin/printenv"
+      self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       puts 'Captured closing environment - #{self.env_closing}'
+      self.env_closing[0].split().each do |env|
+        p env # String
+        # Returned a array of strings like: "rvm_dump_environment_flag=0"
+        # Want to split on '=' for each string entry and make left side the key, right the value
+        #p Hash.new(env.split().map{|line| line.split('=')})
+        # BLEH - Failing to figure how to convert.
+      end
     end
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
