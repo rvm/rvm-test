@@ -13,6 +13,9 @@ require 'clint'
 # Require session gem for shelled commands
 require 'session'
 
+# Require Pretty Print
+require 'pp'
+
 # ActiveRecord since models are AR backed
 require 'active_record'
 require 'active_support'
