@@ -26,13 +26,19 @@ class Command < ActiveRecord::Base
       puts "command.run EXIT STATUS: #{self.exit_status}"
       self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       puts 'Captured closing environment - #{self.env_closing}'
+      hash ||= {}
       self.env_closing[0].split().each do |env|
-        p env # String
+        key = env.split('=')[0].to_sym
+        value = env.split('=')[1]
+        hash[key] = value
+        self.env_closing = hash
+         # String
         # Returned a array of strings like: "rvm_dump_environment_flag=0"
         # Want to split on '=' for each string entry and make left side the key, right the value
         #p Hash.new(env.split().map{|line| line.split('=')})
         # BLEH - Failing to figure how to convert.
       end
+      p self.env_closing.keys
     end
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.

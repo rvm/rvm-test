@@ -126,6 +126,7 @@ elsif cmdline.options[:script]
         # Now that all the commands in the batch have been processed and added to test_report,
         # now is when to save the Test Report, immediately following the processing of all commands.
         @test_report.save!
+        #binding.pry
         @test_report.display_combined_gist_report
         @test_report.dump_obj_store
             
@@ -142,6 +143,8 @@ else
   @bash = Session::Bash.new
   @test_report.run_command(ARGV[0].strip, @bash)
   @test_report.save!
+  #binding.pry
+  
   @test_report.display_short_report
 
 end
