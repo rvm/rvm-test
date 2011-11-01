@@ -112,7 +112,16 @@ elsif cmdline.options[:script]
         # We'll have to do this over and over as we keep processing deeper in the
         # options parsing if there were more options allowed / left.        
 
+        # Open a shell session.
         @bash = Session::Bash.new
+        
+        # Capture the initial environment before any commands are run.
+        puts 'Captured Test Report Initial Environment - #{TestReport.env_initial}'
+        @test_report.env_initial = @bash.execute "/usr/bin/printenv"
+        @test_report.env_initial = @test_report.env_to_hash(@test_report.env_initial[0])
+        p @test_report.env_initial.inspect
+        
+          # Now we process the individual commands
           File.foreach(ARGV[0]) do |cmd|
             cmd.strip!
             next if cmd =~ /^#/ or cmd.empty?

@@ -14,11 +14,19 @@ class TestReport < ActiveRecord::Base
   def github(login_string)
     Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
   end
+  
+  def env_to_hash(env_string)
+    lines = env_string.split("\n")
+    key_value_pairs = lines.map { |line|
+      key, value = *line.split("=", 2)
+      [key.to_sym, value]
+    }
+
+    Hash[key_value_pairs]
+  end
 
   def run_command( cmd, bash )
     command = commands.build
-    puts 'Captured Test Report initial environment - #{self.env_initial}'
-    self.env_initial = bash.execute "/usr/bin/printenv"
     command.run( cmd, bash )
     command.save
     self.sysname = command.sysname

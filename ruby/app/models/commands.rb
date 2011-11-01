@@ -33,10 +33,10 @@ class Command < ActiveRecord::Base
       self.exit_status = bash.status
       self.cmd_output = stdout.string
       self.error_msg = stderr.string
-      puts "command.run EXIT STATUS: #{self.exit_status}"
+      puts "command.run EXIT STATUS: #{Command.exit_status}"
       # Now, capture and display that we captured ENV from the shell for this command.
-      self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
-      puts 'Captured closing environment - #{self.env_closing}'
+      self.env_closing = bash.execute "/usr/bin/printenv"
+      puts 'Captured closing environment - #{Command.env_closing}'
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])    
     end
