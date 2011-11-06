@@ -1,4 +1,7 @@
+#cmd:start=(rvm --version)=
 rvm --version
+#cmd:stop=
+
 rvm use 1.8.7@testrun
 rvm pkg install readline
 echo yes | rvm --install --create 1.9.2@testrun -- --with-readline-dir=$rvm_path/usr
