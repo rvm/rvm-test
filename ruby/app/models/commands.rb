@@ -22,16 +22,28 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
+    
+    # Add command information to stdout
+    bash.execute "echo '=====cmd:start=\"#{self.cmd}\"='", :stdout => stdout, :stderr => stderr
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
         bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
-        
       end
       # Capture pertinent information  
       self.exit_status = bash.status
-      self.cmd_output = stdout.string
+      
+      # Add exit status from last command to the stdout string capture
+      bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
+        # This is on-screen only, so people running the test manually can see any errors.
+        if self.exit_status == 1 then
+          puts "#{stderr.string}"
+        end
+      # Add end-of-command deliniation to stdout
+      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
+      # Now we include both stdout and stderr in cmd_output. stderr will only be populated if there *was* an error.
+      self.cmd_output = stdout.string + stderr.string
       self.error_msg = stderr.string
       puts "command.run EXIT STATUS: #{self.exit_status}"
       # Now, capture and display that we captured ENV from the shell for this command.
