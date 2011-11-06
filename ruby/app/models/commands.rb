@@ -24,6 +24,7 @@ class Command < ActiveRecord::Base
     self.cmd = cmd
     
     # Add command information to stdout
+    # Mark start of command exectution in shell's stdout
     bash.execute "echo '=====cmd:start=\"#{self.cmd}\"='", :stdout => stdout, :stderr => stderr
     Benchmark.benchmark(CAPTION) do |x|
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
@@ -34,21 +35,28 @@ class Command < ActiveRecord::Base
       # Capture pertinent information  
       self.exit_status = bash.status
       
-      # Add exit status from last command to the stdout string capture
+      # Add exit status from last command to the shell's stdout string capture
       bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
         # This is on-screen only, so people running the test manually can see any errors.
         if self.exit_status == 1 then
           puts "#{stderr.string}"
         end
-      # Add end-of-command deliniation to stdout
+      # Add end-of-command deliniation to the shell's stdout
       bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
-      # Now we include both stdout and stderr in cmd_output. stderr will only be populated if there *was* an error.
+      
+      # Now capture the environment settings in the shell's stdout
+      bash.execute "echo =====cmd:env=", :stdout => stdout, :stderr => stderr
+      bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
+      bash.execute "echo =====cmd:env:stop", :stdout => stdout, :stderr => stderr
+      # Now we include both stdout and stderr in the current cmd's cmd_output.
       self.cmd_output = stdout.string + stderr.string
+      # self.error_msg is only be populated on errors.
       self.error_msg = stderr.string
-      puts "command.run EXIT STATUS: #{self.exit_status}"
-      # Now, capture and display that we captured ENV from the shell for this command.
+      # Let screenies know the exit status
+      puts "COMMAND EXIT STATUS: #{self.exit_status}"
+      # Now, capture ENV from the shell for this command in the current command object itself.
+      # TODO - Figure out how to only call this once, not twice like we are above
       self.env_closing = bash.execute "/usr/bin/printenv"
-      puts 'Captured closing environment - #{self.env_closing}'
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])    
     end
