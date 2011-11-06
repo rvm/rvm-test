@@ -34,20 +34,21 @@ class Command < ActiveRecord::Base
       end
       # Capture pertinent information  
       self.exit_status = bash.status
-      
+
+      # Add end-of-command deliniation to the shell's stdout
+      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr      
       # Add exit status from last command to the shell's stdout string capture
       bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
-        # This is on-screen only, so people running the test manually can see any errors.
-        if self.exit_status == 1 then
-          puts "#{stderr.string}"
-        end
-      # Add end-of-command deliniation to the shell's stdout
-      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
+      
+      # This is on-screen only, so people running the test manually can see any errors.
+      if self.exit_status == 1 then
+        puts "#{stderr.string}"
+      end
       
       # Now capture the environment settings in the shell's stdout
-      bash.execute "echo =====cmd:env=", :stdout => stdout, :stderr => stderr
+      bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
-      bash.execute "echo =====cmd:env:stop", :stdout => stdout, :stderr => stderr
+      bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
       # Now we include both stdout and stderr in the current cmd's cmd_output.
       self.cmd_output = stdout.string + stderr.string
       # self.error_msg is only be populated on errors.
