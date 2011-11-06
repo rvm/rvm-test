@@ -126,14 +126,15 @@ elsif cmdline.options[:script]
             cmd.strip!
             next if cmd =~ /^#/ or cmd.empty?
             
-            # # We want to parse specific expectations so we can manage logic flow based on that match
-            # # Check for #cmd:start()= / #cmd:stop= - anything between deliniates actual execution output
-            # if cmd =~ /#cmd:start(.*)=$/ then
-            #   puts "\n CMD PARSING: Parsed cmd:start()= string\n"
-            # else
-            #   if cmd =~ /^#cmd:stop=$/
-            #     puts "\n CMD PARSING: Parsed cmd:stop= string\n" 
-            # end
+            # We want to parse specific expectations so we can manage logic flow based on that match
+            # Check for #cmd:start()= / #cmd:stop= - anything between deliniates actual execution output
+            # TODO - Ask mpapis to use this to add his comment testing
+            if cmd =~ /#cmd:start(.*)=$/ then
+              puts "\n CMD PARSING: Parsed cmd:start()= string\n"
+            else
+              if cmd =~ /^#cmd:stop=$/
+                puts "\n CMD PARSING: Parsed cmd:stop= string\n" 
+            end
             
             # TODO - Need to define a method to manage the parsing within TestReport such that we can
             # TODO - assert specifics regarding expectations. The entry point for using the method is the top
