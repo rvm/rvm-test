@@ -30,7 +30,14 @@ class Command < ActiveRecord::Base
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
-        bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
+        bash.execute "#{self.cmd}" do |stdout, stderr|
+          # properly map errors and output in the order they show up
+          self.cmd_output += stderr if stderr
+          self.cmd_output += stdout if stdout
+          # self.error_msg is only be populated on errors. stored for later retrieval without
+          # having to also read through non-error output.
+          self.error_msg += stderr if stderr
+        end              
       end
       # Capture pertinent information  
       self.exit_status = bash.status
@@ -49,10 +56,6 @@ class Command < ActiveRecord::Base
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
-      # Now we include both stdout and stderr in the current cmd's cmd_output.
-      self.cmd_output = stderr.string + stdout.string
-      # self.error_msg is only be populated on errors.
-      self.error_msg = stderr.string
       # Let screenies know the exit status
       puts "COMMAND EXIT STATUS: #{self.exit_status}"
       # Now, capture ENV from the shell for this command in the current command object itself.
