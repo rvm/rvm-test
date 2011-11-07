@@ -50,7 +50,7 @@ class Command < ActiveRecord::Base
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
       # Now we include both stdout and stderr in the current cmd's cmd_output.
-      self.cmd_output = stdout.string + stderr.string
+      self.cmd_output = stderr.string + stdout.string
       # self.error_msg is only be populated on errors.
       self.error_msg = stderr.string
       # Let screenies know the exit status
