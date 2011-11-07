@@ -145,11 +145,11 @@ elsif cmdline.options[:script]
           end
         puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
             
-        rescue Errno::ENOENT => e
+      rescue Errno::ENOENT => e
           # The file wasn't found so display the help and abort.
           cmdline.help
           abort
-        end
+      end
         # BATCH HAS BEEN PROCESSED
         # Now that all the commands in the batch have been processed and added to test_report,
         # now is when to save the Test Report, immediately following the processing of all commands.
