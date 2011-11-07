@@ -133,7 +133,8 @@ elsif cmdline.options[:script]
               puts "\n CMD PARSING: Parsed cmd:start()= string\n"
             else
               if cmd =~ /^#cmd:stop=$/
-                puts "\n CMD PARSING: Parsed cmd:stop= string\n" 
+                puts "\n CMD PARSING: Parsed cmd:stop= string\n"
+              end 
             end
             
             # TODO - Need to define a method to manage the parsing within TestReport such that we can
