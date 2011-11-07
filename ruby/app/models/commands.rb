@@ -72,6 +72,10 @@ class Command < ActiveRecord::Base
     else
       self.cmd = cmd
     end
+
+    # Ensure that self.error_msg and self.cmd_output are blank
+    # Do this before we get anywhere near the timing and command execution blocks
+    self.error_msg = self.cmd_output = ""
     
     # Add command information to stdout
     # Mark start of command exectution in shell's stdout
@@ -80,7 +84,14 @@ class Command < ActiveRecord::Base
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
-        bash.execute "#{self.cmd}", :stdout => stdout, :stderr => stderr    
+        bash.execute "#{self.cmd}" do |out, err|
+          # properly map errors and output in the order they show up
+          self.cmd_output += err if err
+          self.cmd_output += out if out
+          # self.error_msg is only be populated on errors. stored for later retrieval without
+          # having to also read through non-error output.
+          self.error_msg += err if err
+        end              
       end
       # Capture pertinent information  
       self.exit_status = bash.status
@@ -99,10 +110,6 @@ class Command < ActiveRecord::Base
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
-      # Now we include both stdout and stderr in the current cmd's cmd_output.
-      self.cmd_output = stdout.string + stderr.string
-      # self.error_msg is only be populated on errors.
-      self.error_msg = stderr.string
       # Let screenies know the exit status
       puts "COMMAND EXIT STATUS: #{self.exit_status}"
       # Now, capture ENV from the shell for this command in the current command object itself.
