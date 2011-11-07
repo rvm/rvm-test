@@ -8,6 +8,7 @@ class Command < ActiveRecord::Base
   end
 
   def env_to_hash(env_string)
+    # Convert the captured environment to a Hash where the env var_names are the keys
     lines = env_string.split("\n")
     key_value_pairs = lines.map { |line|
       key, value = *line.split("=", 2)
