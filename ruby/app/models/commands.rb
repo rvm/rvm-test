@@ -22,6 +22,9 @@ class Command < ActiveRecord::Base
     
     # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
     self.cmd = cmd
+    # Ensure that self.error_msg and self.cmd_output are blank
+    # Do this before we get anywhere near the timing and command execution blocks
+    self.error_msg = self.cmd_output = ""
     
     # Add command information to stdout
     # Mark start of command exectution in shell's stdout
@@ -30,13 +33,13 @@ class Command < ActiveRecord::Base
       # Start and track timing for each individual commands, storing as a Benchmark Tms block.
       self.timings = x.report("Timings: ") do
         # Set cmd_output on self, for later processing, to the returned cmd output.
-        bash.execute "#{self.cmd}" do |stdout, stderr|
+        bash.execute "#{self.cmd}" do |out, err|
           # properly map errors and output in the order they show up
-          self.cmd_output += stderr if stderr
-          self.cmd_output += stdout if stdout
+          self.cmd_output += err if err
+          self.cmd_output += out if out
           # self.error_msg is only be populated on errors. stored for later retrieval without
           # having to also read through non-error output.
-          self.error_msg += stderr if stderr
+          self.error_msg += err if err
         end              
       end
       # Capture pertinent information  
