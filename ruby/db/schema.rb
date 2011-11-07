@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111016225920) do
+ActiveRecord::Schema.define(:version => 20111106234153) do
 
   create_table "commands", :force => true do |t|
     t.integer  "test_report_id"
@@ -26,6 +26,9 @@ ActiveRecord::Schema.define(:version => 20111016225920) do
     t.text     "env_closing"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "test_text"
+    t.string   "test_output"
+    t.integer  "test_failed"
   end
 
   create_table "test_reports", :force => true do |t|

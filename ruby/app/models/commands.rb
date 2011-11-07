@@ -16,12 +16,62 @@ class Command < ActiveRecord::Base
 
     Hash[key_value_pairs]
   end
-  
+
+  def test_output_status sign, value
+    value = value.to_i
+    if ( sign == "=" ) ^ ( self.exit_status == value )
+      self.test_failed+=1
+      "failed: status #{sign} #{value} # was #{self.exit_status}"
+    else
+      "passed: status #{sign} #{value}"
+    end
+  end
+
+  def test_output_match sign, value
+    if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
+      self.test_failed+=1
+      "failed: match #{sign} /#{value}/"
+    else
+      "passed: match #{sign} /#{value}/"
+    end
+  end
+
+  def test_command
+    # reset test status
+    self.test_failed = 0
+    self.test_output = nil
+    # do nothing when no tests
+    return if self.test_text.nil?
+
+    # read the tests
+    tests = self.test_text.split(/;/).map(&:strip)
+    outputs = []
+    tests.each do |test|
+      if test =~ /^status([!]?=)(.*)/
+        outputs.push( test_output_status( $1, $2 ) )
+      elsif test =~ /^match([!]?=)[~]?\/(.*)\//
+        outputs.push( test_output_match( $1, $2 ) )
+      else
+        outputs.push("invalid test: #{test}")
+      end
+    end
+    self.test_output = outputs * "\n" + "\n"
+    $stderr.puts self.test_output
+  end
+
   def run( cmd, bash )
     stdout, stderr = StringIO::new, StringIO::new
     
-    # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
-    self.cmd = cmd
+    # clean cmd
+    cmd.strip!
+
+    # detect if command is followed by test in comment: command # test
+    if cmd =~ /^(.*)\#(.*)$/
+      self.cmd = $1.strip
+      self.test_text = $2.strip
+    else
+      self.cmd = cmd
+    end
     
     # Add command information to stdout
     # Mark start of command exectution in shell's stdout
@@ -61,12 +111,24 @@ class Command < ActiveRecord::Base
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])    
     end
+
+    test_command
     
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
-    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
+    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
   end
-  
+
+  def gist_content
+    content = cmd_output.presence || "Cmd had no output"
+    if test_output
+      content += "Tests(failed #{test_failed}):\n" + test_output
+    else
+      content += "No tests defined\n"
+    end
+    content
+  end
+
   def dump_obj_store
     File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
       Marshal.dump(self, report_obj)
