@@ -34,9 +34,9 @@ class Command < ActiveRecord::Base
   end
 
   def test_output_match sign, value
-    # See comment in test_output_status. First part is the same in both tests. In this one we test if self.cmd_output contains 'value'
+    # See comment in test_output_status. First part is the same in both tests. Here we test if self.cmd_output contains 'value'
     # If the contents of 'value' are in self.cmd_output, its of course True, and Regexp.new's job is to return value's
-    # starting location (starting from 0 as a position, starting at the beginning of the string)) - This is called an eXclusive OR. 
+    # starting location (starting from 0 as a position, starting at the beginning of the string). This is called an eXclusive OR. 
     # This is a logical test on two operands that results in a value of true if exactly one of the operands has a value of true.
     # A simple way to state this is "one or the other but not both.". This is referring to the '^' in the following line of code.
     if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
