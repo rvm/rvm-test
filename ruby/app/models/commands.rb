@@ -20,7 +20,7 @@ class Command < ActiveRecord::Base
   def run( cmd, bash )
     stdout, stderr = StringIO::new, StringIO::new
     
-    # set self.cmd to the passed in param, directly, stripping any '\n. as we do.
+    # set self.cmd to the passed in param, directly.
     self.cmd = cmd
     # Ensure that self.error_msg and self.cmd_output are blank
     # Do this before we get anywhere near the timing and command execution blocks
