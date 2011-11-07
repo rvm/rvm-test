@@ -19,7 +19,12 @@ class Command < ActiveRecord::Base
   end
 
   def test_output_status sign, value
+    # Convert value to integer for the coming test
     value = value.to_i
+    
+    # This test means True or false, if sign's value is "="  OR  if self.exit_status equals the integer value of 'value'
+    # if one of those two tests are True, then set self.test_failed to 1, and report accordingly - Also known as an eXclusive OR (XOR)
+    # This is what is meant by the ^ in the next line.
     if ( sign == "=" ) ^ ( self.exit_status == value )
       self.test_failed+=1
       "failed: status #{sign} #{value} # was #{self.exit_status}"
@@ -29,6 +34,11 @@ class Command < ActiveRecord::Base
   end
 
   def test_output_match sign, value
+    # See comment in test_output_status. First part is the same in both tests. In this one we test if self.cmd_output contains 'value'
+    # If the contents of 'value' are in self.cmd_output, its of course True, and Regexp.new's job is to return value's
+    # starting location (starting from 0 as a position, starting at the beginning of the string)) - This is called an eXclusive OR. 
+    # This is a logical test on two operands that results in a value of true if exactly one of the operands has a value of true.
+    # A simple way to state this is "one or the other but not both.". This is referring to the '^' in the following line of code.
     if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
       self.test_failed+=1
       "failed: match #{sign} /#{value}/"
