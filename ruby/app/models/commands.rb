@@ -86,11 +86,11 @@ class Command < ActiveRecord::Base
         # Set cmd_output on self, for later processing, to the returned cmd output.
         bash.execute "#{self.cmd}" do |out, err|
           # properly map errors and output in the order they show up
-          self.cmd_output += err if err
-          self.cmd_output += out if out
+          stdout << err if err
+          stdout << out if out
           # self.error_msg is only be populated on errors. stored for later retrieval without
           # having to also read through non-error output.
-          self.error_msg += err if err
+          stderr << err if err
         end              
       end
       # Capture pertinent information  
@@ -110,6 +110,12 @@ class Command < ActiveRecord::Base
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
+
+      # Now we include both stdout and stderr in the current cmd's cmd_output.
+      self.cmd_output = stderr.string + stdout.string
+      # self.error_msg is only be populated on errors.
+      self.error_msg = stderr.string
+
       # Let screenies know the exit status
       puts "COMMAND EXIT STATUS: #{self.exit_status}"
       # Now, capture ENV from the shell for this command in the current command object itself.
