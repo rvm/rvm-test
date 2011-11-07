@@ -16,12 +16,63 @@ class Command < ActiveRecord::Base
 
     Hash[key_value_pairs]
   end
-  
+
+  def test_output_status sign, value
+    value = value.to_i
+    if ( sign == "=" ) ^ ( self.exit_status == value )
+      self.test_failed+=1
+      "failed: status #{sign} #{value} # was #{self.exit_status}"
+    else
+      "passed: status #{sign} #{value}"
+    end
+  end
+
+  def test_output_match sign, value
+    if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
+      self.test_failed+=1
+      "failed: match #{sign} /#{value}/"
+    else
+      "passed: match #{sign} /#{value}/"
+    end
+  end
+
+  def test_command
+    # reset test status
+    self.test_failed = 0
+    self.test_output = nil
+    # do nothing when no tests
+    return if self.test_text.nil?
+
+    # read the tests
+    tests = self.test_text.split(/;/).map(&:strip)
+    outputs = []
+    tests.each do |test|
+      if test =~ /^status([!]?=)(.*)/
+        outputs.push( test_output_status( $1, $2 ) )
+      elsif test =~ /^match([!]?=)[~]?\/(.*)\//
+        outputs.push( test_output_match( $1, $2 ) )
+      else
+        outputs.push("invalid test: #{test}")
+      end
+    end
+    self.test_output = outputs * "\n" + "\n"
+    $stderr.puts self.test_output
+  end
+
   def run( cmd, bash )
     stdout, stderr = StringIO::new, StringIO::new
     
-    # set self.cmd to the passed in param, directly.
-    self.cmd = cmd
+    # clean cmd
+    cmd.strip!
+
+    # detect if command is followed by test in comment: command # test
+    if cmd =~ /^(.*)\#(.*)$/
+      self.cmd = $1.strip
+      self.test_text = $2.strip
+    else
+      self.cmd = cmd
+    end
+
     # Ensure that self.error_msg and self.cmd_output are blank
     # Do this before we get anywhere near the timing and command execution blocks
     self.error_msg = self.cmd_output = ""
@@ -35,11 +86,11 @@ class Command < ActiveRecord::Base
         # Set cmd_output on self, for later processing, to the returned cmd output.
         bash.execute "#{self.cmd}" do |out, err|
           # properly map errors and output in the order they show up
-          self.cmd_output += err if err
-          self.cmd_output += out if out
+          stdout << err if err
+          stdout << out if out
           # self.error_msg is only be populated on errors. stored for later retrieval without
           # having to also read through non-error output.
-          self.error_msg += err if err
+          stderr << err if err
         end              
       end
       # Capture pertinent information  
@@ -59,6 +110,12 @@ class Command < ActiveRecord::Base
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
+
+      # Now we include both stdout and stderr in the current cmd's cmd_output.
+      self.cmd_output = stderr.string + stdout.string
+      # self.error_msg is only be populated on errors.
+      self.error_msg = stderr.string
+
       # Let screenies know the exit status
       puts "COMMAND EXIT STATUS: #{self.exit_status}"
       # Now, capture ENV from the shell for this command in the current command object itself.
@@ -67,12 +124,24 @@ class Command < ActiveRecord::Base
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])    
     end
+
+    test_command
     
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
-    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => cmd_output.presence || "Cmd had no output" }}).html_url
+    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
   end
-  
+
+  def gist_content
+    content = cmd_output.presence || "Cmd had no output"
+    if test_output
+      content += "Tests(failed #{test_failed}):\n" + test_output
+    else
+      content += "No tests defined\n"
+    end
+    content
+  end
+
   def dump_obj_store
     File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
       Marshal.dump(self, report_obj)
