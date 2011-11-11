@@ -58,15 +58,24 @@ class Command < ActiveRecord::Base
     tests = self.test_text.split(/;/).map(&:strip)
     outputs = []
     tests.each do |test|
+      # check for status=... or status!=...
       if test =~ /^status([!]?=)(.*)/
+        # pass in the operator($1) and tested value($2)
         outputs.push( test_output_status( $1, $2 ) )
+
+      # check for match=~... or status!=~...
       elsif test =~ /^match([!]?=)[~]?\/(.*)\//
+        # pass in the operator($1) and tested value($2)
         outputs.push( test_output_match( $1, $2 ) )
+
       else
         outputs.push("invalid test: #{test}")
       end
     end
+
+    # join array items with new lines and append new line on the end
     self.test_output = outputs * "\n" + "\n"
+
     $stderr.puts self.test_output
   end
 
