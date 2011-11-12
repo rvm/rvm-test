@@ -1,0 +1,2 @@
+rvm cleanup all
+bash < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer ) # status='0'
