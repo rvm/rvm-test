@@ -31,7 +31,7 @@ else
   if ! rvm --create use  "$environment_id"
   then
     echo "Failed to create RVM environment '${environment_id}'."
-    exit 1
+    return 1
   fi
 fi
 

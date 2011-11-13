@@ -128,14 +128,14 @@ class Command < ActiveRecord::Base
       
       # Now capture the environment settings in the shell's stdout
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
-      bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
+      bash.execute "/usr/bin/printenv | grep -i rvm", :stdout => stdout, :stderr => stderr
       bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
 
       # Let screenies know the exit status
       puts "COMMAND EXIT STATUS: #{self.exit_status}"
       # Now, capture ENV from the shell for this command in the current command object itself.
       # TODO - Figure out how to only call this once, not twice like we are above
-      self.env_closing = bash.execute "/usr/bin/printenv"
+      self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])    
     end
