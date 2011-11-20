@@ -16,7 +16,7 @@ class Command < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
-    binding.pry
+    
   end
 
   def test_output_status sign, value
@@ -32,6 +32,7 @@ class Command < ActiveRecord::Base
     else
       "passed: status #{sign} #{value}"
     end
+    
   end
 
   def test_output_match sign, value
@@ -46,6 +47,7 @@ class Command < ActiveRecord::Base
     else
       "passed: match #{sign} /#{value}/"
     end
+    
   end
 
   def test_command
@@ -78,6 +80,7 @@ class Command < ActiveRecord::Base
     self.test_output = outputs * "\n" + "\n"
 
     $stderr.puts self.test_output
+    
   end
 
   def run( cmd, bash )
@@ -112,7 +115,8 @@ class Command < ActiveRecord::Base
           # self.error_msg is only be populated on errors. stored for later retrieval without
           # having to also read through non-error output.
           self.error_msg += err if err
-        end              
+        end
+                
       end
       # Capture pertinent information  
       self.exit_status = bash.status
@@ -138,7 +142,8 @@ class Command < ActiveRecord::Base
       # TODO - Figure out how to only call this once, not twice like we are above
       self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
-      self.env_closing = env_to_hash(self.env_closing[0])    
+      self.env_closing = env_to_hash(self.env_closing[0])
+          
     end
 
     test_command
@@ -146,7 +151,7 @@ class Command < ActiveRecord::Base
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
     self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
-    binding.pry
+    
   end
 
   def gist_content
@@ -157,12 +162,14 @@ class Command < ActiveRecord::Base
       content += "No tests defined\n"
     end
     content
+    
   end
 
   def dump_obj_store
     File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
       Marshal.dump(self, report_obj)
     end
+    
   end
   
   def load_obj_store
@@ -170,6 +177,7 @@ class Command < ActiveRecord::Base
       test_report.commands = Marshal.load(report_obj)      
       return test_report.commands
     end
+    
   end
   
 end

@@ -9,6 +9,7 @@ class TestReport < ActiveRecord::Base
     Benchmark.benchmark(CAPTION) do |x|
       x.report("Timings: ", &cmds)
     end
+    
   end
 
   def github(login_string)
@@ -23,7 +24,7 @@ class TestReport < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
-    binding.pry
+    
   end
 
   def run_command( cmd, bash )
@@ -31,13 +32,14 @@ class TestReport < ActiveRecord::Base
     command.run( cmd, bash )
     command.save
     self.sysname = command.sysname
-    binding.pry
+    
   end
   
   def display_combined_gist_report
-      self.report = self.display_short_report()
-      self.gist_url = "#{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
-      puts "The Complete report URL is: #{self.gist_url} - Report Exit Status: #{self.exit_status}" 
+    self.report = self.display_short_report()
+    self.gist_url = "#{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
+    puts "The Complete report URL is: #{self.gist_url} - Report Exit Status: #{self.exit_status}" 
+    
   end
   
   def display_short_report
@@ -77,7 +79,7 @@ class TestReport < ActiveRecord::Base
   end
   
   def open_session
-    
+
   end
   
 end
