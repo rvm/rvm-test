@@ -16,6 +16,7 @@ class Command < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
+    binding.pry
   end
 
   def test_output_status sign, value
@@ -145,6 +146,7 @@ class Command < ActiveRecord::Base
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
     self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+    binding.pry
   end
 
   def gist_content

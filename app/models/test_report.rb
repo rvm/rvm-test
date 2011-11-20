@@ -23,6 +23,7 @@ class TestReport < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
+    binding.pry
   end
 
   def run_command( cmd, bash )
@@ -30,6 +31,7 @@ class TestReport < ActiveRecord::Base
     command.run( cmd, bash )
     command.save
     self.sysname = command.sysname
+    binding.pry
   end
   
   def display_combined_gist_report
