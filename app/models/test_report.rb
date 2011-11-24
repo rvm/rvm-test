@@ -10,11 +10,13 @@ class TestReport < ActiveRecord::Base
   accepts_nested_attributes_for :commands, :allow_destroy => true, :reject_if => proc { |attributes| attributes['cmd'].blank? }
   
   def initialize
+    
+    super
+    
     # We log into github via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
     #
     # So its not in the repository, we put the auth strings, in yaml format, into config/github.yml file and load it to @login_string.
     # This gives us self.login_string (@test_report.login_string) and self.my_github (@test_report.my_github) to be used later.
-
     @login_string = YAML.load_file("#{APP_ROOT}/config/github.yml")
     @my_github = self.github(@login_string)  
   end
