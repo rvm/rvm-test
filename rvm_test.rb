@@ -138,15 +138,15 @@ elsif cmdline.options[:script]
 elsif cmdline.options[:marshal]
       # Sessioned - encapsulated within load_and_replay_obj_store
       puts "Loading and Re-executing previous session"
-      @test_report.load_and_replay_obj_store
+      @test_report.load_and_replay_obj_store(@test_report)
       puts "Repeat execution of previous session complete!\n"
 else
   # PROCESS SINGLE COMMAND - Meant for one-off commands play.
   # Not that its wrong, maybe a bit of a waste of resources, but sessioning had to be added due to how we rely on
   # run commands through the structure. Oh, well. All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
-  @bash = Session::Bash.new
-  @test_report.run_command(ARGV[0].strip, @test_report, @bash)
+  bash = Session::Bash.new
+  @test_report.run_command(ARGV[0].strip, @test_report, bash)
   @test_report.save!
    
   @test_report.display_short_report
