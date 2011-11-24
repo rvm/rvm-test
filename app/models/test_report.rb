@@ -67,23 +67,23 @@ class TestReport < ActiveRecord::Base
     end
   end
   
-  def dump_obj_store
-    File.open('db/testreport_marshalled.rvm', 'w+') do |report_obj|
+  def dump_obj_store(test_report)
+    File.open('db/testreport_marshalled.rvm', 'w+') do |file|
       puts "\nDumping TestReport object store"
-      Marshal.dump(self, report_obj)
+      Marshal.dump(test_report, file)
     end
     puts "Dumping Command object store\n"
     self.commands.each do |cmd|
-      cmd.dump_obj_store
+      cmd.dump_obj_store(cmd)
     end
   end
   
   def load_and_replay_obj_store
     @bash = Session::Bash.new
     
-    File.open'db/testreport_marshalled.rvm' do |report_obj|
+    File.open'db/testreport_marshalled.rvm' do |file|
       puts "\nLoading TestReport object store\n"
-      @test_report = Marshal.load(report_obj)
+      @test_report = Marshal.load(file)
     end
     
     puts "Loaded TestReport ID is: " "#{@test_report.id}"    

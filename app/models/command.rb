@@ -170,16 +170,16 @@ class Command < ActiveRecord::Base
     
   end
 
-  def dump_obj_store
-    File.open('db/commands_marshalled.rvm', 'w+') do |report_obj|
-      Marshal.dump(self, report_obj)
+  def dump_obj_store(cmd)
+    File.open('db/commands_marshalled.rvm', 'w+') do |file|
+      Marshal.dump(cmd, file)
     end
     
   end
   
   def load_obj_store
-    File.open'db/commands_marshalled.rvm' do |report_obj|
-      test_report.commands = Marshal.load(report_obj)      
+    File.open'db/commands_marshalled.rvm' do |file|
+      test_report.commands = Marshal.load(file)      
       return test_report.commands
     end
     

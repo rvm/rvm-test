@@ -132,7 +132,7 @@ elsif cmdline.options[:script]
         @test_report.save!
         
         @test_report.display_combined_gist_report
-        @test_report.dump_obj_store
+        @test_report.dump_obj_store(@test_report)
             
 
 elsif cmdline.options[:marshal]
