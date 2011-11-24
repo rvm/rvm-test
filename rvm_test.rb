@@ -27,15 +27,11 @@ require 'yaml'
 require 'benchmark'
 include Benchmark
 
-# Now, connect to the database using ActiveRecord
-ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/config/database.yml"))
-
+# Define the APP_ROOT usign this file since its the startup file
 APP_ROOT = File.dirname(__FILE__)
 
-# Now load the Model(s).
-# $:.unshift( File.join(APP_ROOT, 'app', 'models') )
-# require 'test_report'
-# require 'command'
+# Now, connect to the database using ActiveRecord
+ActiveRecord::Base.establish_connection(YAML.load_file("#{APP_ROOT}/config/database.yml"))
 
 # Now load the Model(s).
 Dir[APP_ROOT + "/app/models/*.rb"].each do |filename|
@@ -47,19 +43,6 @@ end
 # Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
 @test_report.save!
-
-# Remove all put and p calls when done debugging.
-# There are more in the object actions themselves.
-# puts "Just before load_obj_store\n"
-# p @test_report.inspect
-# @test_report = @test_report.load_obj_store
-# puts "Outside load_obj_store\n"
-# p @test_report.inspect
-# p @test_report.my_github.inspect
-# However, the above code causes a 
-# bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
-# This string has not changed. Are we somehow wiping out the github (or not recording it)?
-# @@github = @test_report.github(@login_string)
 
 
 # Create a commandline parser object

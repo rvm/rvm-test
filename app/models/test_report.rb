@@ -2,36 +2,19 @@ class TestReport < ActiveRecord::Base
   
   # Github API interface
   require 'github_api'
-
-  # Now create both a Github and a Report object
-  #
   
-  # You define it such as follows for a Github object
-  # There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
-  # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
-  # @github = Github.new(:basic_auth => "deryldoucette/token:cc32f016a438fe3526be017f68e5e7b5", :repo => 'rvm-test')
-  # We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
-  # ISSUE: We need to instantiate the TestReport object first in order to gain access to the method/action.
-  #
-  # So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
-  # This gives us @login_string to be used later.
-  
-  # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
   attr_accessor :my_github, :login_string
   
   has_many :commands
   
   accepts_nested_attributes_for :commands, :allow_destroy => true, :reject_if => proc { |attributes| attributes['cmd'].blank? }
   
-      # 
-      # file = File.open("#{APP_ROOT}/config/github.rb", 'r')
-      # @login_string = {}
-      # @login_string = file.readline
-      # file.close
-      # puts @login_string
-      # puts @login_string.class
-      # 
   def initialize
+    # We log into github via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
+    #
+    # So its not in the repository, we put the auth strings, in yaml format, into config/github.yml file and load it to @login_string.
+    # This gives us self.login_string (@test_report.login_string) and self.my_github (@test_report.my_github) to be used later.
+
     @login_string = YAML.load_file("#{APP_ROOT}/config/github.yml")
     @my_github = self.github(@login_string)  
   end
@@ -110,10 +93,6 @@ class TestReport < ActiveRecord::Base
     # Recreate a gisted report of this new run based off the marshalled object(s)
     @test_report.display_combined_gist_report
     puts "\nExiting load_obj_store\n"
-  end
-  
-  def open_session
-
   end
   
 end

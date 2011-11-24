@@ -153,7 +153,7 @@ class Command < ActiveRecord::Base
     
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
-    self.gist_url = @test_report.my_github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+    self.gist_url = "#{@test_report.my_github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url}"
         
     
   end
