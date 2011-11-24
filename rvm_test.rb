@@ -34,7 +34,7 @@ APP_ROOT = File.dirname(__FILE__)
 ActiveRecord::Base.establish_connection(YAML.load_file("#{APP_ROOT}/config/database.yml"))
 
 # Now load the Model(s).
-Dir[APP_ROOT + "/app/models/*.rb"].each do |filename|
+Dir[ "#{APP_ROOT}/app/models/*.rb"].each do |filename|
   # "#{filename}" == filename.to_s == filename - so just call filename
   load filename
 end
@@ -42,7 +42,7 @@ end
 
 # Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
-@test_report.save!
+@test_report.save
 
 
 # Create a commandline parser object
