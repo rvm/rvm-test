@@ -27,9 +27,15 @@ include Benchmark
 # Now, connect to the database using ActiveRecord
 ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
 
+APP_ROOT = File.dirname(__FILE__)
 
 # Now load the Model(s).
-Dir[File.dirname(__FILE__) + "/../app/models/*.rb"].each do |filename|
+# $:.unshift( File.join(APP_ROOT, 'app', 'models') )
+# require 'test_report'
+# require 'command'
+
+# Now load the Model(s).
+Dir[APP_ROOT + "app/models/*.rb"].each do |filename|
   # "#{filename}" == filename.to_s == filename - so just call filename
   load filename
 end
