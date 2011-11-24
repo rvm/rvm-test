@@ -25,7 +25,7 @@ require 'benchmark'
 include Benchmark
 
 # Now, connect to the database using ActiveRecord
-ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
+ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/config/database.yml"))
 
 APP_ROOT = File.dirname(__FILE__)
 
@@ -35,26 +35,12 @@ APP_ROOT = File.dirname(__FILE__)
 # require 'command'
 
 # Now load the Model(s).
-Dir[APP_ROOT + "app/models/*.rb"].each do |filename|
+Dir[APP_ROOT + "/app/models/*.rb"].each do |filename|
   # "#{filename}" == filename.to_s == filename - so just call filename
   load filename
 end
 
-# Github API interface
-require 'github_api'
 
-# Now create both a Github and a Report object
-#
-# So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
-load File.dirname(__FILE__) + "/../config/github.rb"
-
-# You define it such as follows for a Github object
-# There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
-# eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
-# @github = Github.new(:basic_auth => "deryldoucette/token:ca62f016a48adc3526be017f68e5e7b5", :repo => 'rvm-test')
-# We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
-# But, we need to instantiate the TestReport object first in order to gain access to the method/action.
-#
 # Currently, we are using marshalling to reload data to populate the report object.
 @test_report = TestReport.new
 @test_report.save!

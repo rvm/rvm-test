@@ -1,4 +1,22 @@
 class TestReport < ActiveRecord::Base
+  
+  # Github API interface
+  require 'github_api'
+
+  # Now create both a Github and a Report object
+  #
+  
+  # You define it such as follows for a Github object
+  # There are other types like :oauth2, :login, etc. We just chose :basic_auth for now. See http://developer.github.com/v3/
+  # eg. @github = Github.new(:basic_auth => "username/token:<api_key>", :repo => "repo_name")
+  # @github = Github.new(:basic_auth => "deryldoucette/token:cc32f016a438fe3526be017f68e5e7b5", :repo => 'rvm-test')
+  # We log in via the TestReport github call because it should be the TestReport that spawns the connection, not Command.
+  # ISSUE: We need to instantiate the TestReport object first in order to gain access to the method/action.
+  #
+  # So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
+  # This gives us @login_string to be used later.
+  load "#{APP_ROOT}/config/github.rb"
+  
   # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
   attr_accessor :github
   
