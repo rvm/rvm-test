@@ -24,9 +24,6 @@ require 'active_support'
 require 'benchmark'
 include Benchmark
 
-# Github API interface
-require 'github_api'
-
 # Now, connect to the database using ActiveRecord
 ActiveRecord::Base.establish_connection(YAML.load_file(File.dirname(__FILE__) + "/../config/database.yml"))
 
@@ -37,6 +34,8 @@ Dir[File.dirname(__FILE__) + "/../app/models/*.rb"].each do |filename|
   load filename
 end
 
+# Github API interface
+require 'github_api'
 
 # Now create both a Github and a Report object
 #
@@ -65,7 +64,7 @@ load File.dirname(__FILE__) + "/../config/github.rb"
 # However, the above code causes a 
 # bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
 # This string has not changed. Are we somehow wiping out the github (or not recording it)?
-@@github = @test_report.github(@login_string)
+# @@github = @test_report.github(@login_string)
 
 
 # Create a commandline parser object
@@ -111,7 +110,6 @@ elsif cmdline.options[:script]
         # So now the script name is ARGV[0] rather than the normal ARGV[1]
         # We'll have to do this over and over as we keep processing deeper in the
         # options parsing if there were more options allowed / left.        
-
         # Open a shell session.
         @bash = Session::Bash.new
         
@@ -119,7 +117,6 @@ elsif cmdline.options[:script]
         puts 'Captured Test Report Initial Environment - #{TestReport.env_initial}'
         @test_report.env_initial = @bash.execute "/usr/bin/printenv"
         @test_report.env_initial = @test_report.env_to_hash(@test_report.env_initial[0])
-        p @test_report.env_initial.inspect
         
           # Now we process the individual commands
           File.foreach(ARGV[0]) do |cmd|
@@ -159,6 +156,7 @@ elsif cmdline.options[:script]
         @test_report.display_combined_gist_report
         @test_report.dump_obj_store
             
+
 elsif cmdline.options[:marshal]
       # Sessioned - encapsulated within load_and_replay_obj_store
       puts "Loading and Re-executing previous session"

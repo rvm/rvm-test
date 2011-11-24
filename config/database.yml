@@ -1,7 +1,7 @@
 adapter: postgresql
 encoding: unicode
 database: rvm_testdata_development
-host: services.pgpnetwork.lan
+host: localhost
 pool: 5
 username: me
 password: me

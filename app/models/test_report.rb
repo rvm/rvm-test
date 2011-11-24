@@ -1,19 +1,24 @@
 class TestReport < ActiveRecord::Base
   # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
+  attr_accessor :github
+  
   has_many :commands
   
   accepts_nested_attributes_for :commands, :allow_destroy => true, :reject_if => proc { |attributes| attributes['cmd'].blank? }
   
-    
+  def self.initialize
+    @github = self.github(@login_string)  
+  end
+        
   def record_timings(&cmds)
     Benchmark.benchmark(CAPTION) do |x|
       x.report("Timings: ", &cmds)
     end
-    
+        
   end
 
   def github(login_string)
-    Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
+    return Github.new(:login => "#{login_string[:login]}", :user => "#{login_string[:user]}", :password => "#{login_string[:password]}", :repo => "#{login_string[:repo]}")    
   end
   
   def env_to_hash(env_string)
@@ -24,6 +29,7 @@ class TestReport < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
+        
     
   end
 
@@ -32,13 +38,15 @@ class TestReport < ActiveRecord::Base
     command.run( cmd, bash )
     command.save
     self.sysname = command.sysname
+        
     
   end
   
   def display_combined_gist_report
     self.report = self.display_short_report()
-    self.gist_url = "#{@@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
+    self.gist_url = "#{@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
     puts "The Complete report URL is: #{self.gist_url} - Report Exit Status: #{self.exit_status}" 
+        
     
   end
   

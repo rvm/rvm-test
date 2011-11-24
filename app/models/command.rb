@@ -16,6 +16,7 @@ class Command < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
+        
     
   end
 
@@ -80,6 +81,7 @@ class Command < ActiveRecord::Base
     self.test_output = outputs * "\n" + "\n"
 
     $stderr.puts self.test_output
+        
     
   end
 
@@ -116,6 +118,7 @@ class Command < ActiveRecord::Base
           # having to also read through non-error output.
           self.error_msg += err if err
         end
+            
                 
       end
       # Capture pertinent information  
@@ -150,18 +153,20 @@ class Command < ActiveRecord::Base
     
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
-    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+    self.gist_url = @test_report.github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+        
     
   end
 
-  def gist_content
+  def self.gist_content
     content = cmd_output.presence || "Cmd had no output"
     if test_output
-      content += "Tests(failed #{test_failed}):\n" + test_output
+      self.content += "Tests(failed #{test_failed}):\n" + test_output
     else
       content += "No tests defined\n"
     end
-    content
+    self.content
+        
     
   end
 
