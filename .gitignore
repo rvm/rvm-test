@@ -4,3 +4,4 @@ ruby/db/config.yml
 ruby/db/*.rvm
 ruby/db/*.db
 .idea
+config/github.yml
