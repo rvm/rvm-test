@@ -70,7 +70,7 @@ class TestReport < ActiveRecord::Base
   def dump_obj_store(test_report)
     File.open('db/testreport_marshalled.rvm', 'w+') do |file|
       puts "\nDumping TestReport object store"
-      Marshal.dump(test_report, file)
+      Marshal.dump(@test_report, file)
     end
     puts "Dumping Command object store\n"
     self.commands.each do |cmd|
