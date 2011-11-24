@@ -117,7 +117,7 @@ elsif cmdline.options[:script]
             # TODO - of @test_report.run-command.
             
             # We've done our checking, execute.
-            @test_report.run_command( cmd, @bash)
+            @test_report.run_command( cmd, @test_report, @bash)
           end
         puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
             

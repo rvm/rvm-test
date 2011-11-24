@@ -44,9 +44,9 @@ class TestReport < ActiveRecord::Base
     
   end
 
-  def run_command( cmd, bash )
+  def run_command( cmd, test_report, bash )
     command = commands.build    
-    command.run( cmd, bash )
+    command.run( cmd, test_report, bash )
     command.save
     self.sysname = command.sysname
         
