@@ -158,14 +158,14 @@ class Command < ActiveRecord::Base
     
   end
 
-  def self.gist_content
+  def gist_content
     content = cmd_output.presence || "Cmd had no output"
     if test_output
-      self.content += "Tests(failed #{test_failed}):\n" + test_output
+      content += "Tests(failed #{test_failed}):\n" + test_output
     else
       content += "No tests defined\n"
     end
-    self.content
+    content
         
     
   end

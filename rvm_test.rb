@@ -146,7 +146,7 @@ else
   # run commands through the structure. Oh, well. All is good so onwards and upwards! This handles when just a single command,
   # not a script, is passed. Since its not a script, ARGV[0] should be the command to be run encased in ''.
   @bash = Session::Bash.new
-  @test_report.run_command(ARGV[0].strip, @bash)
+  @test_report.run_command(ARGV[0].strip, @test_report, @bash)
   @test_report.save!
    
   @test_report.display_short_report
