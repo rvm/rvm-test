@@ -28,7 +28,7 @@ class Command < ActiveRecord::Base
     # if one of those two tests are True, then set self.test_failed to 1, and report accordingly - Also known as an eXclusive OR (XOR)
     # This is what is meant by the ^ in the next line.
     if ( sign == "=" ) ^ ( self.exit_status == value )
-      self.test_failed+=1
+      self.test_failed += 1
       "failed: status #{sign} #{value} # was #{self.exit_status}"
     else
       "passed: status #{sign} #{value}"
@@ -43,7 +43,7 @@ class Command < ActiveRecord::Base
     # This is a logical test on two operands that results in a value of true if exactly one of the operands has a value of true.
     # A simple way to state this is "one or the other but not both.". This is referring to the '^' in the following line of code.
     if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
-      self.test_failed+=1
+      self.test_failed += 1
       "failed: match #{sign} /#{value}/"
     else
       "passed: match #{sign} /#{value}/"
