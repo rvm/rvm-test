@@ -15,17 +15,25 @@ class TestReport < ActiveRecord::Base
   #
   # So its not in the repository, we put the bash_auth string into config/github.rb file and load it in a variable
   # This gives us @login_string to be used later.
-  load "#{APP_ROOT}/config/github.rb"
   
   # has_and_belongs_to_many :commands, :join_table => "test_reports_commands"
-  attr_accessor :github
+  attr_accessor :my_github, :login_string
   
   has_many :commands
   
   accepts_nested_attributes_for :commands, :allow_destroy => true, :reject_if => proc { |attributes| attributes['cmd'].blank? }
   
-  def self.initialize
-    @github = self.github(@login_string)  
+      # 
+      # file = File.open("#{APP_ROOT}/config/github.rb", 'r')
+      # @login_string = {}
+      # @login_string = file.readline
+      # file.close
+      # puts @login_string
+      # puts @login_string.class
+      # 
+  def initialize
+    @login_string = YAML.load_file("#{APP_ROOT}/config/github.yml")
+    @my_github = self.github(@login_string)  
   end
         
   def record_timings(&cmds)
@@ -62,7 +70,7 @@ class TestReport < ActiveRecord::Base
   
   def display_combined_gist_report
     self.report = self.display_short_report()
-    self.gist_url = "#{@github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
+    self.gist_url = "#{self.my_github.gists.create_gist(:description => "Complete Report", :public => true, :files => { "console.sh" => { :content => report.presence || "Cmd had no output" }}).html_url}"
     puts "The Complete report URL is: #{self.gist_url} - Report Exit Status: #{self.exit_status}" 
         
     

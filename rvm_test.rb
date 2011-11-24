@@ -20,6 +20,9 @@ require 'pp'
 require 'active_record'
 require 'active_support'
 
+# Load YAML support
+require 'yaml'
+
 # Benchmarking for TestReports
 require 'benchmark'
 include Benchmark
@@ -52,7 +55,7 @@ end
 # @test_report = @test_report.load_obj_store
 # puts "Outside load_obj_store\n"
 # p @test_report.inspect
-# p @test_report.github.inspect
+# p @test_report.my_github.inspect
 # However, the above code causes a 
 # bin/run.rb:54:in `<main>': undefined method `github' for #<String:0x007fae3c327700> (NoMethodError)
 # This string has not changed. Are we somehow wiping out the github (or not recording it)?
