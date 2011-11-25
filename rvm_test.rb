@@ -65,7 +65,6 @@ end
 # Define the potential options
 cmdline.options :help => false, :h => :help
 cmdline.options :script => false, :s => :script
-cmdline.options :marshal => false, :m => :marshal
 
 # Parse the actual commandline arguments
 cmdline.parse ARGV
@@ -132,14 +131,7 @@ elsif cmdline.options[:script]
         @test_report.save!
         
         @test_report.display_combined_gist_report
-        @test_report.dump_obj_store(@test_report)
-            
 
-elsif cmdline.options[:marshal]
-      # Sessioned - encapsulated within load_and_replay_obj_store
-      puts "Loading and Re-executing previous session"
-      @test_report.load_and_replay_obj_store(@test_report)
-      puts "Repeat execution of previous session complete!\n"
 else
   # PROCESS SINGLE COMMAND - Meant for one-off commands play.
   # Not that its wrong, maybe a bit of a waste of resources, but sessioning had to be added due to how we rely on

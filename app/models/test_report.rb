@@ -66,35 +66,5 @@ class TestReport < ActiveRecord::Base
       puts "Test Report for: #{command.test_report_id}" + " - Test Node: #{command.sysname} - " + "Cmd ID: " + command.id.to_s + " - Executed: \"#{command.cmd.to_s}\"" + " at " +  "#{command.updated_at.to_s}" + " Gist URL: #{command.gist_url}" + " Cmd exit code: #{command.exit_status}"
     end
   end
-  
-  def dump_obj_store(test_report)
-    File.open('db/testreport_marshalled.rvm', 'w+') do |file|
-      puts "\nDumping TestReport object store"
-      Marshal.dump(@test_report, file)
-    end
-    puts "Dumping Command object store\n"
-    self.commands.each do |cmd|
-      cmd.dump_obj_store(cmd)
-    end
-  end
-  
-  def load_and_replay_obj_store
-    @bash = Session::Bash.new
-    
-    File.open'db/testreport_marshalled.rvm' do |file|
-      puts "\nLoading TestReport object store\n"
-      @test_report = Marshal.load(file)
-    end
-    
-    puts "Loaded TestReport ID is: " "#{@test_report.id}"    
-    puts "Replaying commands "
-    @test_report.commands.each do |cmd, bash|
-      cmd.run cmd.cmd, @bash
-    end
-    
-    # Recreate a gisted report of this new run based off the marshalled object(s)
-    @test_report.display_combined_gist_report
-    puts "\nExiting load_obj_store\n"
-  end
-  
+
 end
