@@ -45,13 +45,6 @@ ruby bin/run.rb --script batch_scripts/testscript
 
 When the commands have finished you will see each command's output shown along with the associated Report ID and the Command ID. Do not be confused! This is the actual report detailing the information and not a double display of the output.
 
-The suite is also able to replay previously saved sessions. To do this, you need to make sure you deploy the previous saved-session files to the db/ directory. These will usually be named db/testreport_marshalled.rvm and db/commands_marshalled.rvm for the two respective peices of each Test Report.
-
-To replay the files, simply execute the following:
-
-```cd ruby && ruby bin/run.rb -- --marshal```
-
-This will reload the previous session, play it out again, and return a Completed Report gist url of that run. It should be a duplicate content-wise of the original session.
 
 Also, let it be known that both TestReport and Command generate their own capture of the shell's environment. TestReport does it just before starting to execute commands in the session, and each Command captures after it has executed. You can access them as TestReport.env_initial (@test_report.env_initial.keys) and Command.env_closing (@test_report.commands.each do |cmd| { puts cmd.env_closing.keys })
 
