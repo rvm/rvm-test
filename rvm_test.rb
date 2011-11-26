@@ -76,61 +76,61 @@ if cmdline.options[:help] || ARGV[0] == nil
   cmdline.help
   abort
 elsif cmdline.options[:script]
-    # PROCESS BATCH FILE - Open a bash session first. Will be passed in for use.
-    # Open the script and parse. Should something go wrong with the file handler
-    # display the help and abort. Wrap in a begin/rescue to handle it gracefully.
-    # This executes each line storing that command's returned data in the database.
-      begin
-        # We call ARGV[0] here rather than ARGV[1] because the original ARGV[0] was
-        # --script (or -s). when cmdline.options[:script] gets processed, it gets
-        # dumped and the remaining argument(s) are shifted down in the ARGV array.
-        # So now the script name is ARGV[0] rather than the normal ARGV[1]
-        # We'll have to do this over and over as we keep processing deeper in the
-        # options parsing if there were more options allowed / left.        
-        # Open a shell session.
-        @bash = Session::Bash.new
-        
-        # Capture the initial environment before any commands are run.
-        puts 'Captured Test Report Initial Environment - #{TestReport.env_initial}'
-        @test_report.env_initial = @bash.execute "/usr/bin/printenv"
-        @test_report.env_initial = @test_report.env_to_hash(@test_report.env_initial[0])
-        
-          # Now we process the individual commands
-          File.foreach(ARGV[0]) do |cmd|
-            cmd.strip!
-            next if cmd =~ /^#/ or cmd.empty?
-            
-            # We want to parse specific expectations so we can manage logic flow based on that match
-            # Check for #cmd:start()= / #cmd:stop= - anything between deliniates actual execution output
-            # TODO - Ask mpapis to use this to add his comment testing
-            if cmd =~ /#cmd:start(.*)=$/ then
-              puts "\n CMD PARSING: Parsed cmd:start()= string\n"
-            else
-              if cmd =~ /^#cmd:stop=$/
-                puts "\n CMD PARSING: Parsed cmd:stop= string\n"
-              end 
-            end
-            
-            # TODO - Need to define a method to manage the parsing within TestReport such that we can
-            # TODO - assert specifics regarding expectations. The entry point for using the method is the top
-            # TODO - of @test_report.run-command.
-            
-            # We've done our checking, execute.
-            @test_report.run_command( cmd, @test_report, @bash)
-          end
-        puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
-            
-      rescue Errno::ENOENT => e
-          # The file wasn't found so display the help and abort.
-          cmdline.help
-          abort
+  # PROCESS BATCH FILE - Open a bash session first. Will be passed in for use.
+  # Open the script and parse. Should something go wrong with the file handler
+  # display the help and abort. Wrap in a begin/rescue to handle it gracefully.
+  # This executes each line storing that command's returned data in the database.
+  begin
+    # We call ARGV[0] here rather than ARGV[1] because the original ARGV[0] was
+    # --script (or -s). when cmdline.options[:script] gets processed, it gets
+    # dumped and the remaining argument(s) are shifted down in the ARGV array.
+    # So now the script name is ARGV[0] rather than the normal ARGV[1]
+    # We'll have to do this over and over as we keep processing deeper in the
+    # options parsing if there were more options allowed / left.
+    # Open a shell session.
+    @bash = Session::Bash.new
+
+    # Capture the initial environment before any commands are run.
+    puts 'Captured Test Report Initial Environment - #{TestReport.env_initial}'
+    @test_report.env_initial = @bash.execute "/usr/bin/printenv"
+    @test_report.env_initial = @test_report.env_to_hash(@test_report.env_initial[0])
+
+    # Now we process the individual commands
+    File.foreach(ARGV[0]) do |cmd|
+      cmd.strip!
+      next if cmd =~ /^#/ or cmd.empty?
+
+      # We want to parse specific expectations so we can manage logic flow based on that match
+      # Check for #cmd:start()= / #cmd:stop= - anything between deliniates actual execution output
+      # TODO - Ask mpapis to use this to add his comment testing
+      if cmd =~ /#cmd:start(.*)=$/ then
+        puts "\n CMD PARSING: Parsed cmd:start()= string\n"
+      else
+        if cmd =~ /^#cmd:stop=$/
+          puts "\n CMD PARSING: Parsed cmd:stop= string\n"
+        end
       end
-        # BATCH HAS BEEN PROCESSED
-        # Now that all the commands in the batch have been processed and added to test_report,
-        # now is when to save the Test Report, immediately following the processing of all commands.
-        @test_report.save!
-        
-        @test_report.display_combined_gist_report
+
+      # TODO - Need to define a method to manage the parsing within TestReport such that we can
+      # TODO - assert specifics regarding expectations. The entry point for using the method is the top
+      # TODO - of @test_report.run-command.
+
+      # We've done our checking, execute.
+      @test_report.run_command( cmd, @test_report, @bash)
+    end
+    puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
+
+  rescue Errno::ENOENT => e
+    # The file wasn't found so display the help and abort.
+    cmdline.help
+    abort
+  end
+  # BATCH HAS BEEN PROCESSED
+  # Now that all the commands in the batch have been processed and added to test_report,
+  # now is when to save the Test Report, immediately following the processing of all commands.
+  @test_report.save!
+
+  @test_report.display_combined_gist_report
 
 else
   # PROCESS SINGLE COMMAND - Meant for one-off commands play.
@@ -140,7 +140,7 @@ else
   bash = Session::Bash.new
   @test_report.run_command(ARGV[0].strip, @test_report, bash)
   @test_report.save!
-   
+
   @test_report.display_short_report
 
 end

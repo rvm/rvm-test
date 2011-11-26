@@ -16,14 +16,14 @@ class Command < ActiveRecord::Base
     }
 
     Hash[key_value_pairs]
-        
-    
+
+
   end
 
   def test_output_status sign, value
     # Convert value to integer for the coming test
     value = value.to_i
-    
+
     # This test means True or false, if sign's value is "="  OR  if self.exit_status equals the integer value of 'value'
     # if one of those two tests are True, then set self.test_failed to 1, and report accordingly - Also known as an eXclusive OR (XOR)
     # This is what is meant by the ^ in the next line.
@@ -33,13 +33,13 @@ class Command < ActiveRecord::Base
     else
       "passed: status #{sign} #{value}"
     end
-    
+
   end
 
   def test_output_match sign, value
     # See comment in test_output_status. First part is the same in both tests. Here we test if self.cmd_output contains 'value'
     # If the contents of 'value' are in self.cmd_output, its of course True, and Regexp.new's job is to return value's
-    # starting location (starting from 0 as a position, starting at the beginning of the string). This is called an eXclusive OR. 
+    # starting location (starting from 0 as a position, starting at the beginning of the string). This is called an eXclusive OR.
     # This is a logical test on two operands that results in a value of true if exactly one of the operands has a value of true.
     # A simple way to state this is "one or the other but not both.". This is referring to the '^' in the following line of code.
     if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
@@ -48,7 +48,7 @@ class Command < ActiveRecord::Base
     else
       "passed: match #{sign} /#{value}/"
     end
-    
+
   end
 
   def test_command
@@ -67,7 +67,7 @@ class Command < ActiveRecord::Base
         # pass in the operator($1) and tested value($2)
         outputs.push( test_output_status( $1, $2 ) )
 
-      # check for match=~... or status!=~...
+        # check for match=~... or status!=~...
       elsif test =~ /^match([!]?=)[~]?\/(.*)\//
         # pass in the operator($1) and tested value($2)
         outputs.push( test_output_match( $1, $2 ) )
@@ -81,13 +81,13 @@ class Command < ActiveRecord::Base
     self.test_output = outputs * "\n" + "\n"
 
     $stderr.puts self.test_output
-        
-    
+
+
   end
 
   def run( cmd, test_report, bash )
     stdout, stderr = StringIO::new, StringIO::new
-    
+
     # clean cmd
     cmd.strip!
 
@@ -102,7 +102,7 @@ class Command < ActiveRecord::Base
     # Ensure that self.error_msg and self.cmd_output are blank
     # Do this before we get anywhere near the timing and command execution blocks
     self.error_msg = self.cmd_output = ""
-    
+
     # Add command information to stdout
     # Mark start of command exectution in shell's stdout
     bash.execute "echo '=====cmd:start=\"#{self.cmd}\"='", :stdout => stdout, :stderr => stderr
@@ -118,22 +118,22 @@ class Command < ActiveRecord::Base
           # having to also read through non-error output.
           self.error_msg += err if err
         end
-            
-                
+
+
       end
-      # Capture pertinent information  
+      # Capture pertinent information
       self.exit_status = bash.status
 
       # Add end-of-command deliniation to the shell's stdout
-      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr      
+      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
       # Add exit status from last command to the shell's stdout string capture
       bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
-      
+
       # This is on-screen only, so people running the test manually can see any errors.
       if self.exit_status == 1 then
         puts "#{stderr.string}"
       end
-      
+
       # Now capture the environment settings in the shell's stdout
       bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
       bash.execute "/usr/bin/printenv | grep -i rvm", :stdout => stdout, :stderr => stderr
@@ -146,16 +146,16 @@ class Command < ActiveRecord::Base
       self.env_closing = bash.execute "/usr/bin/printenv | grep -i rvm"
       # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
       self.env_closing = env_to_hash(self.env_closing[0])
-          
+
     end
 
     test_command
-    
+
     # Create the gist, take the returned json object from Github and use the value html_url on that object
     # to set self's gist_url variable for later processing.
     self.gist_url = "#{test_report.my_github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url}"
-        
-    
+
+
   end
 
   def gist_content
@@ -166,8 +166,8 @@ class Command < ActiveRecord::Base
       content += "No tests defined\n"
     end
     content
-        
-    
+
+
   end
-  
+
 end
