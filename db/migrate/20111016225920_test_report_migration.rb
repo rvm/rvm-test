@@ -1,5 +1,5 @@
 class TestReportMigration < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :test_reports do |t|
       t.string  :sysname
       t.string  :timings
@@ -11,7 +11,4 @@ class TestReportMigration < ActiveRecord::Migration
     end
   end
 
-  def self.down
-    drop_table :test_reports
-  end
 end

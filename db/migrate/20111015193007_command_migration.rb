@@ -1,5 +1,5 @@
 class CommandMigration < ActiveRecord::Migration
-  def self.up
+  def change
     create_table :commands do |t|
       t.references :test_report
       t.string :sysname     
@@ -15,7 +15,4 @@ class CommandMigration < ActiveRecord::Migration
     end
   end
 
-  def self.down
-    drop_table :commands
-  end
 end
