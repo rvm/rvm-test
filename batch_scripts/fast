@@ -1,0 +1,4 @@
+rvm gemset create test_gemset         # status=0 ; match=/gemset created/
+rvm gemset list                       # match=/test_gemset/
+rvm --force gemset delete test_gemset # status=0
+rvm gemset list                       # match!=/test_gemset/

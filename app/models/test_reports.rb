@@ -3,8 +3,11 @@ class TestReport < ActiveRecord::Base
   has_many :commands
   
   accepts_nested_attributes_for :commands, :allow_destroy => true, :reject_if => proc { |attributes| attributes['cmd'].blank? }
-  
-    
+
+  def short _short
+    @short = _short
+  end
+
   def record_timings(&cmds)
     Benchmark.benchmark(CAPTION) do |x|
       x.report("Timings: ", &cmds)
@@ -26,10 +29,13 @@ class TestReport < ActiveRecord::Base
   end
 
   def run_command( cmd, bash )
-    command = commands.build    
+    command = commands.build
+    command.short @short
     command.run( cmd, bash )
-    command.save
-    self.sysname = command.sysname
+    if ! @short
+      command.save
+      self.sysname = command.sysname
+    end
   end
   
   def display_combined_gist_report

@@ -1,2 +1,0 @@
-rvm use 1.9.9999 # status=1; status!=0; match=~/WARN.*is not installed/
-rvm use 1.9.2@testrun # status=0 ; status=1

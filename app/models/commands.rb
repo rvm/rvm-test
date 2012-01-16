@@ -1,6 +1,10 @@
 class Command < ActiveRecord::Base
   belongs_to :test_reports, :autosave => true
 
+  def short _short
+    @short = _short
+  end
+
   before_create do |command|
     # Capture the system's name and its OS
     command.sysname = %x[uname -n].strip
@@ -74,7 +78,7 @@ class Command < ActiveRecord::Base
     end
 
     # join array items with new lines and append new line on the end
-    self.test_output = outputs * "\n" + "\n"
+    self.test_output = outputs.map{|s| "# #{s}" } * "\n" + "\n"
 
     $stderr.puts self.test_output
   end
@@ -100,51 +104,68 @@ class Command < ActiveRecord::Base
     # Add command information to stdout
     # Mark start of command exectution in shell's stdout
     bash.execute "echo '=====cmd:start=\"#{self.cmd}\"='", :stdout => stdout, :stderr => stderr
-    Benchmark.benchmark(CAPTION) do |x|
-      # Start and track timing for each individual commands, storing as a Benchmark Tms block.
-      self.timings = x.report("Timings: ") do
-        # Set cmd_output on self, for later processing, to the returned cmd output.
-        bash.execute "#{self.cmd}" do |out, err|
-          # properly map errors and output in the order they show up
-          self.cmd_output += err if err
-          self.cmd_output +=  out if out
-          # self.error_msg is only be populated on errors. stored for later retrieval without
-          # having to also read through non-error output.
-          self.error_msg += err if err
-        end              
+    if @short
+      puts "$ #{self.cmd}"
+      bash.execute "#{self.cmd}" do |out, err|
+        # properly map errors and output in the order they show up
+        self.cmd_output += err if err
+        self.cmd_output += out if out
+        puts out || err
+        # self.error_msg is only be populated on errors. stored for later retrieval without
+        # having to also read through non-error output.
+        self.error_msg += err if err
       end
-      # Capture pertinent information  
       self.exit_status = bash.status
+    else
 
-      # Add end-of-command deliniation to the shell's stdout
-      bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr      
-      # Add exit status from last command to the shell's stdout string capture
-      bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
-      
-      # This is on-screen only, so people running the test manually can see any errors.
-      if self.exit_status == 1 then
-        puts "#{stderr.string}"
+      Benchmark.benchmark(CAPTION) do |x|
+        # Start and track timing for each individual commands, storing as a Benchmark Tms block.
+        self.timings = x.report("Timings: ") do
+          # Set cmd_output on self, for later processing, to the returned cmd output.
+          bash.execute "#{self.cmd}" do |out, err|
+            # properly map errors and output in the order they show up
+            self.cmd_output += err if err
+            self.cmd_output +=  out if out
+            # self.error_msg is only be populated on errors. stored for later retrieval without
+            # having to also read through non-error output.
+            self.error_msg += err if err
+          end
+        end
+        # Capture pertinent information
+        self.exit_status = bash.status
+
+        # Add end-of-command deliniation to the shell's stdout
+        bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
+        # Add exit status from last command to the shell's stdout string capture
+        bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
+
+        # This is on-screen only, so people running the test manually can see any errors.
+        if self.exit_status == 1 then
+          puts "#{stderr.string}"
+        end
+
+        # Now capture the environment settings in the shell's stdout
+        bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
+        bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
+        bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
+
+        # Let screenies know the exit status
+        puts "COMMAND EXIT STATUS: #{self.exit_status}"
+        # Now, capture ENV from the shell for this command in the current command object itself.
+        # TODO - Figure out how to only call this once, not twice like we are above
+        self.env_closing = bash.execute "/usr/bin/printenv"
+        # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
+        self.env_closing = env_to_hash(self.env_closing[0])
       end
-      
-      # Now capture the environment settings in the shell's stdout
-      bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
-      bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
-      bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
-
-      # Let screenies know the exit status
-      puts "COMMAND EXIT STATUS: #{self.exit_status}"
-      # Now, capture ENV from the shell for this command in the current command object itself.
-      # TODO - Figure out how to only call this once, not twice like we are above
-      self.env_closing = bash.execute "/usr/bin/printenv"
-      # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
-      self.env_closing = env_to_hash(self.env_closing[0])    
     end
 
     test_command
     
-    # Create the gist, take the returned json object from Github and use the value html_url on that object
-    # to set self's gist_url variable for later processing.
-    self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+    if ! @short
+      # Create the gist, take the returned json object from Github and use the value html_url on that object
+      # to set self's gist_url variable for later processing.
+      self.gist_url = @@github.gists.create_gist(:description => cmd, :public => true, :files => { "console.sh" => { :content => gist_content }}).html_url
+    end
   end
 
   def gist_content
