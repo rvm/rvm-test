@@ -4,3 +4,4 @@ db/*.rvm
 db/*.db
 .idea
 config/github.yml
+config/github.rb
