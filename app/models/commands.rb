@@ -1,5 +1,6 @@
 class Command < ActiveRecord::Base
   belongs_to :test_reports, :autosave => true
+  attr_accessor :env_starting
 
   def short _short
     @short = _short
@@ -51,6 +52,16 @@ class Command < ActiveRecord::Base
     end
   end
 
+  def test_env_match variable, sign, value
+    var_val = self.env_closing[ variable.to_sym ]
+    if ( sign == "=" ) ^ ( Regexp.new(value) =~ var_val )
+      self.test_failed+=1
+      "failed: env #{variable} #{sign} /#{value}/ # was #{var_val}"
+    else
+      "passed: env #{variable} #{sign} /#{value}/"
+    end
+  end
+
   def test_command
     # reset test status
     self.test_failed = 0
@@ -67,10 +78,15 @@ class Command < ActiveRecord::Base
         # pass in the operator($1) and tested value($2)
         outputs.push( test_output_status( $1, $2 ) )
 
-      # check for match=~... or status!=~...
+      # check for match=~... or match!=~...
       elsif test =~ /^match([!]?=)[~]?\/(.*)\//
         # pass in the operator($1) and tested value($2)
         outputs.push( test_output_match( $1, $2 ) )
+
+      # check for env[...]=~... or env[...]!=~...
+      elsif test =~ /^env\[(.*)\]([!]?=)[~]?\/(.*)\//
+        # pass in the variable($1) operator($2) and tested value($3)
+        outputs.push( test_env_match( $1, $2, $3 ) )
 
       else
         outputs.push("invalid test: #{test}")
@@ -84,8 +100,6 @@ class Command < ActiveRecord::Base
   end
 
   def run( cmd, bash )
-    stdout, stderr = StringIO::new, StringIO::new
-    
     # clean cmd
     cmd.strip!
 
@@ -100,12 +114,21 @@ class Command < ActiveRecord::Base
     # Ensure that self.error_msg and self.cmd_output are blank
     # Do this before we get anywhere near the timing and command execution blocks
     self.error_msg = self.cmd_output = ""
-    
-    # Add command information to stdout
-    # Mark start of command exectution in shell's stdout
-    bash.execute "echo '=====cmd:start=\"#{self.cmd}\"='", :stdout => stdout, :stderr => stderr
+
+    # Source rvm so we can use rvm as function
+    bash.execute 'source ${rvm_scripts_path:-$rvm_path/scripts}/rvm'
+
+    # Record starting env so we can check it in tests
+    self.env_starting = bash.execute "/usr/bin/printenv"
+    self.env_starting = env_to_hash(self.env_starting[0])
+
     if @short
-      puts "$ #{self.cmd}"
+      if /^: / =~ self.cmd
+        puts ""
+        puts self.cmd.gsub(/^: /, "### ")
+      else
+        puts "$ #{self.cmd}"
+      end
       bash.execute "#{self.cmd}" do |out, err|
         # properly map errors and output in the order they show up
         self.cmd_output += err if err
@@ -116,8 +139,8 @@ class Command < ActiveRecord::Base
         self.error_msg += err if err
       end
       self.exit_status = bash.status
-    else
 
+    else
       Benchmark.benchmark(CAPTION) do |x|
         # Start and track timing for each individual commands, storing as a Benchmark Tms block.
         self.timings = x.report("Timings: ") do
@@ -133,31 +156,21 @@ class Command < ActiveRecord::Base
         end
         # Capture pertinent information
         self.exit_status = bash.status
-
-        # Add end-of-command deliniation to the shell's stdout
-        bash.execute "echo =====cmd:stop=", :stdout => stdout, :stderr => stderr
-        # Add exit status from last command to the shell's stdout string capture
-        bash.execute "echo =====cmd:exit_status=\"#{self.exit_status}\"=", :stdout => stdout, :stderr => stderr
-
-        # This is on-screen only, so people running the test manually can see any errors.
-        if self.exit_status == 1 then
-          puts "#{stderr.string}"
-        end
-
-        # Now capture the environment settings in the shell's stdout
-        bash.execute "echo =====cmd:env:start=", :stdout => stdout, :stderr => stderr
-        bash.execute "/usr/bin/printenv", :stdout => stdout, :stderr => stderr
-        bash.execute "echo =====cmd:env:stop=", :stdout => stdout, :stderr => stderr
-
-        # Let screenies know the exit status
-        puts "COMMAND EXIT STATUS: #{self.exit_status}"
-        # Now, capture ENV from the shell for this command in the current command object itself.
-        # TODO - Figure out how to only call this once, not twice like we are above
-        self.env_closing = bash.execute "/usr/bin/printenv"
-        # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
-        self.env_closing = env_to_hash(self.env_closing[0])
       end
+
+      # This is on-screen only, so people running the test manually can see any errors.
+      if self.exit_status == 1 then
+        puts "#{stderr.string}"
+      end
+
+      # Let screenies know the exit status
+      puts "COMMAND EXIT STATUS: #{self.exit_status}"
     end
+
+    # Now, capture ENV from the shell for this command in the current command object itself.
+    self.env_closing = bash.execute "/usr/bin/printenv"
+    # Turn the Array of env strings into a Hash for later use - Thanks apeiros_
+    self.env_closing = env_to_hash(self.env_closing[0])
 
     test_command
     
