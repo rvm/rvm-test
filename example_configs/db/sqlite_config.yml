@@ -1,0 +1,4 @@
+development:
+  adapter: sqlite3
+  encoding: unicode
+  database: db/rvm_testdata_development.db
