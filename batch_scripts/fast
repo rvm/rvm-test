@@ -7,5 +7,13 @@ rvm use 1.9.2         # status=0; match=/Using / ; env[GEM_HOME]=/1.9.2/
 : gemsets
 rvm gemset create test_gemset         # status=0 ; match=/gemset created/
 rvm gemset list                       # match=/test_gemset/
+rvm gemset use test_gemset            # status=0 ; match=/Using /
+gem install haml
+rvm gemset export haml.gems           # status=0; match=/Exporting /
+rvm --force gemset empty              # status=0
+gem list                              # match!=/haml/
+rvm gemset import haml.gems           # status=0; match=/Installing /
+rm haml.gems
+gem list                              # match=/haml/
 rvm --force gemset delete test_gemset # status=0
 rvm gemset list                       # match!=/test_gemset/
