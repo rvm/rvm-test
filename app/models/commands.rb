@@ -6,7 +6,7 @@ class Command < ActiveRecord::Base
   GREEN = `tput setaf 2`
   YELLOW = `tput setaf 3`
   BLUE = `tput setaf 4`
-  RESET = `tput sgr0`
+  RESET = `tput setaf 9`
 
   def short _short
     @short = _short
