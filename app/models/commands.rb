@@ -2,6 +2,12 @@ class Command < ActiveRecord::Base
   belongs_to :test_reports, :autosave => true
   attr_accessor :env_starting
 
+  RED = `tput setaf 1`
+  GREEN = `tput setaf 2`
+  YELLOW = `tput setaf 3`
+  BLUE = `tput setaf 4`
+  RESET = `tput sgr0`
+
   def short _short
     @short = _short
   end
@@ -44,7 +50,7 @@ class Command < ActiveRecord::Base
     # starting location (starting from 0 as a position, starting at the beginning of the string). This is called an eXclusive OR. 
     # This is a logical test on two operands that results in a value of true if exactly one of the operands has a value of true.
     # A simple way to state this is "one or the other but not both.". This is referring to the '^' in the following line of code.
-    if ( sign == "=" ) ^ ( Regexp.new(value) =~ self.cmd_output )
+    if ( sign == "=" ) ^ ( Regexp.new(value) =~ "#{self.cmd_output}" )
       self.test_failed+=1
       "failed: match #{sign} /#{value}/"
     else
@@ -54,9 +60,9 @@ class Command < ActiveRecord::Base
 
   def test_env_match variable, sign, value
     var_val = self.env_closing[ variable.to_sym ]
-    if ( sign == "=" ) ^ ( Regexp.new(value) =~ var_val )
+    if ( sign == "=" ) ^ ( Regexp.new(value) =~ "#{var_val}" )
       self.test_failed+=1
-      "failed: env #{variable} #{sign} /#{value}/ # was #{var_val}"
+      "failed: env #{variable} #{sign} /#{value}/ # was '#{var_val}'"
     else
       "passed: env #{variable} #{sign} /#{value}/"
     end
@@ -94,9 +100,13 @@ class Command < ActiveRecord::Base
     end
 
     # join array items with new lines and append new line on the end
-    self.test_output = outputs.map{|s| "# #{s}" } * "\n" + "\n"
+    self.test_output = outputs * "\n" + "\n"
 
-    $stderr.puts self.test_output
+    if @short
+      $stderr.puts outputs.map{|s| s =~ /^failed: / ? "#{RED}# #{s}#{RESET}" : "#{GREEN}# #{s}#{RESET}" } * "\n" + "\n"
+    else
+      $stderr.puts self.test_output
+    end
   end
 
   def run( cmd, bash )
@@ -125,9 +135,9 @@ class Command < ActiveRecord::Base
     if @short
       if /^: / =~ self.cmd
         puts ""
-        puts self.cmd.gsub(/^: /, "### ")
+        puts "#{BLUE}#{self.cmd.gsub(/^: /, "### ")}#{RESET}"
       else
-        puts "$ #{self.cmd}"
+        puts "#{YELLOW}$ #{self.cmd}#{RESET}"
       end
       bash.execute "#{self.cmd}" do |out, err|
         # properly map errors and output in the order they show up
