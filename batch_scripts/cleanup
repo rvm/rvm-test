@@ -1,7 +1,0 @@
-: cleanup
-rvm gemset create test_gemset         # status=0 ; match=/gemset created/
-rvm gemset use test_gemset            # match=/Using/
-rvm --force gemset delete test_gemset # status=0
-rvm gemset list                       # match!=/test_gemset/
-ls ~/.rvm/wrappers | grep test_gemset # status!=0
-ls ~/.rvm/bin | grep test_gemset      # status!=0
