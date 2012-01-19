@@ -151,7 +151,7 @@ elsif cmdline.options[:script]
           abort
       end
       if cmdline.options[:short]
-        if ! @test_report.commands.select{|c| c.test_output =~ /^# failed/ }.empty?
+        if ! @test_report.commands.select{|c| c.test_output =~ /^failed/ }.empty?
           exit 1
         end
       else
