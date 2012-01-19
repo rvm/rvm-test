@@ -100,13 +100,6 @@ elsif cmdline.options[:script]
     # display the help and abort. Wrap in a begin/rescue to handle it gracefully.
     # This executes each line storing that command's returned data in the database.
       begin
-        # We call ARGV[0] here rather than ARGV[1] because the original ARGV[0] was
-        # --script (or -s). when cmdline.options[:script] gets processed, it gets
-        # dumped and the remaining argument(s) are shifted down in the ARGV array.
-        # So now the script name is ARGV[0] rather than the normal ARGV[1]
-        # We'll have to do this over and over as we keep processing deeper in the
-        # options parsing if there were more options allowed / left.        
-
         # Open a shell session.
         @bash = Session::Bash.new
         
@@ -118,8 +111,16 @@ elsif cmdline.options[:script]
           p @test_report.env_initial.inspect
         end
         
+        # We call ARGV.each here because the original ARGV[0] was --script (or -s).
+        # when cmdline.options[:script] gets processed, it gets dumped and
+        # the remaining argument(s) are shifted down in the ARGV array.
+        # So now the scripts names are in ARGV ... assuming there were file names.
+        ARGV.each do |filename|
+          if cmdline.options[:short]
+            puts "\n#{Command::BLUE}##### test file: #{filename} #{Command::RESET}"
+          end
           # Now we process the individual commands
-          File.foreach(ARGV[0]) do |cmd|
+          File.foreach(filename) do |cmd|
             cmd.strip!
             next if cmd =~ /^#/ or cmd.empty?
             
@@ -141,20 +142,20 @@ elsif cmdline.options[:script]
             # We've done our checking, execute.
             @test_report.run_command( cmd, @bash)
           end
-          if ! cmdline.options[:short]
-            puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
-          end
-            
+        end
       rescue Errno::ENOENT => e
-          # The file wasn't found so display the help and abort.
-          cmdline.help
-          abort
+        # The file wasn't found so display the help and abort.
+        cmdline.help
+        abort
       end
       if cmdline.options[:short]
-        if ! @test_report.commands.select{|c| c.test_output =~ /^failed/ }.empty?
+        sum = @test_report.commands.map{ |c| c.test_failed }.sum
+        if sum > 0
+          puts "#{Command::RED}### Failed #{sum} tests.#{Command::RESET}"
           exit 1
         end
       else
+        puts "TEST REPORT - Exit Status: #{@test_report.exit_status = @bash.status}"
         # BATCH HAS BEEN PROCESSED
         # Now that all the commands in the batch have been processed and added to test_report,
         # now is when to save the Test Report, immediately following the processing of all commands.
