@@ -7,9 +7,10 @@ rvm gemset create test_gemset            # status=0 ; match=/gemset created/
 echo yes | rvm gemset delete test_gemset # status=0
 rvm gemset list                          # match!=/test_gemset/
 
-: export/import
+: export/import/use
 rvm gemset create test_gemset
 rvm gemset use test_gemset  # status=0 ; match=/Using /
+rvm gemdir                  # match=/@test_gemset$/
 gem install haml
 rvm gemset export haml.gems # status=0; match=/Exporting /
 rvm --force gemset empty    # status=0
