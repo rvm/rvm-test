@@ -5,33 +5,17 @@ f=$d/.rvmrc
 mkdir $d
 echo "echo loading-rvmrc" > $f
 
-: rvmrc
-type cd | head -n 1    # match=/is a function/
-rvm rvmrc reset $d     # match=/^Reset/
-command cd $d          # match!=/loading-rvmrc/
-command cd ..
-rvm rvmrc trusted $d   # match=/contains unreviewed changes/
-cd $d                  # status=0
-rvm rvmrc trusted $d   # match=/contains unreviewed changes/
-command cd ..
-
 : trust
 rvm rvmrc trust $d     # match=/ as trusted$/
 rvm rvmrc trusted $d   # match=/is currently trusted/
-cd $d                  # match=/loading-rvmrc/
-command cd ..
 
 : untrust
 rvm rvmrc untrust $d   # match=/ as untrusted$/
 rvm rvmrc trusted $d   # match=/is currently untrusted/
-cd $d                  # match!=/loading-rvmrc/
-command cd ..
 
 : reset
 rvm rvmrc reset $d     # match=/^Reset/
 rvm rvmrc trusted $d   # match=/contains unreviewed changes/
-cd $d                  # match!=/loading-rvmrc/
-command cd ..
 
 : clean
 rm -rf $d
