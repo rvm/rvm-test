@@ -8,7 +8,7 @@ script: env time -f "# took: %E" ruby bin/test.rb test/*/*.rb
 notifications:
   irc:
     channels:
-      - "irc.freenode.org#beginrescueend"
+      - "irc.freenode.org#rvm-test"
       - "irc.freenode.org#rvm"
   email:
     recipients:
