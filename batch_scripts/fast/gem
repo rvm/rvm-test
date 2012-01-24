@@ -1,6 +1,0 @@
-rvm use --create @gemtest # status=0
-bundle config             # status!=0 ; match=/Gem bundler is not installed/
-gem install bundler       # status=0
-bundle config             # status=0 ; match=/Settings are listed in order of priority/
-rvm gemset use default
-rvm --force gemset delete gemtest
