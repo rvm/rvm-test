@@ -2,10 +2,10 @@ language: ruby
 rvm:
   - 1.9.2
 before_install:
-  - cp example_configs/db/sqlite_config.yml       db/config.yml
-  - cp example_configs/config/sqlite_database.yml config/database.yml
-  - bundle install --without long
-script: env time -f "# took: %E" ruby bin/test.rb test/*/*.rb
+  - 'cp example_configs/db/sqlite_config.yml       db/config.yml'
+  - 'cp example_configs/config/sqlite_database.yml config/database.yml'
+  - 'bundle install --without long'
+script: 'env time -f "# took: %E" ruby bin/test.rb test/*/*.rb'
 notifications:
   irc:
     channels:
