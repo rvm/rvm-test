@@ -12,6 +12,10 @@ class Command < ActiveRecord::Base
     @short = _short
   end
 
+  def silent _silent
+    @silent = _silent
+  end
+
   before_create do |command|
     # Capture the system's name and its OS
     command.sysname = %x[uname -n].strip
@@ -102,10 +106,12 @@ class Command < ActiveRecord::Base
     # join array items with new lines and append new line on the end
     self.test_output = outputs * "\n" + "\n"
 
-    if @short
-      $stderr.puts outputs.map{|s| s =~ /^failed: / ? "#{RED}# #{s}#{RESET}" : "#{GREEN}# #{s}#{RESET}" } * "\n" + "\n"
-    else
-      $stderr.puts self.test_output
+    unless @silent
+      if @short
+        $stderr.puts outputs.map{|s| s =~ /^failed: / ? "#{RED}# #{s}#{RESET}" : "#{GREEN}# #{s}#{RESET}" } * "\n" + "\n"
+      else
+        $stderr.puts self.test_output
+      end
     end
   end
 
@@ -133,17 +139,19 @@ class Command < ActiveRecord::Base
     self.env_starting = env_to_hash(self.env_starting[0])
 
     if @short
-      if /^: / =~ self.cmd
-        puts ""
-        puts "#{BLUE}#{self.cmd.gsub(/^: /, "### ")}#{RESET}"
-      else
-        puts "#{YELLOW}$ #{self.cmd}#{RESET}"
+      unless @silent
+        if /^: / =~ self.cmd
+          puts ""
+          puts "#{BLUE}#{self.cmd.gsub(/^: /, "### ")}#{RESET}"
+        else
+          puts "#{YELLOW}$ #{self.cmd}#{RESET}"
+        end
       end
       bash.execute "#{self.cmd}" do |out, err|
         # properly map errors and output in the order they show up
         self.cmd_output += err if err
         self.cmd_output += out if out
-        puts out || err
+        puts out || err unless @silent
         # self.error_msg is only be populated on errors. stored for later retrieval without
         # having to also read through non-error output.
         self.error_msg += err if err
