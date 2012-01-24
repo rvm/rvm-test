@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 1.9.2
+gemfile: Gemfile
+bundler_args: --without long
+before_install: bundle install --without long
+script: env time -f "# took: %E" ruby bin/test.rb test/*/*.rb
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#beginrescueend"
+      - "irc.freenode.org#rvm"
+  email:
+    recipients:
+      - mpapis@gmail.com
+    on_failure: change
