@@ -12,4 +12,4 @@ bundle config       # status=0 ; match=/Settings are listed in order of priority
 
 : reset
 rvm gemset use default
-rvm --force gemset delete gemtest
+rvm --force gemset delete gemtest # status=0
