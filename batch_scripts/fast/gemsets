@@ -1,7 +1,9 @@
-: create/delete
+: create/delete/rename
 rvm gemset create test_gemset            # status=0 ; match=/gemset created/
-rvm gemset list                          # match=/test_gemset/
-rvm --force gemset delete test_gemset    # status=0
+rvm gemset list                          # match=/test_gemset/; match!=/other_gems/
+rvm gemset rename test_gemset other_gems # status=0
+rvm gemset list                          # match!=/test_gemset/; match=/other_gems/
+rvm --force gemset delete other_gems     # status=0
 rvm gemset list                          # match!=/test_gemset/
 rvm gemset create test_gemset            # status=0 ; match=/gemset created/
 echo yes | rvm gemset delete test_gemset # status=0
