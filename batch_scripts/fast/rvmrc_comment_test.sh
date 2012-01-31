@@ -1,3 +1,5 @@
+source "$rvm_path/scripts/rvm"
+
 : prepare
 true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-rvmrc

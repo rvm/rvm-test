@@ -1,3 +1,5 @@
+source "$rvm_path/scripts/rvm"
+
 : create/delete/rename
 rvm gemset create test_gemset            # status=0 ; match=/gemset created/
 rvm gemset list                          # match=/test_gemset/; match!=/other_gems/

@@ -1,3 +1,5 @@
+source "$rvm_path/scripts/rvm"
+
 : setup/pretest
 rvm @global do gem uninstall bundler
 bundle config
