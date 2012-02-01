@@ -1,5 +1,6 @@
 source "$rvm_path/scripts/rvm"
 
+rvm use 1.9.2
 rvm gemset create test_gemset
 
 rvm alias create default 1.9.2@test_gemset # status=0
