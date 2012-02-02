@@ -1,13 +1,12 @@
 language: ruby
 rvm:
-  - 1.9.2
-bundler_args: --without long
+  - 1.9.3
+install: true
 before_install:
-  - 'cp example_configs/db/sqlite_config.yml       db/config.yml'
-  - 'cp example_configs/config/sqlite_database.yml config/database.yml'
-  - 'bundle install --without long'
-  - 'rake db:create db:migrate'
-script: 'env time -f "# took: %E" ruby bin/test.rb test/*/*.rb'
+  - rvm alias delete default
+  - hash -r
+  - gem install dtf
+script: 'dtf fast/*'
 notifications:
   irc:
     channels:
