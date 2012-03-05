@@ -1,4 +1,3 @@
-
 This suite is designed to test everything from installation of RVM itself, to ruby installs and gem installations.
 
 Currently, this suite is written specifically in Ruby and Bash. However, the Ruby portion is currently the section under heavy development, and the Bash section is wonky at best.
@@ -61,7 +60,7 @@ Alternatively version of the output is available with:
 ruby bin/run.rb --script batch_scripts/fast --short
 ```
 
-This will show the outputs and result in console, not saving anything to database and skiping creation of gists
+This will show the outputs and result in console, not saving anything to database and skipping creation of gists
 
 Now, go yee forth and .. Have fun with it!
 
