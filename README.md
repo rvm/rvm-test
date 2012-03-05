@@ -62,7 +62,7 @@ ruby bin/run.rb --script batch_scripts/fast --short
 
 This will show the outputs and result in console, not saving anything to database and skipping creation of gists
 
-Now, go yee forth and .. Have fun with it!
+Now, go ye forth and .. Have fun with it!
 
 --
 RVM Project
