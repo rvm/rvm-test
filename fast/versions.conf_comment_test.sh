@@ -24,7 +24,7 @@ rvm current # match=/^ruby-1.8.7-.*@versions-conf-b$/
 mcd $d/a
 gem list # match!=/haml/
 echo "ruby-gem-install=haml" >> .versions.conf
-cd .
+cd .     # match!=/moving aside to preserve/
 gem list # match=/haml/
 
 : test bundler
@@ -36,6 +36,6 @@ cd .
 gem list # match=/haml/; match=/bundler/
 
 : clean
-rvm --force gemset delete 1.9.3@versions-conf-a
-rvm --force gemset delete 1.8.7@versions-conf-b
+rvm 1.9.3 do rvm --force gemset delete versions-conf-a
+rvm 1.8.7 do rvm --force gemset delete versions-conf-b
 rm -rf $d

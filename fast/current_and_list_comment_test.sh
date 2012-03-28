@@ -1,8 +1,8 @@
 source "$rvm_path/scripts/rvm"
 
-rvm install 1.8.7
-rvm install 1.9.2
-rvm install 1.9.3
+rvm try_install 1.8.7
+rvm try_install 1.9.2
+rvm try_install 1.9.3
 
 : separate default/current
 rvm use 1.8.7@abc-test --create --default

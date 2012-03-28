@@ -3,14 +3,14 @@ source "$rvm_path/scripts/rvm"
 : setup/pretest
 export BUNDLE_GEMFILE=${TMPDIR:-/tmp}/Gemfile
 touch ${BUNDLE_GEMFILE}
+rvm alias delete default
 rvm @global do gem uninstall bundler
-bundle config
-hash                # match=/bundle/
-rvm use --create @gemtest
-hash                # match!=/bundle/
+rvm gemset create gemtest
+rvm gemset use gemtest # status=0
 
 : test
-bundle config       # status!=0 ; match=/Gem bundler is not installed/
+## this only happens after installing rvm: match=/Gem bundler is not installed/
+bundle config       # status=127
 gem install bundler # status=0
 bundle config       # status=0 ; match=/Settings are listed in order of priority/
 

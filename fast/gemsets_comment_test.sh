@@ -29,5 +29,6 @@ ls ~/.rvm/wrappers | grep test_gemset # status!=0
 ls -l ~/.rvm/bin   | grep test_gemset # status!=0
 
 : use
+rvm --force gemset delete unknown_gemset
 rvm gemset use unknown_gemset # status!=0; match=/does not exist/
 rvm current                   # match!=/unknown_gemset/
