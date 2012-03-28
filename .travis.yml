@@ -7,7 +7,7 @@ before_install:
   - rvm alias delete default
   - hash -r
   - gem install dtf
-script: 'dtf fast/*'
+script: 'dtf --text fast/*'
 notifications:
   irc:
     channels:
