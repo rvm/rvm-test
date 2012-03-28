@@ -3,6 +3,7 @@ rvm:
   - 1.9.3
 install: true
 before_install:
+  - rvm get head
   - rvm alias delete default
   - hash -r
   - gem install dtf
