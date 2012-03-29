@@ -1,4 +1,4 @@
-source "$rvm_path/scripts/rvm"
+rvm_reload_flag=1 source "$rvm_path/scripts/rvm"
 
 : prepare
 true TMPDIR:${TMPDIR:=/tmp}:
