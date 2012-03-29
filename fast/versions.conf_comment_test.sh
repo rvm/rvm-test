@@ -33,7 +33,8 @@ rvm rvmrc load . # match!=/moving aside to preserve/; match=/Successfully instal
 gem list         # match=/haml/
 
 : test bundler
-mcd $d/b
+mcd $d/b ## on travis cd hook is disabled ?
+rvm rvmrc load $d/b
 gem list # match!=/haml/
 printf "ruby-gem-install=bundler\nruby-bundle-install=true\n" >> .versions.conf
 printf "source :rubygems\n\ngem 'haml'\n" > Gemfile
