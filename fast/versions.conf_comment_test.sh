@@ -10,35 +10,35 @@ rm -f */*
 : generate
 mcd $d/a
 rvm use 1.9.3@versions-conf-a --create --versions-conf
-rvm current # match=/^ruby-1.9.3-.*@versions-conf-a$/
+rvm current             # match=/^ruby-1.9.3-.*@versions-conf-a$/
 [[ -f .versions.conf ]] # status=0
 
 mcd $d/b
 rvm use 1.8.7@versions-conf-b --create --versions-conf
-rvm current # match=/^ruby-1.8.7-.*@versions-conf-b$/
+rvm current             # match=/^ruby-1.8.7-.*@versions-conf-b$/
 [[ -f .versions.conf ]] # status=0
 
 : test
-mcd $d/a
-cat .versions.conf # match=/ruby=ruby-1.9.3-.*/;  match=/ruby-gemset=versions-conf-a/
-rvm current        # match=/^ruby-1.9.3-.*@versions-conf-a$/
-mcd $d/b
-cat .versions.conf # match=/ruby=ruby-1.8.7-.*/; match=/ruby-gemset=versions-conf-b/
-rvm current        # match=/^ruby-1.8.7-.*@versions-conf-b$/
+rvm rvmrc load $d/a
+rvm current         # match=/^ruby-1.9.3-.*@versions-conf-a$/
+rvm rvmrc load $d/b
+rvm current         # match=/^ruby-1.8.7-.*@versions-conf-b$/
 
 : test installing gem
 mcd $d/a
-gem list # match!=/haml/
+gem list         # match!=/haml/
 echo "ruby-gem-install=haml" >> .versions.conf
-cd .     # match!=/moving aside to preserve/
-gem list # match=/haml/
+rvm_current_rvmrc=""
+rvm rvmrc load . # match!=/moving aside to preserve/; match=/Successfully installed haml/
+gem list         # match=/haml/
 
 : test bundler
 mcd $d/b
 gem list # match!=/haml/
 printf "ruby-gem-install=bundler\nruby-bundle-install=true\n" >> .versions.conf
 printf "source :rubygems\n\ngem 'haml'\n" > Gemfile
-cd .
+rvm_current_rvmrc=""
+rvm rvmrc load . # match=/Installing haml/
 gem list # match=/haml/; match=/bundler/
 
 : clean
