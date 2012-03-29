@@ -20,7 +20,7 @@ rvm current # match=/^ruby-1.8.7-.*@versions-conf-b$/
 
 : test
 mcd $d/a
-cat .versions.conf # match=/ruby=ruby-1.9.3-.*/; match=/ruby-gemset=versions-conf-a/
+cat .versions.conf # match=/ruby=ruby-1.9.3-.*/;  match=/ruby-gemset=versions-conf-a/
 rvm current        # match=/^ruby-1.9.3-.*@versions-conf-a$/
 mcd $d/b
 cat .versions.conf # match=/ruby=ruby-1.8.7-.*/; match=/ruby-gemset=versions-conf-b/
