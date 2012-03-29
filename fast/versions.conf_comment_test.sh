@@ -4,14 +4,18 @@ source "$rvm_path/scripts/rvm"
 true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-versions-conf
 mcd(){ mkdir -p $1 ; cd $1 ; }
+mcd $d
+rm -f */*
 
 : generate
 mcd $d/a
 rvm use 1.9.3@versions-conf-a --create --versions-conf
+rvm current # match=/^ruby-1.9.3-.*@versions-conf-a$/
 [[ -f .versions.conf ]] # status=0
 
 mcd $d/b
 rvm use 1.8.7@versions-conf-b --create --versions-conf
+rvm current # match=/^ruby-1.8.7-.*@versions-conf-b$/
 [[ -f .versions.conf ]] # status=0
 
 : test
