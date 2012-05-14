@@ -49,22 +49,49 @@ readlink $bdir/erb                   # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/erb ]]                   # status=0
 rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
 rm -f $bdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
+rm -f $bdir/ruby-$ivp                # status=0
 
 rvm wrapper $ivp myprefix            # status=0; match=/\A\Z/
 readlink $bdir/myprefix_erb          # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/myprefix_erb ]]          # status=0
 rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}          # status=0
 rm -f $bdir/myprefix_{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
+rm -f $bdir/myprefix_ruby-$ivp       # status=0
 
 : installed version, single binary
-rvm wrapper $ivp myprefix erb        # status=0;  match=/\A\Z/
-[[ -L $bdir/myprefix_erb ]]          # status=0
+rvm wrapper $ivp --no-prefix erb     # status=0;  match=/\A\Z/
+readlink $bdir/erb                   # status=0; match=/1\.8\.7-p352\/erb$/
+[[ -L $bdir/erb ]]                   # status=0
+[[ -e $bdir/rake-ruby-$ivp ]]        # status!=0
+[[ -e $bdir/ruby-$ivp ]]             # status!=0
 rm -f $wdir/erb                      # status=0
-rm -f $bdir/myprefix_erb             # status=0
+rm -f $bdir/erb-ruby-$ivp            # status=0
+
+rvm wrapper $ivp myprefix erb        # status=0; match=/\A\Z/
+readlink $bdir/myprefix_erb          # status=0; match=/1\.8\.7-p352\/erb$/
+[[ -L $bdir/myprefix_erb ]]          # status=0
+[[ -e $bdir/myprefix_rake-ruby-$ivp ]]        # status!=0
+[[ -e $bdir/myprefix_ruby-$ivp ]]             # status!=0
+rm -f $wdir/erb                      # status=0
+rm -f $bdir/erb-ruby-$ivp            # status=0
 
 : installed version, multiple binaries
-rvm wrapper $ivp myprefix erb irb    # status=0;  match=/\A\Z/
-readlink $bdir/myprefix_erb          # status=0; match=/1\.8\.7-p352\/erb$/
-[[ -L $bdir/myprefix_irb ]]          # status=0
+rvm wrapper $ivp --no-prefix erb irb # status=0;  match=/\A\Z/
+readlink $bdir/erb                   # status=0; match=/1\.8\.7-p352\/erb$/
+readlink $bdir/irb                   # status=0; match=/1\.8\.7-p352\/irb$/
+[[ -L $bdir/erb ]]                   # status=0
+[[ -L $bdir/irb ]]                   # status=0
+[[ -e $bdir/rake-ruby-$ivp ]]        # status!=0
+[[ -e $bdir/ruby-$ivp ]]             # status!=0
 rm -f $wdir/{erb,irb}                # status=0
-rm -f $bdir/myprefix_{erb,irb}       # status=0
+rm -f $bdir/{erb,irb}-ruby-$ivp      # status=0
+
+rvm wrapper $ivp myprefix erb irb    # status=0; match=/\A\Z/
+readlink $bdir/myprefix_erb          # status=0; match=/1\.8\.7-p352\/erb$/
+readlink $bdir/myprefix_irb          # status=0; match=/1\.8\.7-p352\/irb$/
+[[ -L $bdir/myprefix_erb ]]          # status=0
+[[ -L $bdir/myprefix_irb ]]          # status=0
+[[ -e $bdir/myprefix_rake-ruby-$ivp ]]        # status!=0
+[[ -e $bdir/myprefix_ruby-$ivp ]]             # status!=0
+rm -f $wdir/{erb,irb}                # status=0
+rm -f $bdir/myprefix_{erb,irb}-ruby-$ivp      # status=0
