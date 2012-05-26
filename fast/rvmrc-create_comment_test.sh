@@ -5,7 +5,8 @@ true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-rvmrc
 mkdir $d
 pushd $d
-rvm use 1.8.7
+command rvm install 1.9.3
+rvm use 1.8.7 --install
 
 : .rvmrc
 rvm rvmrc create 1.9.3

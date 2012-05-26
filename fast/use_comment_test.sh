@@ -1,5 +1,8 @@
 source "$rvm_path/scripts/rvm"
 
+command rvm install 1.8.7
+command rvm install 1.9.2
+
 rvm use 9.9.9           # status=1; match!=/Using /; env[GEM_HOME]!=/9.9.9/ ; match=/Unknown ruby interpreter version/
 rvm reset               # env[GEM_HOME]=/^$/
 rvm current             # match=/system/

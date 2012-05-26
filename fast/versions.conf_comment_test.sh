@@ -9,12 +9,12 @@ rm -f */*
 
 : generate
 mcd $d/a
-rvm use 1.9.3@versions-conf-a --create --versions-conf
+rvm use 1.9.3@versions-conf-a --create --versions-conf --install
 rvm current             # match=/^ruby-1.9.3-.*@versions-conf-a$/
 [[ -f .versions.conf ]] # status=0
 
 mcd $d/b
-rvm use 1.8.7@versions-conf-b --create --versions-conf
+rvm use 1.8.7@versions-conf-b --create --versions-conf --install
 rvm current             # match=/^ruby-1.8.7-.*@versions-conf-b$/
 [[ -f .versions.conf ]] # status=0
 
