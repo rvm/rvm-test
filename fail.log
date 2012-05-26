@@ -1,0 +1,1001 @@
+[34m##### starting test alias.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ rvm use 1.9.2 --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.2-p320
+[33m$ rvm gemset create test_gemset[39m
+'test_gemset' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.2-p320@test_gemset).
+[33m$ rvm alias create default 1.9.2@test_gemset[39m
+Creating alias default for ruby-1.9.2-p320@test_gemset.
+Recording alias default for ruby-1.9.2-p320@test_gemset.
+Creating default links/files
+[32m# passed: status = 0[39m
+[33m$ ls -l $rvm_path/environments/default[39m
+lrwxrwxrwx 1 mpapis users 58 May 26 21:19 /home/mpapis/.rvm/environments/default -> /home/mpapis/.rvm/environments/ruby-1.9.2-p320@test_gemset
+[32m# passed: status = 0[39m
+[32m# passed: match = /1.9.2.*@test_gemset/[39m
+[33m$ rvm alias list[39m
+default => ruby-1.9.2-p320@test_gemset
+[32m# passed: match = /^default => ruby-1.9.2.*@test_gemset$/[39m
+[33m$ rvm alias delete default[39m
+Deleting alias: default
+Deleting default links/files
+[32m# passed: status = 0[39m
+[33m$ ls -l $rvm_path/environments/default[39m
+ls: cannot access /home/mpapis/.rvm/environments/default: No such file or directory
+[32m# passed: status != 0[39m
+[33m$ rvm alias create ruby-test-default 1.9.2@test_gemset[39m
+Creating alias ruby-test-default for ruby-1.9.2-p320@test_gemset.
+Recording alias ruby-test-default for ruby-1.9.2-p320@test_gemset.
+[32m# passed: status = 0[39m
+[33m$ ls -l $rvm_path/environments/ruby-test-default[39m
+ls: cannot access /home/mpapis/.rvm/environments/ruby-test-default: No such file or directory
+[32m# passed: status != 0[39m
+[33m$ rvm alias list[39m
+ruby-test-default => ruby-1.9.2-p320@test_gemset
+[32m# passed: match = /^ruby-test-default => ruby-1.9.2.*@test_gemset$/[39m
+[33m$ rvm alias delete ruby-test-default[39m
+Deleting alias: ruby-test-default
+[32m# passed: status = 0[39m
+[33m$ rvm --force gemset delete test_gemset[39m
+[34m##### starting test current_and_list.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ rvm try_install 1.8.7[39m
+Already installed ruby-1.8.7-p358.
+To reinstall use:
+
+    rvm reinstall 1.8.7
+
+[33m$ rvm try_install 1.9.2[39m
+Already installed ruby-1.9.2-p320.
+To reinstall use:
+
+    rvm reinstall 1.9.2
+
+[33m$ rvm try_install 1.9.3[39m
+Already installed ruby-1.9.3-p194.
+To reinstall use:
+
+    rvm reinstall 1.9.3
+
+[33m$ : separate default/current[39m
+[33m$ rvm use 1.8.7@abc-test --create --default[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358 with gemset abc-test
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using .*ruby-1.8.7.* with gemset abc-test/[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358@abc-test
+[32m# passed: match = /ruby-1.8.7.*@abc-test/[39m
+[33m$ rvm use 1.9.2@abc-test --create[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.2-p320 with gemset abc-test
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using .*ruby-1.9.2.* with gemset abc-test/[39m
+[33m$ rvm current[39m
+ruby-1.9.2-p320@abc-test
+[32m# passed: match = /ruby-1.9.2.*@abc-test/[39m
+[33m$ rvm list[39m
+
+rvm rubies
+
+   jruby-1.7.0.preview1 [ x86_64 ]
+   jruby-head [ x86_64 ]
+   rbx-head [ x86_64 ]
+   ruby-1.8.7-p352 [ x86_64 ]
+ * ruby-1.8.7-p358 [ x86_64 ]
+=> ruby-1.9.2-p320 [ x86_64 ]
+   ruby-1.9.3-p125 [ x86_64 ]
+   ruby-1.9.3-p194 [ x86_64 ]
+   ruby-1.9.3-p194-noccache [ x86_64 ]
+   ruby-1.9.3-p194-nx [ x86_64 ]
+   ruby-head [ x86_64 ]
+
+# => - current
+# =* - current && default
+#  * - default
+
+[32m# passed: match = /^ \* ruby-1.8.7/[39m
+[32m# passed: match = /^=> ruby-1.9.2/[39m
+[33m$ : default == current[39m
+[33m$ rvm use 1.9.3@abc-test --create --default[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.3-p194 with gemset abc-test
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using .*ruby-1.9.3.* with gemset abc-test/[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p194@abc-test
+[32m# passed: match = /ruby-1.9.3.*@abc-test/[39m
+[33m$ rvm list[39m
+
+rvm rubies
+
+   jruby-1.7.0.preview1 [ x86_64 ]
+   jruby-head [ x86_64 ]
+   rbx-head [ x86_64 ]
+   ruby-1.8.7-p352 [ x86_64 ]
+   ruby-1.8.7-p358 [ x86_64 ]
+   ruby-1.9.2-p320 [ x86_64 ]
+   ruby-1.9.3-p125 [ x86_64 ]
+=* ruby-1.9.3-p194 [ x86_64 ]
+   ruby-1.9.3-p194-noccache [ x86_64 ]
+   ruby-1.9.3-p194-nx [ x86_64 ]
+   ruby-head [ x86_64 ]
+
+# => - current
+# =* - current && default
+#  * - default
+
+[32m# passed: match = /^=\* ruby-1.9.3/[39m
+[34m##### starting test do.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ : do[39m
+[33m$ rvm 9.9.9 do rvm gemdir[39m
+Ruby 9.9.9 is not installed.
+[32m# passed: status = 1[39m
+[32m# passed: match = /is not installed/[39m
+[33m$ rvm 1.8.7 do rvm gemdir[39m
+/home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[32m# passed: status = 0[39m
+[32m# passed: match = /1.8.7/[39m
+[34m##### starting test env.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ rvm use 1.8.7-p358 --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[33m$ rvm env 1.8.7-p358[39m
+export PATH ; PATH="/home/mpapis/.rvm/gems/ruby-1.8.7-p358/bin:/home/mpapis/.rvm/gems/ruby-1.8.7-p358@global/bin:/home/mpapis/.rvm/rubies/ruby-1.8.7-p358/bin:/home/mpapis/.rvm/bin:$PATH"
+export rvm_env_string ; rvm_env_string='ruby-1.8.7-p358'
+export rvm_path ; rvm_path='/home/mpapis/.rvm'
+export rvm_ruby_string ; rvm_ruby_string='ruby-1.8.7-p358'
+unset rvm_gemset_name
+export RUBY_VERSION ; RUBY_VERSION='ruby-1.8.7-p358'
+export GEM_HOME ; GEM_HOME='/home/mpapis/.rvm/gems/ruby-1.8.7-p358'
+export GEM_PATH ; GEM_PATH='/home/mpapis/.rvm/gems/ruby-1.8.7-p358:/home/mpapis/.rvm/gems/ruby-1.8.7-p358@global'
+export MY_RUBY_HOME ; MY_RUBY_HOME='/home/mpapis/.rvm/rubies/ruby-1.8.7-p358'
+export IRBRC ; IRBRC='/home/mpapis/.rvm/rubies/ruby-1.8.7-p358/.irbrc'
+unset MAGLEV_HOME
+unset RBXOPT
+[32m# passed: match = /1.8.7-p358/[39m
+[32m# passed: match = /GEM_HOME=/[39m
+[32m# passed: match = /GEM_PATH=/[39m
+[33m$ rvm env 1.8.7-p358 --path[39m
+/home/mpapis/.rvm/environments/ruby-1.8.7-p358
+[32m# passed: match = /1.8.7-p358/[39m
+[32m# passed: match = /environments/[39m
+[33m$ rvm env 1.8.7-p358 -- --path[39m
+/home/mpapis/.rvm/environments/ruby-1.8.7-p358
+[32m# passed: match = /1.8.7-p358/[39m
+[32m# passed: match = /environments/[39m
+[34m##### starting test exports.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ export TEST_VAR=2[39m
+[32m# passed: env TEST_VAR = /^2$/[39m
+[33m$ rvm export TEST_VAR=3[39m
+[32m# passed: env TEST_VAR = /^3$/[39m
+[33m$ rvm unexport[39m
+[32m# passed: env TEST_VAR = /^2$/[39m
+[33m$ unset TEST_VAR[39m
+[32m# passed: env TEST_VAR = /^$/[39m
+[33m$ rvm export TEST_VAR=3[39m
+[32m# passed: env TEST_VAR = /^3$/[39m
+[33m$ rvm unexport[39m
+[32m# passed: env TEST_VAR = /^$/[39m
+[34m##### starting test gem-bundle.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ : setup/pretest[39m
+[33m$ export BUNDLE_GEMFILE=${TMPDIR:-/tmp}/Gemfile[39m
+[33m$ touch ${BUNDLE_GEMFILE}[39m
+[33m$ rvm alias delete default[39m
+Deleting alias: default
+Deleting default links/files
+[33m$ rvm @global do gem uninstall bundler[39m
+INFO:  gem "bundler" is not installed
+[33m$ rvm gemset create gemtest[39m
+'gemtest' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.3-p125@gemtest).
+[33m$ rvm gemset use gemtest[39m
+Using ruby-1.9.3-p125 with gemset gemtest
+[32m# passed: status = 0[39m
+[33m$ : test[39m
+[33m$ bundle config[39m
+[31mERROR: Gem bundler is not installed, run `gem install bundler` first.(B[m
+[32m# passed: status = 127[39m
+[33m$ gem install bundler[39m
+Successfully installed bundler-1.1.3
+1 gem installed
+[32m# passed: status = 0[39m
+[33m$ bundle config[39m
+[32mSettings are listed in order of priority. The top value will be used.
+[0m
+[32mgemfile[0m
+  Set via BUNDLE_GEMFILE: "/tmp/Gemfile"
+[32m[0m
+[32m# passed: status = 0[39m
+[32m# passed: match = /Settings are listed in order of priority/[39m
+[33m$ : reset[39m
+[33m$ rvm gemset use default[39m
+Using ruby-1.9.3-p125 with gemset default
+[33m$ rvm --force gemset delete gemtest[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f ${BUNDLE_GEMFILE}[39m
+[34m##### starting test gemsets.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ : create/delete/rename[39m
+[33m$ rvm gemset create test_gemset[39m
+'test_gemset' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.3-p125@test_gemset).
+[32m# passed: status = 0[39m
+[32m# passed: match = /gemset created/[39m
+[33m$ rvm gemset list[39m
+
+gemsets for ruby-1.9.3-p125 (found in /home/mpapis/.rvm/gems/ruby-1.9.3-p125)
+   global
+   rvm-site
+=> rvm-test
+   test_gemset
+
+[32m# passed: match = /test_gemset/[39m
+[32m# passed: match != /other_gems/[39m
+[33m$ rvm gemset rename test_gemset other_gems[39m
+[32m# passed: status = 0[39m
+[33m$ rvm gemset list[39m
+
+gemsets for ruby-1.9.3-p125 (found in /home/mpapis/.rvm/gems/ruby-1.9.3-p125)
+   global
+   other_gems
+   rvm-site
+=> rvm-test
+
+[32m# passed: match != /test_gemset/[39m
+[32m# passed: match = /other_gems/[39m
+[33m$ rvm --force gemset delete other_gems[39m
+[32m# passed: status = 0[39m
+[33m$ rvm gemset list[39m
+
+gemsets for ruby-1.9.3-p125 (found in /home/mpapis/.rvm/gems/ruby-1.9.3-p125)
+   global
+   rvm-site
+=> rvm-test
+
+[32m# passed: match != /test_gemset/[39m
+[33m$ rvm gemset create test_gemset[39m
+'test_gemset' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.3-p125@test_gemset).
+[32m# passed: status = 0[39m
+[32m# passed: match = /gemset created/[39m
+[33m$ echo yes | rvm gemset delete test_gemset[39m
+Are you SURE you wish to remove the entire gemset directory 'test_gemset' (/home/mpapis/.rvm/gems/ruby-1.9.3-p125@test_gemset)?
+(anything other than 'yes' will cancel) > 
+[32m# passed: status = 0[39m
+[33m$ rvm gemset list[39m
+
+gemsets for ruby-1.9.3-p125 (found in /home/mpapis/.rvm/gems/ruby-1.9.3-p125)
+   global
+   rvm-site
+=> rvm-test
+
+[32m# passed: match != /test_gemset/[39m
+[33m$ : export/import/use[39m
+[33m$ rvm gemset create test_gemset[39m
+'test_gemset' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.3-p125@test_gemset).
+[33m$ rvm gemset use test_gemset[39m
+Using ruby-1.9.3-p125 with gemset test_gemset
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using /[39m
+[33m$ rvm gemdir[39m
+/home/mpapis/.rvm/gems/ruby-1.9.3-p125@test_gemset
+[32m# passed: match = /@test_gemset$/[39m
+[33m$ gem install haml[39m
+Successfully installed haml-3.1.6
+1 gem installed
+[33m$ rvm gemset export haml.gems[39m
+Exporting current environments gemset to haml.gems
+[32m# passed: status = 0[39m
+[32m# passed: match = /Exporting /[39m
+[33m$ rvm --force gemset empty[39m
+[32m# passed: status = 0[39m
+[33m$ gem list[39m
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match != /haml/[39m
+[33m$ rvm gemset import haml.gems[39m
+
+Installing gems listed in haml.gems file...
+
+installing haml 3.1.6...
+haml 3.1.6 installed.
+
+Processing of haml.gems is complete.
+
+[32m# passed: status = 0[39m
+[32m# passed: match = /Installing /[39m
+[33m$ rm haml.gems[39m
+[33m$ gem list[39m
+haml (3.1.6)
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match = /haml/[39m
+[33m$ rvm --force gemset delete test_gemset[39m
+[33m$ : cleanup[39m
+[33m$ ls ~/.rvm/wrappers | grep test_gemset[39m
+[32m# passed: status != 0[39m
+[33m$ ls -l ~/.rvm/bin   | grep test_gemset[39m
+[32m# passed: status != 0[39m
+[33m$ : use[39m
+[33m$ rvm --force gemset delete unknown_gemset[39m
+/home/mpapis/.rvm/gems/ruby-1.9.3-p125@unknown_gemset did not previously exist. Ignoring.
+[33m$ rvm gemset use unknown_gemset[39m
+Gemset 'unknown_gemset' does not exist, 'rvm gemset create unknown_gemset' first, or append '--create'.
+[32m# passed: status != 0[39m
+[32m# passed: match = /does not exist/[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p125
+[32m# passed: match != /unknown_gemset/[39m
+[34m##### starting test globalcache.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ rvm use 1.9.3 --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.3-p194
+[32m# passed: status = 0[39m
+[33m$ rvm --force gemset globalcache disable[39m
+Removing the global cache (note: this will empty the caches)
+[33m$ rvm gemset globalcache enabled[39m
+Gemset global cache is currently: Disabled
+[32m# passed: match = /Disabled/[39m
+[33m$ [[ -L "$rvm_path/gems/cache" ]][39m
+[32m# passed: status != 0[39m
+[33m$ rvm gemset globalcache enable[39m
+Enabling global cache for gems.
+Moving the gem cache for ruby-1.8.7-p358@global to the global cache.
+Moving the gem cache for ruby-1.9.3-p194@testset to the global cache.
+Moving the gem cache for ruby-1.8.7-p358 to the global cache.
+Moving the gem cache for ruby-1.9.3-p194-noccache to the global cache.
+Moving the gem cache for jruby-1.7.0.preview1 to the global cache.
+Moving the gem cache for jruby-head to the global cache.
+Moving the gem cache for rbx-head to the global cache.
+Moving the gem cache for ruby-1.8.7-p352 to the global cache.
+Moving the gem cache for ruby-1.9.3-p194 to the global cache.
+Moving the gem cache for ruby-1.9.3-p125 to the global cache.
+Moving the gem cache for ruby-1.9.2-p320 to the global cache.
+Moving the gem cache for ruby-head to the global cache.
+Moving the gem cache for cache to the global cache.
+Moving the gem cache for ruby-1.9.3-p194-nx to the global cache.
+[32m# passed: status = 0[39m
+[32m# passed: match = / global cache /[39m
+[33m$ rvm gemset globalcache enabled[39m
+Gemset global cache is currently: Enabled
+[32m# passed: status = 0[39m
+[32m# passed: match = /Enabled/[39m
+[33m$ rvm gemset list[39m
+
+gemsets for ruby-1.9.3-p194 (found in /home/mpapis/.rvm/gems/ruby-1.9.3-p194)
+   abc-test
+   global
+   rvm-test-vagrant
+   testset
+
+[32m# passed: status = 0[39m
+[32m# passed: match != / testset /[39m
+[33m$ rvm 1.9.3 do rvm gemset create testset[39m
+'testset' gemset created (/home/mpapis/.rvm/gems/ruby-1.9.3-p194@testset).
+[32m# passed: status = 0[39m
+[32m# passed: match = / gemset created /[39m
+[33m$ [[ -L "$rvm_path/gems/cache" ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -d "$rvm_path/gems/cache" ]][39m
+[32m# passed: status = 0[39m
+[33m$ rvm system[39m
+[32m# passed: status = 0[39m
+[33m$ [[ -L "$rvm_path/gems/cache" ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -d "$rvm_path/gems/cache" ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -d "$rvm_path/gems/cache/cache" ]][39m
+[33m$ rvm --force gemset globalcache disable[39m
+Removing the global cache (note: this will empty the caches)
+Reverting the gem cache for ruby-1.8.7-p358@global to an empty directory.
+Reverting the gem cache for ruby-1.9.3-p194@testset to an empty directory.
+Reverting the gem cache for ruby-1.8.7-p358 to an empty directory.
+Reverting the gem cache for ruby-1.9.3-p194-noccache to an empty directory.
+Reverting the gem cache for jruby-1.7.0.preview1 to an empty directory.
+Reverting the gem cache for jruby-head to an empty directory.
+Reverting the gem cache for rbx-head to an empty directory.
+Reverting the gem cache for ruby-1.8.7-p352 to an empty directory.
+Reverting the gem cache for ruby-1.9.3-p194 to an empty directory.
+Reverting the gem cache for ruby-1.9.3-p125 to an empty directory.
+Reverting the gem cache for ruby-1.9.2-p320 to an empty directory.
+Reverting the gem cache for ruby-head to an empty directory.
+Reverting the gem cache for cache to an empty directory.
+Reverting the gem cache for ruby-1.9.3-p194-nx to an empty directory.
+[32m# passed: status = 0[39m
+[32m# passed: match = /Removing the global cache/[39m
+[33m$ rvm gemset globalcache enabled[39m
+Gemset global cache is currently: Disabled
+[32m# passed: status != 0[39m
+[32m# passed: match = /Disabled/[39m
+[34m##### starting test ruby-1.8.7.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ rvm reinstall 1.8.7-ntest --skip-gemsets[39m
+it seems that /home/mpapis/.rvm/src/ruby-1.8.7-p358-ntest is already non existent.
+it seems that /home/mpapis/.rvm/rubies/ruby-1.8.7-p358-ntest is already non existent.
+Removing ruby-1.8.7-p358-ntest aliases...
+Removing ruby-1.8.7-p358-ntest wrappers...
+Removing ruby-1.8.7-p358-ntest environments...
+Removing ruby-1.8.7-p358-ntest binaries...
+Installing Ruby from source to: /home/mpapis/.rvm/rubies/ruby-1.8.7-p358-ntest, this may take a while depending on your cpu(s)...
+
+ruby-1.8.7-p358-ntest - #fetching 
+ruby-1.8.7-p358-ntest - #extracting ruby-1.8.7-p358 to /home/mpapis/.rvm/src/ruby-1.8.7-p358-ntest
+ruby-1.8.7-p358-ntest - #extracted to /home/mpapis/.rvm/src/ruby-1.8.7-p358-ntest
+Applying patch 'stdout-rouge-fix' (located at /home/mpapis/.rvm/patches/ruby/1.8.7/stdout-rouge-fix.patch)
+Applying patch 'no_sslv2' (located at /home/mpapis/.rvm/patches/ruby/1.8.7/no_sslv2.diff)
+ruby-1.8.7-p358-ntest - #configuring 
+ruby-1.8.7-p358-ntest - #compiling 
+ruby-1.8.7-p358-ntest - #installing 
+Removing old Rubygems files...
+Installing rubygems-1.8.24 for ruby-1.8.7-p358-ntest ...
+Installation of rubygems completed successfully.
+ruby-1.8.7-p358-ntest - adjusting #shebangs for (gem irb erb ri rdoc testrb rake).
+Skipped importing default gemsets
+Install of ruby-1.8.7-p358-ntest - #complete 
+Please be aware that you just installed a ruby that requires 2 patches just to be compiled on up to date linux system.
+This may have known and unaccounted for security vulnerabilities.
+Please consider upgrading to Ruby 1.9.3-194 which will have all of the latest security patches.
+[32m# passed: status = 0[39m
+[32m# passed: match != /Already installed/[39m
+[32m# passed: match = /Applying patch/[39m
+[32m# passed: match = /Skipped importing default gemsets/[39m
+[32m# passed: match = /patches just to be compiled on/[39m
+[33m$ rvm 1.8.7-ntest do gem list[39m
+
+[32m# passed: match != /bundler/[39m
+[32m# passed: match != /rake/[39m
+[32m# passed: match != /rubygems-bundler/[39m
+[32m# passed: match != /rvm/[39m
+[33m$ rvm 1.8.7-ntest do ruby -v[39m
+ruby 1.8.7 (2012-02-08 patchlevel 358) [x86_64-linux]
+[32m# passed: match = /1.8.7/[39m
+[33m$ rvm install 1.8.7-ntest[39m
+Already installed ruby-1.8.7-p358-ntest.
+To reinstall use:
+
+    rvm reinstall 1.8.7-ntest
+
+[32m# passed: status = 0[39m
+[32m# passed: match = /Already installed/[39m
+[33m$ rvm remove 1.8.7-ntest --gems[39m
+Removing /home/mpapis/.rvm/src/ruby-1.8.7-p358-ntest...
+Removing /home/mpapis/.rvm/rubies/ruby-1.8.7-p358-ntest...
+Removing ruby-1.8.7-p358-ntest gemsets...
+Removing ruby-1.8.7-p358-ntest aliases...
+Removing ruby-1.8.7-p358-ntest wrappers...
+Removing ruby-1.8.7-p358-ntest environments...
+Removing ruby-1.8.7-p358-ntest binaries...
+[32m# passed: status = 0[39m
+[32m# passed: match = /Removing/[39m
+[34m##### starting test rvm-prompt.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ command rvm install 1.8.7[39m
+Already installed ruby-1.8.7-p358.
+To reinstall use:
+
+    rvm reinstall 1.8.7
+
+[33m$ command rvm install 1.9.2[39m
+Already installed ruby-1.9.2-p320.
+To reinstall use:
+
+    rvm reinstall 1.9.2
+
+[33m$ command rvm install 1.9.3[39m
+Already installed ruby-1.9.3-p194.
+To reinstall use:
+
+    rvm reinstall 1.9.3
+
+[33m$ rvm 1.9.1 do rvm-prompt[39m
+Ruby 1.9.1 is not installed.
+[32m# passed: match = /Ruby 1.9.1 is not installed./[39m
+[33m$ rvm 1.9.2 do rvm-prompt[39m
+ruby-1.9.2-p320
+[32m# passed: match = /^ruby-1.9.2-p[[:digit:]]+$/[39m
+[33m$ rvm 1.9.3 do rvm-prompt i[39m
+ruby
+[32m# passed: match = /^ruby$/[39m
+[33m$ rvm 1.9.3 do rvm-prompt i v[39m
+ruby-1.9.3
+[32m# passed: match = /^ruby-1.9.3$/[39m
+[33m$ rvm 1.9.3 do rvm-prompt v[39m
+1.9.3
+[32m# passed: match = /^1.9.3$/[39m
+[33m$ rvm 1.9.3 do rvm-prompt v p[39m
+1.9.3-p194
+[32m# passed: match = /^1.9.3-p[[:digit:]]+$/[39m
+[33m$ rvm system do rvm-prompt[39m
+[32m# passed: match = /^$/[39m
+[33m$ rvm system do rvm-prompt s v[39m
+system
+[32m# passed: match = /^system$/[39m
+[33m$ rvm 1.8.7 do rvm-prompt s v[39m
+1.8.7
+[32m# passed: match = /^1.8.7$/[39m
+[34m##### starting test rvmrc.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ : prepare[39m
+[33m$ true TMPDIR:${TMPDIR:=/tmp}:[39m
+[33m$ d=$TMPDIR/test-rvmrc[39m
+[33m$ f=$d/.rvmrc[39m
+[33m$ mkdir $d[39m
+[33m$ echo "echo loading-rvmrc" > $f[39m
+[33m$ : trust[39m
+[33m$ rvm rvmrc trust $d[39m
+Marked /tmp/test-rvmrc/.rvmrc as trusted
+[32m# passed: match = / as trusted$/[39m
+[33m$ rvm rvmrc trusted $d[39m
+The rvmrc at '/tmp/test-rvmrc/.rvmrc' is currently trusted.
+[32m# passed: match = /is currently trusted/[39m
+[33m$ : untrust[39m
+[33m$ rvm rvmrc untrust $d[39m
+Marked /tmp/test-rvmrc/.rvmrc as untrusted
+[32m# passed: match = / as untrusted$/[39m
+[33m$ rvm rvmrc trusted $d[39m
+The rvmrc at '/tmp/test-rvmrc/.rvmrc' is currently untrusted.
+[32m# passed: match = /is currently untrusted/[39m
+[33m$ : reset[39m
+[33m$ rvm rvmrc reset $d[39m
+Reset trust for /tmp/test-rvmrc/.rvmrc
+[32m# passed: match = /^Reset/[39m
+[33m$ rvm rvmrc trusted $d[39m
+The rvmrc at '/tmp/test-rvmrc/.rvmrc' contains unreviewed changes.
+[32m# passed: match = /contains unreviewed changes/[39m
+[33m$ : clean[39m
+[33m$ rm -rf $d[39m
+[34m##### starting test rvmrc-create.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ : prepare[39m
+[33m$ true TMPDIR:${TMPDIR:=/tmp}:[39m
+[33m$ d=$TMPDIR/test-rvmrc[39m
+[33m$ mkdir $d[39m
+[33m$ pushd $d[39m
+/tmp/test-rvmrc ~/projects/rvm/rvm-test
+[33m$ command rvm install 1.9.3[39m
+Already installed ruby-1.9.3-p194.
+To reinstall use:
+
+    rvm reinstall 1.9.3
+
+[33m$ rvm use 1.8.7 --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[33m$ : .rvmrc[39m
+[33m$ rvm rvmrc create 1.9.3[39m
+[33m$ rvm rvmrc trust .[39m
+Marked /tmp/test-rvmrc/.rvmrc as trusted
+[33m$ [ -f .rvmrc ][39m
+[32m# passed: status = 0[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358
+[32m# passed: match = /1.8.7/[39m
+[33m$ rvm rvmrc load .[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p194
+[32m# passed: match = /1.9.3/[39m
+[33m$ rm -f .rvmrc[39m
+[33m$ rvm use 1.8.7[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[33m$ : .versions.conf[39m
+[33m$ rvm rvmrc create 1.9.3 .versions.conf[39m
+[33m$ [ -f .versions.conf ][39m
+[32m# passed: status = 0[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358
+[32m# passed: match = /1.8.7/[39m
+[33m$ rvm rvmrc load .[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p194
+[32m# passed: match = /1.9.3/[39m
+[33m$ rm -f .versions.conf[39m
+[33m$ rvm use 1.8.7[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[33m$ : .ruby-version[39m
+[33m$ rvm rvmrc create 1.9.3 .ruby-version[39m
+[33m$ [ -f .ruby-version ][39m
+[32m# passed: status = 0[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358
+[32m# passed: match = /1.8.7/[39m
+[33m$ rvm rvmrc load .[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p194
+[32m# passed: match = /1.9.3/[39m
+[33m$ rm -f .ruby-version[39m
+[33m$ rvm use 1.8.7[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[33m$ : clean[39m
+[33m$ popd[39m
+~/projects/rvm/rvm-test
+[33m$ rm -rf $d[39m
+[34m##### starting test use.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ command rvm install 1.8.7[39m
+Already installed ruby-1.8.7-p358.
+To reinstall use:
+
+    rvm reinstall 1.8.7
+
+[33m$ command rvm install 1.9.2[39m
+Already installed ruby-1.9.2-p320.
+To reinstall use:
+
+    rvm reinstall 1.9.2
+
+[33m$ rvm use 9.9.9[39m
+Unknown ruby interpreter version: '9.9.9'.
+[32m# passed: status = 1[39m
+[32m# passed: match != /Using /[39m
+[32m# passed: env GEM_HOME != /9.9.9/[39m
+[32m# passed: match = /Unknown ruby interpreter version/[39m
+[33m$ rvm reset[39m
+[32m# passed: env GEM_HOME = /^$/[39m
+[33m$ rvm current[39m
+system
+[32m# passed: match = /system/[39m
+[33m$ rvm use 1.8.7[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using /[39m
+[32m# passed: env GEM_HOME = /1.8.7/[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358
+[32m# passed: match = /1.8.7/[39m
+[33m$ command rvm use 1.9.2[39m
+
+RVM is not a function, selecting rubies with 'rvm use ...' will not work.
+You need to change your terminal settings to allow shell login.
+Please visit https://rvm.io/workflow/screen/ for example.
+
+[32m# passed: status = 0[39m
+[32m# passed: match != /Using /[39m
+[32m# passed: env GEM_HOME != /1.9.2/[39m
+[32m# passed: match = /RVM is not a function/[39m
+[33m$ rvm use 1.9.2[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.2-p320
+[32m# passed: status = 0[39m
+[32m# passed: match = /Using /[39m
+[32m# passed: env GEM_HOME = /1.9.2/[39m
+[34m##### starting test versions.conf.[39m
+[33m$ rvm_reload_flag=1 source "$rvm_path/scripts/rvm"[39m
+[33m$ : prepare[39m
+[33m$ true TMPDIR:${TMPDIR:=/tmp}:[39m
+[33m$ d=$TMPDIR/test-versions-conf[39m
+[33m$ mcd(){ mkdir -p $1 ; cd $1 ; }[39m
+[33m$ mcd $d[39m
+[33m$ rm -f */*[39m
+[33m$ : generate[39m
+[33m$ mcd $d/a[39m
+[33m$ rvm use 1.9.3@versions-conf-a --create --versions-conf --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.9.3-p194 with gemset versions-conf-a
+[33m$ rvm current[39m
+ruby-1.9.3-p194@versions-conf-a
+[32m# passed: match = /^ruby-1.9.3-.*@versions-conf-a$/[39m
+[33m$ [[ -f .versions.conf ]][39m
+[32m# passed: status = 0[39m
+[33m$ mcd $d/b[39m
+[33m$ rvm use 1.8.7@versions-conf-b --create --versions-conf --install[39m
+Using /home/mpapis/.rvm/gems/ruby-1.8.7-p358 with gemset versions-conf-b
+[33m$ rvm current[39m
+ruby-1.8.7-p358@versions-conf-b
+[32m# passed: match = /^ruby-1.8.7-.*@versions-conf-b$/[39m
+[33m$ [[ -f .versions.conf ]][39m
+[32m# passed: status = 0[39m
+[33m$ : test[39m
+[33m$ rvm rvmrc load $d/a[39m
+[33m$ rvm current[39m
+ruby-1.9.3-p194@versions-conf-a
+[32m# passed: match = /^ruby-1.9.3-.*@versions-conf-a$/[39m
+[33m$ rvm rvmrc load $d/b[39m
+[33m$ rvm current[39m
+ruby-1.8.7-p358@versions-conf-b
+[32m# passed: match = /^ruby-1.8.7-.*@versions-conf-b$/[39m
+[33m$ : test installing gem[39m
+[33m$ mcd $d/a[39m
+[33m$ gem list[39m
+bundler (1.1.3)
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match != /haml/[39m
+[33m$ echo "ruby-gem-install=haml" >> .versions.conf[39m
+[33m$ rvm_current_rvmrc=""[39m
+[33m$ rvm rvmrc load .[39m
+Successfully installed haml-3.1.6
+1 gem installed
+[32m# passed: match != /moving aside to preserve/[39m
+[32m# passed: match = /Successfully installed haml/[39m
+[33m$ gem list[39m
+bundler (1.1.3)
+haml (3.1.6)
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match = /haml/[39m
+[33m$ : test bundler[39m
+[33m$ mcd $d/b[39m
+[33m$ rvm rvmrc load $d/b[39m
+[33m$ gem list[39m
+bundler (1.1.3)
+gemcutter (0.7.1)
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match != /haml/[39m
+[33m$ printf "ruby-gem-install=bundler\nruby-bundle-install=true\n" >> .versions.conf[39m
+[33m$ printf "source :rubygems\n\ngem 'haml'\n" > Gemfile[39m
+[33m$ rvm_current_rvmrc=""[39m
+[33m$ rvm rvmrc load .[39m
+Fetching gem metadata from http://rubygems.org/..
+Installing haml (3.1.6) 
+[32m# passed: match = /Installing haml/[39m
+[33m$ gem list[39m
+bundler (1.1.3)
+gemcutter (0.7.1)
+haml (3.1.6)
+rake (0.9.2.2)
+rubygems-bundler (1.0.2)
+rvm (1.11.3.3)
+[32m# passed: match = /haml/[39m
+[32m# passed: match = /bundler/[39m
+[33m$ : clean[39m
+[33m$ rvm 1.9.3 do rvm --force gemset delete versions-conf-a[39m
+[33m$ rvm 1.8.7 do rvm --force gemset delete versions-conf-b[39m
+[33m$ rm -rf $d[39m
+[34m##### starting test wrapper.[39m
+[33m$ source "$rvm_path/scripts/rvm"[39m
+[33m$ iv=1.8.7[39m
+[33m$ nv=1.2.3[39m
+[33m$ ivp=$iv-p352[39m
+[33m$ ivnp=$iv-p999[39m
+[33m$ nvp=$nv-p999[39m
+[33m$ wdir="$rvm_path/wrappers/ruby-$ivp"[39m
+[33m$ bdir="$rvm_path/bin"[39m
+[33m$ rvm install $ivp[39m
+Already installed ruby-1.8.7-p352.
+To reinstall use:
+
+    rvm reinstall 1.8.7-p352
+
+[32m# passed: status = 0[39m
+[33m$ : help[39m
+[33m$ rvm wrapper[39m
+
+  Usage:
+
+    rvm wrapper ruby_string [wrapper_prefix] [binary[ binary[ ...]]]
+
+  Binaries
+
+    ruby, gem, rake, irb, rdoc, ri, testrb
+
+  Notes
+
+    For more information, see 'rvm help wrapper'
+
+  Example
+
+    # Wrap the spec binary as 'rails3_spec' for 1.9.2@rails3
+    rvm wrapper 1.9.2@rails3 rails3 spec
+
+    # To create a single binary you can do the following,
+    user$ rvm use --create 1.8.7@ey ; gem install ey
+    user$ rvm wrapper 1.8.7@ey --no-prefix ey
+    # So that it is clear I am now in a different env,
+    user$ rvm 1.9.2
+    user$ ruby -v
+    ruby 1.9.2p180 (2011-02-18 revision 30909) [x86_64-darwin10.7.0]
+    # And we have the desired result,
+    user$ ey
+    Usage:
+      ey [--help] [--version] COMMAND [ARGS]
+      ...
+
+[32m# passed: status != 0[39m
+[32m# passed: match = /Usage:/[39m
+[33m$ : non-existent version[39m
+[33m$ rvm wrapper $nv[39m
+rbx-1.2.3-20110315 is not installed.
+Could not load ruby 1.2.3.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ [[ -f $rvm_path/wrappers/ruby-$nvp/erb ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -L $bdir/erb-ruby-$nvp ]][39m
+[32m# passed: status != 0[39m
+[33m$ rvm wrapper $nvp[39m
+rbx-1.2.3-p999 is not installed.
+Could not load ruby 1.2.3-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nv --no-prefix[39m
+rbx-1.2.3-20110315 is not installed.
+Could not load ruby 1.2.3.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nv --no-prefix erb[39m
+rbx-1.2.3-20110315 is not installed.
+Could not load ruby 1.2.3.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nv myprefix[39m
+rbx-1.2.3-20110315 is not installed.
+Could not load ruby 1.2.3.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nv myprefix erb[39m
+rbx-1.2.3-20110315 is not installed.
+Could not load ruby 1.2.3.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ : non-existent version and patchlevel[39m
+[33m$ rvm wrapper $nvp --no-prefix[39m
+rbx-1.2.3-p999 is not installed.
+Could not load ruby 1.2.3-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nvp --no-prefix erb[39m
+rbx-1.2.3-p999 is not installed.
+Could not load ruby 1.2.3-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nvp myprefix[39m
+rbx-1.2.3-p999 is not installed.
+Could not load ruby 1.2.3-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ rvm wrapper $nvp myprefix erb[39m
+rbx-1.2.3-p999 is not installed.
+Could not load ruby 1.2.3-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.2\.3/[39m
+[33m$ : installed version, invalid patchlevel[39m
+[33m$ rvm wrapper $ivnp --no-prefix[39m
+ruby-1.8.7-p999 is not installed.
+Could not load ruby 1.8.7-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.8\.7-p999/[39m
+[33m$ rvm wrapper $ivnp --no-prefix erb[39m
+ruby-1.8.7-p999 is not installed.
+Could not load ruby 1.8.7-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.8\.7-p999/[39m
+[33m$ rvm wrapper $ivnp myprefix[39m
+ruby-1.8.7-p999 is not installed.
+Could not load ruby 1.8.7-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.8\.7-p999/[39m
+[33m$ rvm wrapper $ivnp myprefix erb[39m
+ruby-1.8.7-p999 is not installed.
+Could not load ruby 1.8.7-p999.
+[32m# passed: status != 0[39m
+[32m# passed: match = /Could not load ruby .*1\.8\.7-p999/[39m
+[33m$ : installed version[39m
+[33m$ rvm wrapper $ivp[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/erb-ruby-$ivp[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ [[ -L $bdir/erb-ruby-$ivp ]][39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/{erb,gem,irb,rake,rdoc,ri,testrb}-ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ rvm wrapper $ivp --no-prefix[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ [[ -L $bdir/erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ rvm wrapper $ivp myprefix[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/myprefix_erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ [[ -L $bdir/myprefix_erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/myprefix_{erb,gem,irb,rake,rdoc,ri,ruby,testrb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/myprefix_ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ : installed version, single binary[39m
+[33m$ rvm wrapper $ivp --no-prefix erb[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ [[ -L $bdir/erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -e $bdir/rake-ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -e $bdir/ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ rm -f $wdir/erb[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/erb-ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ rvm wrapper $ivp myprefix erb[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/myprefix_erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ [[ -L $bdir/myprefix_erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -e $bdir/myprefix_rake-ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -e $bdir/myprefix_ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ rm -f $wdir/erb[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/erb-ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ : installed version, multiple binaries[39m
+[33m$ rvm wrapper $ivp --no-prefix erb irb[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ readlink $bdir/irb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/irb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/irb$/[39m
+[33m$ [[ -L $bdir/erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -L $bdir/irb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -e $bdir/rake-ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -e $bdir/ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ rm -f $wdir/{erb,irb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/{erb,irb}-ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[33m$ rvm wrapper $ivp myprefix erb irb[39m
+[32m# passed: status = 0[39m
+[32m# passed: match = /\A\Z/[39m
+[33m$ readlink $bdir/myprefix_erb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/erb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/erb$/[39m
+[33m$ readlink $bdir/myprefix_irb[39m
+/home/mpapis/.rvm/wrappers/ruby-1.8.7-p352/irb
+[32m# passed: status = 0[39m
+[32m# passed: match = /1\.8\.7-p352\/irb$/[39m
+[33m$ [[ -L $bdir/myprefix_erb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -L $bdir/myprefix_irb ]][39m
+[32m# passed: status = 0[39m
+[33m$ [[ -e $bdir/myprefix_rake-ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ [[ -e $bdir/myprefix_ruby-$ivp ]][39m
+[32m# passed: status != 0[39m
+[33m$ rm -f $wdir/{erb,irb}[39m
+[32m# passed: status = 0[39m
+[33m$ rm -f $bdir/myprefix_{erb,irb}-ruby-$ivp[39m
+[32m# passed: status = 0[39m
+[34m##### Processed commands 313 of 313, [32msuccess tests 261 of 261.[39m

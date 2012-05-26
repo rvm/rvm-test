@@ -11,6 +11,6 @@ rvm 1.8.7-ntest do gem list
 # match!=/rake/
 # match!=/rubygems-bundler/
 # match!=/rvm/
-rvm 1.8.7-ntest do ruby -v # match=/1.8.7/
-rvm install 1.8.7-ntest    # status=0; match=/Already installed/
-rvm remove 1.8.7-ntest     # status=0; match=/Removing/
+rvm 1.8.7-ntest do ruby -v    # match=/1.8.7/
+rvm install 1.8.7-ntest       # status=0; match=/Already installed/
+rvm remove 1.8.7-ntest --gems # status=0; match=/Removing/
