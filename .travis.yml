@@ -2,13 +2,12 @@ language: ruby
 rvm:
   - 1.9.3
 before_install:
+  - unset BUNDLE_GEMFILE
   - rvm get head
   - rvm alias delete default
   - hash -r
 install: gem install dtf
-before_script:
-  - unset BUNDLE_GEMFILE
-script: 'dtf --text fast/*'
+script: 'NOEXEC=skip dtf --text fast/*'
 notifications:
   irc:
     channels:
