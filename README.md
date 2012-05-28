@@ -4,14 +4,14 @@ Set of tests for [RVM](https://github.com/wayneeseguin/rvm/).
 
 ## Usage
 
-    $ gem install dtf    # Install testing framework
-    $ dtf fast/*         # Run the short tests (those are run on travis)
-    $ dtf long/*         # Run the long set of tests, like installing rubies.
-    $ dtf --text long/*  # Same as above, but watch output
+    $ gem install tf    # Install testing framework
+    $ tf fast/*         # Run the short tests (those are run on travis)
+    $ tf long/*         # Run the long set of tests, like installing rubies.
+    $ tf --text long/*  # Same as above, but watch output
 
 ## Comment tests
 
-Filenames have to end with _comment_test.sh
+Filenames have to end with `_comment_test.sh`
 
 Example test file:
 
