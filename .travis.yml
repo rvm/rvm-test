@@ -6,8 +6,8 @@ before_install:
   - rvm get head
   - rvm alias delete default
   - hash -r
-install: gem install dtf
-script: 'NOEXEC=skip dtf --text fast/*'
+install: gem install tf
+script: 'NOEXEC=skip tf --text fast/*'
 notifications:
   irc:
     channels:
