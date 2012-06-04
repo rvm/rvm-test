@@ -24,6 +24,12 @@ rm haml.gems
 gem list                    # match=/haml/
 rvm --force gemset delete test_gemset
 
+: use/create
+rvm --force gemset delete test_gemset
+rvm gemset use test_gemset --create # status=0 ; match=/Using /
+rvm current                         # match=/test_gemset/
+rvm --force gemset delete test_gemset
+
 : cleanup
 ls ~/.rvm/wrappers | grep test_gemset # status!=0
 ls -l ~/.rvm/bin   | grep test_gemset # status!=0
