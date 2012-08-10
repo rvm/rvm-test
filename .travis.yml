@@ -6,7 +6,7 @@ before_install:
   - rvm get head
   - rvm alias delete default
   - hash -r
-install: gem install tf
+install: gem install tf -v '>=0.4.1'
 script: 'NOEXEC=skip tf --text fast/*'
 notifications:
   irc:
