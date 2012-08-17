@@ -12,6 +12,7 @@ ls -l $rvm_path/environments/default       # status!=0
 rvm alias create ruby-test-default 1.9.2@test_gemset # status=0
 ls -l $rvm_path/environments/ruby-test-default       # status=0
 rvm alias list                                       # match=/^ruby-test-default => ruby-1.9.2.*@test_gemset$/
+rvm alias list names                                 # match=/^ruby-test-default$/
 rvm alias delete ruby-test-default                   # status=0
 ls -l $rvm_path/environments/ruby-test-default       # status!=0
 
