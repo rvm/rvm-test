@@ -10,3 +10,4 @@ rvm use 1.8.7           # status=0; match=/Using / ; env[GEM_HOME]=/1.8.7/
 rvm current             # match=/1.8.7/
 command rvm use 1.9.2   # status=0; match!=/Using /; env[GEM_HOME]!=/1.9.2/ ; match=/RVM is not a function/
 rvm use 1.9.2           # status=0; match=/Using / ; env[GEM_HOME]=/1.9.2/
+rvm use 1.9.1           # status=1; env[rvm_recommended_ruby]=/rvm install ruby-1.9.1/
