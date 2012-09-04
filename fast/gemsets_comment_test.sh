@@ -17,6 +17,7 @@ rvm gemset use test_gemset  # status=0 ; match=/Using /
 rvm gemdir                  # match=/@test_gemset$/
 gem install haml
 rvm gemset export haml.gems # status=0; match=/Exporting /
+[[ -f haml.gems ]]          # status=0
 rvm --force gemset empty    # status=0
 gem list                    # match!=/haml/
 rvm gemset import haml.gems # status=0; match=/Installing /

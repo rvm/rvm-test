@@ -10,7 +10,7 @@ rvm gemset globalcache enable                     # status=0; match=/ global cac
 rvm gemset globalcache enabled                    # status=0; match=/Enabled/
 rvm gemset list                                   # status=0; match!=/ testset /
 
-rvm 1.9.3 do rvm gemset create testset            # status=0; match=/ gemset created /
+rvm 1.9.3 do rvm gemset create testset            # status=0; match=/gemset created/
 
 [[ -L "$rvm_path/gems/cache" ]]                   # status!=0
 [[ -d "$rvm_path/gems/cache" ]]                   # status=0
