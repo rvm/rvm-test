@@ -33,6 +33,7 @@ rvm --force gemset delete test_gemset
 
 : cleanup
 ls ~/.rvm/wrappers | grep test_gemset # status!=0
+ls ~/.rvm/gems     | grep test_gemset # status!=0
 ls -l ~/.rvm/bin   | grep test_gemset # status!=0
 
 : use
