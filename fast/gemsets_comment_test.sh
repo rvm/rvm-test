@@ -58,3 +58,6 @@ rvm gemset list                          # match!=/test_gemset/
 rvm --force gemset delete unknown_gemset # status=0
 rvm gemset use unknown_gemset            # status!=0; match=/does not exist/
 rvm current                              # match!=/unknown_gemset/
+
+: default
+rvm gemset list                          # match=/default/
