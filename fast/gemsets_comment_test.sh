@@ -13,31 +13,40 @@ rvm gemset list                          # match!=/test_gemset/
 
 : export/import/use
 rvm gemset create test_gemset
-rvm gemset use test_gemset  # status=0 ; match=/Using /
-rvm gemdir                  # match=/@test_gemset$/
+rvm gemset use test_gemset               # status=0 ; match=/Using /
+rvm gemdir                               # match=/@test_gemset$/
 gem install haml
-rvm gemset export haml.gems # status=0; match=/Exporting /
-[[ -f haml.gems ]]          # status=0
-rvm --force gemset empty    # status=0
-gem list                    # match!=/haml/
-rvm gemset import haml.gems # status=0; match=/Installing /
+rvm gemset export haml.gems              # status=0; match=/Exporting /
+[[ -f haml.gems ]]                       # status=0
+rvm --force gemset empty                 # status=0
+gem list                                 # match!=/haml/
+rvm gemset import haml.gems              # status=0; match=/Installing /
 rm haml.gems
-gem list                    # match=/haml/
-rvm --force gemset delete test_gemset
+gem list                                 # match=/haml/
+rvm --force gemset delete test_gemset    # status=0
+rvm gemset list                          # match!=/test_gemset/
 
 : use/create
-rvm --force gemset delete test_gemset
-rvm gemset use test_gemset --create # status=0 ; match=/Using /
-rvm current                         # match=/test_gemset/
+ls $rvm_path/wrappers/*test_gemset*      # status!=0
+ls $rvm_path/gems/*test_gemset*          # status!=0
+ls -l $rvm_path/bin/*test_gemset*        # status!=0
+rvm gemset list                          # match!=/test_gemset/
+rvm --force gemset delete test_gemset    # status=0
+rvm gemset use test_gemset --create      # status=0 ; match=/Using /
+ls $rvm_path/wrappers/*test_gemset*      # status=0
+ls $rvm_path/gems/*test_gemset*          # status=0
+ls -l $rvm_path/bin/*test_gemset*        # status=0
+rvm gemset list                          # match=/test_gemset/
+rvm current                              # match=/test_gemset/
 rvm --force gemset delete test_gemset
 
 : cleanup
-ls ~/.rvm/wrappers # match!=/test_gemset/
-ls ~/.rvm/gems     # match!=/test_gemset/
-ls -l ~/.rvm/bin   # match!=/test_gemset/
-rvm gemset list    # match!=/test_gemset/
+ls $rvm_path/wrappers/*test_gemset*      # status!=0
+ls $rvm_path/gems/*test_gemset*          # status!=0
+ls -l $rvm_path/bin/*test_gemset*        # status!=0
+rvm gemset list                          # match!=/test_gemset/
 
 : use
-rvm --force gemset delete unknown_gemset
-rvm gemset use unknown_gemset # status!=0; match=/does not exist/
-rvm current                   # match!=/unknown_gemset/
+rvm --force gemset delete unknown_gemset # status=0
+rvm gemset use unknown_gemset            # status!=0; match=/does not exist/
+rvm current                              # match!=/unknown_gemset/
