@@ -32,8 +32,10 @@ rvm current                         # match=/test_gemset/
 rvm --force gemset delete test_gemset
 
 : cleanup
-ls ~/.rvm/wrappers | grep test_gemset # status!=0
-ls -l ~/.rvm/bin   | grep test_gemset # status!=0
+ls ~/.rvm/wrappers # match!=/test_gemset/
+ls ~/.rvm/gems     # match!=/test_gemset/
+ls -l ~/.rvm/bin   # match!=/test_gemset/
+rvm gemset list    # match!=/test_gemset/
 
 : use
 rvm --force gemset delete unknown_gemset
