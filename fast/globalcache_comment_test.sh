@@ -1,6 +1,6 @@
 source "$rvm_path/scripts/rvm"
 
-rvm use 1.9.3 --install                           # status=0
+rvm use 1.9.3 --install                           # status=0; env[GEM_HOME]=/1.9.3/
 rvm --force gemset globalcache disable
 rvm gemset globalcache enabled                    # match=/Disabled/
 
@@ -8,12 +8,19 @@ rvm gemset globalcache enabled                    # match=/Disabled/
 
 rvm gemset globalcache enable                     # status=0; match=/ global cache /
 rvm gemset globalcache enabled                    # status=0; match=/Enabled/
-rvm gemset list                                   # status=0; match!=/ testset /
+rvm gemset list                                   # status=0; match!=/ testset$/
 
-rvm 1.9.3 do rvm gemset create testset            # status=0; match=/gemset created/
+rvm gemset create testset                         # status=0; match=/gemset created/
+rvm gemset list                                   # status=0; match=/ testset$/
 
 [[ -L "$rvm_path/gems/cache" ]]                   # status!=0
 [[ -d "$rvm_path/gems/cache" ]]                   # status=0
+
+rvm gemset copy 1.9.3@testset 1.9.3@testset2      # status=0; match=/Copying gemset/; match[stderr]=/^$/
+rvm gemset list                                   # status=0; match=/ testset2$/
+
+rvm gemset --force delete testset                 # status=0; match=/^Removing gemset testset$/
+rvm gemset --force delete testset2                # status=0; match=/^Removing gemset testset2$/
 
 rvm system                                        # status=0
 
