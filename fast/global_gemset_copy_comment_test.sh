@@ -1,6 +1,6 @@
+rvm get head # status=0 ; match=/Downloading RVM from wayneeseguin branch master/; match=/RVM reloaded/
 rvm use 1.9.3-p286 --install # status=0
 rvm use 1.9.3-p194 --install # status=0
-rvm get head # status=0 ; match=/Downloading RVM from wayneeseguin branch master/; match=/RVM reloaded/
 rvm --force gemset globalcache disable
 rvm gemset globalcache enabled # status=1; match=/ Disabled/
 rvm gemset globalcache enable # status=0; match=/ global cache /
