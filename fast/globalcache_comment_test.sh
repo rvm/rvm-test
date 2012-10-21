@@ -16,7 +16,14 @@ rvm gemset list                                   # status=0; match=/ testset$/
 [[ -L "$rvm_path/gems/cache" ]]                   # status!=0
 [[ -d "$rvm_path/gems/cache" ]]                   # status=0
 
-rvm gemset copy 1.9.3@testset 1.9.3@testset2      # status=0; match=/Copying gemset/; match[stderr]=/^$/
+rvm gemset copy 1.9.3@testset 1.9.3@testset2
+# status=0
+# match=/Copying gemset/
+# match!=/Unknown file type/
+# match!=/cannot overwrite directory/
+# match!=/with non-directory/
+# match!=/Error running/
+# match[stderr]=/^$/
 rvm gemset list                                   # status=0; match=/ testset2$/
 
 rvm gemset --force delete testset                 # status=0; match=/^Removing gemset testset$/
