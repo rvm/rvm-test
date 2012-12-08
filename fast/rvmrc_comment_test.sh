@@ -28,7 +28,7 @@ rvm rvmrc trust "$ds"     # match=/ as trusted$/
 rvm rvmrc trusted "$ds"   # match=/is currently trusted/
 rvm rvmrc reset "$ds"     # match=/^Reset/
 
-## spaces
+## brackets
 ds="$d/with(brackets)"
 mkdir -p "$ds"
 echo "echo loading-rvmrc" > "$ds/.rvmrc"
