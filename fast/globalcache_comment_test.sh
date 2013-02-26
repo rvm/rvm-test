@@ -26,8 +26,8 @@ rvm gemset copy 1.9.3@testset 1.9.3@testset2
 # match[stderr]=/^$/
 rvm gemset list                                   # status=0; match=/ testset2$/
 
-rvm gemset --force delete testset                 # status=0; match=/^Removing gemset testset$/
-rvm gemset --force delete testset2                # status=0; match=/^Removing gemset testset2$/
+rvm gemset --force delete testset                 # status=0; match=/Removing gemset testset/
+rvm gemset --force delete testset2                # status=0; match=/Removing gemset testset2/
 
 rvm system                                        # status=0
 
