@@ -5,7 +5,7 @@ d=${TMPDIR:=/tmp}/test-rvm-shell/ # status=0
 mkdir -p $d                       # status=0
 echo "rvm current" > $d/rvm-shell-rvm-current-script.sh # status=0
 chmod +x $d/rvm-shell-rvm-current-script.sh
-rvm use 1.9.3-p194 --install -j 3
+rvm use 1.9.3-p194 --install
 rvm use system
 
 : Test1

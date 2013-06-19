@@ -1,7 +1,7 @@
 source "$rvm_path/scripts/rvm"
 
 rvm remove  1.8.7-ntest --gems
-rvm install 1.8.7-ntest --skip-gemsets -j $(cat /proc/cpuinfo 2>/dev/null | (grep vendor_id || echo 'vendor_id : Other';) | wc -l)
+rvm install 1.8.7-ntest --skip-gemsets
 # status=0
 # match!=/Already installed/
 # match=/Applying patch/
