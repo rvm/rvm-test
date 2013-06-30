@@ -9,7 +9,7 @@ rvm install 1.8.7-ntest --skip-gemsets
 # match!=/Already installed/
 # match=/Applying patch/
 # match=/Skipped importing default gemsets/
-# match=/patches just to be compiled on/
+# match=/WARNING: Please be aware that you just installed ruby that is no more supported, more details here:/
 
 rvm install 1.8.7-ntest
 # status=0; match=/Already installed/
@@ -44,7 +44,7 @@ rvm install 1.8.7-ntest
 # match!=/Already installed/
 # match=/Applying patch/
 # match=/importing default gemsets, this may take time/
-# match=/patches just to be compiled on/
+# match=/WARNING: Please be aware that you just installed ruby that is no more supported, more details here:/
 
 rvm 1.8.7-ntest do gem list
 # match[stderr]=/\A\Z/
