@@ -1,4 +1,5 @@
 source "$rvm_path/scripts/rvm"
+rvm_project_rvmrc=cd source "$rvm_path/scripts/cd"
 
 : prepare
 true TMPDIR:${TMPDIR:=/tmp}:
@@ -36,5 +37,13 @@ rvm rvmrc trust "$ds"     # match=/ as trusted$/
 rvm rvmrc trusted "$ds"   # match=/is currently trusted/
 rvm rvmrc reset "$ds"     # match=/^Reset/
 
+## load
+export rvm_project_rvmrc_default=1
+builtin cd
+rvm use 1.9.3-p448 --default --install # status=0
+rvm alias list            # match=/default/
+rvm rvmrc load            # env[GEM_HOME]!=/^$/
+
 : clean
+rvm alias delete default
 rm -rf $d
