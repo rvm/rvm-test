@@ -68,6 +68,13 @@ cd
 rvm use 1.9.3-p392
 echo "rvm use @vee --create" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
+cd "$d"                   # env[GEM_HOME]=/1.9.3-p392@vee$/
+
+## load @gemset after system
+cd
+rvm use system
+echo "rvm use @vee --create" > "$d/.rvmrc"
+rvm rvmrc trust "$d"      # match=/ as trusted$/
 cd "$d"                   # env[GEM_HOME]=/1.9.3-p448@vee$/
 
 : clean
