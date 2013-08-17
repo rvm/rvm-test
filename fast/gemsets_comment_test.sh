@@ -16,9 +16,29 @@ rvm gemset create test_gemset            # status=0 ; match=/gemset created/
 rvm gemset use test_gemset               # status=0 ; match=/Using /
 rvm current                              # match=/test_gemset/
 rvm --force gemset delete test_gemset    # status=0
-echo $GEM_PATH
 rvm current                              # match=/^ruby-1.8.7-p370$/
 rvm gemset list                          # match!=/test_gemset/
+
+: rvm ... do
+rvm 1.8.7-p370 do rvm gemset create test_gemset            # status=0 ; match=/gemset created/
+rvm 1.8.7-p370 do rvm gemset list                          # match=/test_gemset/; match!=/other_gems/
+rvm 1.8.7-p370 do rvm --force gemset delete test_gemset    # status=0
+
+: rvm ... do new rvm_gemsets_path
+rvm use 1.8.7-p370
+true TMPDIR:${TMPDIR:=/tmp}:
+d=$TMPDIR/test-rvm_gemsets_path
+mkdir -p $d
+echo rvm_gems_path=$d  >> ~/.rvmrc
+echo rvm_create_flag=1 >> ~/.rvmrc
+rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/rvm_gemsets_path/
+rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/rvm_gemsets_path/
+rvm --force gemset delete test_gemset    # status=0
+rvm 1.8.7-p370 do rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/rvm_gemsets_path/
+rvm 1.8.7-p370 do rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/rvm_gemsets_path/
+rvm 1.8.7-p370 do rvm --force gemset delete test_gemset    # status=0
+sed -i'' -e "/rvm_gems_path=${d//\//\/}/ d" -e "/rvm_create_flag=1/ d" ~/.rvmrc
+rm -rf $d
 
 : export/import/use
 rvm gemset create test_gemset
