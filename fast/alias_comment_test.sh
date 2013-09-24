@@ -20,10 +20,12 @@ rvm --force gemset delete test_gemset
 
 : overwrite existing aliases
 rvm alias create veve 1.9.3-p194  # status=0
-ls -l $rvm_path/environments/veve # status=0
+ls -l $rvm_path/environments/veve # status=0; match=/1.9.3-p194/
+ls -l $rvm_path/wrappers/veve     # status=0; match=/1.9.3-p194/
 rvm alias list                    # match=/^veve => ruby-1.9.3-p194$/
 rvm alias create veve 1.9.2       # status=0
-ls -l $rvm_path/environments/veve # status=0
+ls -l $rvm_path/environments/veve # status=0; match=/1.9.2/
+ls -l $rvm_path/wrappers/veve     # status=0; match=/1.9.2/
 rvm alias list                    # match=/^veve => ruby-1.9.2-p.*$/
 rvm alias delete veve             # status=0
 ls -l $rvm_path/environments/veve # status!=0
