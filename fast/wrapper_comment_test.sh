@@ -12,7 +12,7 @@ bdir="$rvm_path/bin"
 rvm install $ivp # status=0
 
 : help
-rvm wrapper      # status!=0; match=/Usage:/
+rvm wrapper      # status!=0; match=/Usage/
 
 : non-existent version
 rvm wrapper $nv                           # status!=0; match=/Could not load ruby .*1\.2\.3/
