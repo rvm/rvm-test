@@ -43,7 +43,7 @@ rvm install 1.8.7-ntest
 # status=0
 # match!=/Already installed/
 # match=/Applying patch/
-# match=/importing default gemsets, this may take time/
+# match=/importing.*gemset/
 # match=/WARNING: Please be aware that you just installed ruby that is no more maintained, for a list of maintained rubies visit:/
 
 rvm 1.8.7-ntest do gem list
