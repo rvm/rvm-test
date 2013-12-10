@@ -36,8 +36,8 @@ rvm remove  1.8.7-ntest --gems
 ## default/global gemsets
 
 mkdir -p $rvm_path/gemsets/ruby/1.8.7/
-echo haml > $rvm_path/gemsets/ruby/1.8.7/default.gems
-echo tf > $rvm_path/gemsets/ruby/1.8.7/global.gems
+printf "gem-wrappers\nhaml\n" > $rvm_path/gemsets/ruby/1.8.7/default.gems
+printf "gem-wrappers\ntf\n"   > $rvm_path/gemsets/ruby/1.8.7/global.gems
 
 rvm install 1.8.7-ntest
 # status=0
