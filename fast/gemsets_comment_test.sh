@@ -58,20 +58,17 @@ rvm gemset list                          # match!=/test_gemset/
 : use/create
 ls $rvm_path/wrappers/*test_gemset*      # status!=0
 ls $rvm_path/gems/*test_gemset*          # status!=0
-ls -l $rvm_path/bin/*test_gemset*        # status!=0
 rvm gemset list                          # match!=/test_gemset/
 rvm --force gemset delete test_gemset    # status=0
 rvm gemset use test_gemset --create      # status=0 ; match=/Using /
 ls $rvm_path/wrappers/*test_gemset*      # status=0
 ls $rvm_path/gems/*test_gemset*          # status=0
-ls -l $rvm_path/bin/*test_gemset*        # status=0
 rvm gemset list                          # match=/test_gemset/
 rvm --force gemset delete test_gemset    # status=0
 
 : cleanup
 ls $rvm_path/wrappers/*test_gemset*      # status!=0
 ls $rvm_path/gems/*test_gemset*          # status!=0
-ls -l $rvm_path/bin/*test_gemset*        # status!=0
 rvm gemset list                          # match!=/test_gemset/
 
 : use
