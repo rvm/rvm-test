@@ -6,7 +6,6 @@ ivp=$iv-p352     ## installed ruby version and patchlevel
 ivnp=$iv-p999    ## installed ruby version but invalid patchlevel
 nvp=$nv-p999     ## non-existent ruby version and patchlevel
 
-wdir="$rvm_path/wrappers/ruby-$ivp"
 bdir="$rvm_path/bin"
 
 rvm install $ivp # status=0
@@ -41,21 +40,18 @@ rvm wrapper $ivp                          # status=0; match[stderr]=/\A\Z/
 readlink $bdir/erb-ruby-$ivp              # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/erb-ruby-$ivp ]]              # status=0
 rm -f $bdir/ruby-$ivp                     # status=0
-rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}      # status=0
 rm -f $bdir/{erb,gem,irb,rake,rdoc,ri,testrb}-ruby-$ivp # status=0
 
 rvm wrapper $ivp --no-prefix              # status=0; match[stderr]=/\A\Z/
 readlink $bdir/erb                        # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/erb ]]                        # status=0
 rm -f $bdir/ruby-$ivp                     # status=0
-rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
 rm -f $bdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
 
 rvm wrapper $ivp myprefix                 # status=0; match[stderr]=/\A\Z/
 readlink $bdir/myprefix_erb               # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/myprefix_erb ]]               # status=0
 rm -f $bdir/myprefix_ruby-$ivp            # status=0
-rm -f $wdir/{erb,gem,irb,rake,rdoc,ri,ruby,testrb}          # status=0
 rm -f $bdir/myprefix_{erb,gem,irb,rake,rdoc,ri,ruby,testrb} # status=0
 
 : installed version, single binary
@@ -64,7 +60,6 @@ readlink $bdir/erb                        # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/erb ]]                        # status=0
 [[ -e $bdir/rake-ruby-$ivp ]]             # status!=0
 [[ -e $bdir/ruby-$ivp ]]                  # status!=0
-rm -f $wdir/erb                           # status=0
 rm -f $bdir/erb-ruby-$ivp                 # status=0
 
 rvm wrapper $ivp myprefix erb             # status=0; match[stderr]=/\A\Z/
@@ -72,7 +67,6 @@ readlink $bdir/myprefix_erb               # status=0; match=/1\.8\.7-p352\/erb$/
 [[ -L $bdir/myprefix_erb ]]               # status=0
 [[ -e $bdir/myprefix_rake-ruby-$ivp ]]    # status!=0
 [[ -e $bdir/myprefix_ruby-$ivp ]]         # status!=0
-rm -f $wdir/erb                           # status=0
 rm -f $bdir/erb-ruby-$ivp                 # status=0
 
 : installed version, multiple binaries
@@ -83,7 +77,6 @@ readlink $bdir/irb                        # status=0; match=/1\.8\.7-p352\/irb$/
 [[ -L $bdir/irb ]]                        # status=0
 [[ -e $bdir/rake-ruby-$ivp ]]             # status!=0
 [[ -e $bdir/ruby-$ivp ]]                  # status!=0
-rm -f $wdir/{erb,irb}                     # status=0
 rm -f $bdir/{erb,irb}-ruby-$ivp           # status=0
 
 rvm wrapper $ivp myprefix erb irb         # status=0; match[stderr]=/\A\Z/
@@ -93,5 +86,4 @@ readlink $bdir/myprefix_irb               # status=0; match=/1\.8\.7-p352\/irb$/
 [[ -L $bdir/myprefix_irb ]]               # status=0
 [[ -e $bdir/myprefix_rake-ruby-$ivp ]]    # status!=0
 [[ -e $bdir/myprefix_ruby-$ivp ]]         # status!=0
-rm -f $wdir/{erb,irb}                     # status=0
 rm -f $bdir/myprefix_{erb,irb}-ruby-$ivp  # status=0
