@@ -8,6 +8,7 @@ nvp=$nv-p999     ## non-existent ruby version and patchlevel
 
 bdir="$rvm_path/bin"
 
+rvm remove $ivp --gems ## make sure we work with fresh installation to avoid problems on travis
 rvm install $ivp # status=0
 
 : help
