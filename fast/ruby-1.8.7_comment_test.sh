@@ -7,7 +7,7 @@ rvm remove  1.8.7-ntest --gems
 rvm install 1.8.7-ntest --skip-gemsets
 # status=0
 # match!=/Already installed/
-# match=/Applying patch/
+# match=/[Aa]pplying patch/
 # match=/Skipped importing default gemsets/
 # match=/WARNING: Please be aware that you just installed ruby that is no more maintained, for a list of maintained rubies visit:/
 
@@ -30,7 +30,7 @@ rvm 1.8.7-ntest do ruby -v
 # match=/1.8.7/
 
 rvm remove  1.8.7-ntest --gems
-# status=0; match=/Removing/
+# status=0; match=/[Rr]emoving/
 
 
 ## default/global gemsets
@@ -42,7 +42,7 @@ printf "gem-wrappers\ntf\n"   > $rvm_path/gemsets/ruby/1.8.7/global.gems
 rvm install 1.8.7-ntest
 # status=0
 # match!=/Already installed/
-# match=/Applying patch/
+# match=/[Aa]pplying patch/
 # match=/importing.*gemset/
 # match=/WARNING: Please be aware that you just installed ruby that is no more maintained, for a list of maintained rubies visit:/
 
@@ -59,7 +59,7 @@ rvm 1.8.7-ntest@global do gem list
 ## Cleanup
 
 rvm remove 1.8.7-ntest --gems
-# status=0; match=/Removing/
+# status=0; match=/[Rr]emoving/
 
 rm -rf $rvm_path/gemsets/ruby/1.8.7/
 
