@@ -9,7 +9,7 @@ rvm install 1.8.7-ntest --skip-gemsets
 # match!=/Already installed/
 # match=/[Aa]pplying patch/
 # match=/Skipped importing default gemsets/
-# match=/WARNING: Please be aware that you just installed ruby that is no more maintained, for a list of maintained rubies visit:/
+# match=/WARNING: Please be aware that you just installed a ruby that is no longer maintained, for a list of maintained rubies visit:/
 
 rvm install 1.8.7-ntest
 # status=0; match=/Already installed/
@@ -44,7 +44,7 @@ rvm install 1.8.7-ntest
 # match!=/Already installed/
 # match=/[Aa]pplying patch/
 # match=/importing.*gemset/
-# match=/WARNING: Please be aware that you just installed ruby that is no more maintained, for a list of maintained rubies visit:/
+# match=/WARNING: Please be aware that you just installed a ruby that is no longer maintained, for a list of maintained rubies visit:/
 
 rvm 1.8.7-ntest do gem list
 # match[stderr]=/\A\Z/
