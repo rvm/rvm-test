@@ -67,8 +67,7 @@ rvm gemset list                          # match=/test_gemset/
 rvm --force gemset delete test_gemset    # status=0
 
 : cleanup
-ls $rvm_path/wrappers/*test_gemset*      # status!=0
-ls $rvm_path/gems/*test_gemset*          # status!=0
+ls $rvm_path/*/*test_gemset*             # status!=0
 rvm gemset list                          # match!=/test_gemset/
 
 : use
