@@ -5,12 +5,12 @@ true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-rvmrc
 mkdir $d
 pushd $d
-command rvm install 1.9.3
+command rvm install 1.9.3-p484
 rvm 1.9.3-p484 do rvm gemset reset_env
 rvm use 1.8.7 --install
 
 : .rvmrc generated
-rvm rvmrc create 1.9.3
+rvm rvmrc create 1.9.3-p484
 [ -f .rvmrc ]         # status=0
 rvm current           # match=/1.8.7/
 rvm rvmrc trust .rvmrc
