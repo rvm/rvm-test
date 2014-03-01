@@ -8,8 +8,7 @@ rvm use 1.9.3 --install # status=0
 : do
 rvm 9.9.9 do rvm gemdir # status=1; match=/is not installed/
 rvm 1.8.7 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+/
-## bad error msg - but good status
-rvm 1.8.7@test0 do rvm gemdir # status=1; match=/is not installed/
+rvm 1.8.7@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
 rvm 1.8.7@test1 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test1/
 rvm 1.8.7@test2 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test2/
 
