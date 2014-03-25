@@ -7,7 +7,7 @@ d=$TMPDIR/test-rvmrc
 f=$d/.rvmrc
 mkdir -p $d
 echo "echo loading-rvmrc" > $f
-rvm use 1.9.3-p392 --install # status=0
+rvm use 2.0.0-p451 --install # status=0
 rvm use 1.9.3-p448 --install # status=0
 
 ## simple
@@ -46,29 +46,29 @@ export rvm_project_rvmrc_default=1
 
 ## load default
 builtin cd
-rvm use 1.9.3-p392
+rvm use 2.0.0-p451
 rvm rvmrc load            # env[GEM_HOME]!=/^$/
 
 ## load ruby
 cd
-rvm use 1.9.3-p392
+rvm use 2.0.0-p451
 echo "rvm use 1.9.3-p448" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
 cd "$d"                   # env[GEM_HOME]=/1.9.3-p448$/
 
 ## load ruby@gemset
 cd
-rvm use 1.9.3-p392
+rvm use 2.0.0-p451
 echo "rvm use 1.9.3-p448@vee --create" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
 cd "$d"                   # env[GEM_HOME]=/1.9.3-p448@vee$/
 
 ## load @gemset
 cd
-rvm use 1.9.3-p392
+rvm use 2.0.0-p451
 echo "rvm use @vee --create" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
-cd "$d"                   # env[GEM_HOME]=/1.9.3-p392@vee$/
+cd "$d"                   # env[GEM_HOME]=/2.0.0-p451@vee$/
 
 ## load @gemset after system
 cd
