@@ -37,7 +37,7 @@ rvm --force gemset delete test_gemset    # status=0
 rvm 1.8.7-p374 do rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/rvm_gemsets_path/
 rvm 1.8.7-p374 do rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/rvm_gemsets_path/
 rvm 1.8.7-p374 do rvm --force gemset delete test_gemset    # status=0
-sed -i'' -e "/rvm_gems_path=${d//\//\/}/ d" -e "/rvm_create_flag=1/ d" ~/.rvmrc
+\sed -e "/rvm_gems_path=${d//\//\/}/ d" -e "/rvm_create_flag=1/ d" < ~/.rvmrc > ~/.rvmrc.new && \mv -f ~/.rvmrc.new ~/.rvmrc
 rm -rf $d
 
 : export/import/use
