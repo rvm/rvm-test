@@ -10,6 +10,7 @@ bdir="$rvm_path/bin"
 
 rvm remove $ivp --gems ## make sure we work with fresh installation to avoid problems on travis
 rvm install $ivp # status=0
+rvm $ivp@global do gem install rake
 
 : help
 rvm wrapper      # status!=0; match=/Usage/
