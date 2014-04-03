@@ -29,7 +29,7 @@ mcd $d/a
 gem list         # match!=/haml/
 echo "ruby-gem-install=haml" >> .versions.conf
 rvm_current_rvmrc=""
-rvm rvmrc load . # match!=/moving aside to preserve/; match=/Successfully installed haml/
+rvm rvmrc load . # match!=/moving aside to preserve/
 gem list         # match=/haml/
 
 : test bundler
