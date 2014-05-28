@@ -1,18 +1,18 @@
 source "$rvm_path/scripts/rvm"
 
-rvm use 1.8.7 --install # status=0
+rvm use 1.8.7-p374 --install # status=0
 rvm gemset create test1 # status=0
 rvm gemset create test2 # status=0
 rvm use 1.9.3 --install # status=0
 
 : do
 rvm 9.9.9 do rvm gemdir # status=1; match=/is not installed/
-rvm 1.8.7 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+/
-rvm 1.8.7@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
-rvm 1.8.7@test1 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test1/
-rvm 1.8.7@test2 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test2/
+rvm 1.8.7-p374 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+/
+rvm 1.8.7-p374@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
+rvm 1.8.7-p374@test1 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test1/
+rvm 1.8.7-p374@test2 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test2/
 
-rvm 1.8.7@global,1.8.7 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@global$/; match=/1.8.7-p[[:digit:]]+$/
+rvm 1.8.7-p374@global,1.8.7-p374 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@global$/; match=/1.8.7-p[[:digit:]]+$/
 
 rvm --force gemset delete test1 # status=0
 rvm --force gemset delete test2 # status=0
@@ -44,7 +44,7 @@ rvm    . do ruby --version # status=1; match=/Could not determine which Ruby to 
 
 : -----------------------------------------------------------------
 mkdir -p $d/1.8.7
-echo "1.8.7" > $d/1.8.7/.ruby-version
+echo "1.8.7-p374" > $d/1.8.7/.ruby-version
 
 : absolute directory
 rvm in $d/1.8.7 do rvm info ruby  # status=0; match=/version: *"1.8.7/
