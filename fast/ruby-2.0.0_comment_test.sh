@@ -15,15 +15,13 @@ rvm install 2.0.0-ntest
 # status=0; match=/Already installed/
 
 rvm 2.0.0-ntest do which gem
-# match=/2.0.0-ntest/
+# match=/2.0.0-p[[:digit:]]+-ntest/
 
 rvm 2.0.0-ntest do gem env
 
 rvm 2.0.0-ntest do gem list
 # match[stderr]=/\A\Z/
-# match[stdout]!=/bundler/
 # match[stdout]!=/rubygems-bundler/
-# match[stdout]!=/rvm/
 
 rvm 2.0.0-ntest do ruby -v
 # match=/2.0.0/
