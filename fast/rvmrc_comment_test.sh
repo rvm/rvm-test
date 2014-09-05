@@ -1,4 +1,5 @@
-source "$rvm_path/scripts/rvm"
+export rvm_scripts_path="$rvm_path/scripts"
+source "$rvm_scripts_path/rvm"
 rvm_project_rvmrc=cd source "$rvm_path/scripts/cd"
 
 : prepare

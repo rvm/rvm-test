@@ -48,17 +48,17 @@ echo "2.1.0" > $d/2.1.0/.ruby-version
 
 : absolute directory
 rvm in $d/2.1.0 do rvm info ruby  # status=0; match=/version: *"2.1.0/
-rvm in $d/2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0 /
+rvm in $d/2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0p0 /
 
 : relative directory
 cd $d
 rvm in 2.1.0 do rvm info ruby  # status=0; match=/version: *"2.1.0/
-rvm in 2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0 /
+rvm in 2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0p0 /
 
 : current directory
 cd $d/2.1.0
 rvm . do rvm info ruby  # status=0; match=/version: *"2.1.0/
-rvm . do ruby --version # status=0; match=/^ruby 2.1.0 /
+rvm . do ruby --version # status=0; match=/^ruby 2.1.0p0 /
 
 : -----------------------------------------------------------------
 ver=2.1.1
