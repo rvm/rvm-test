@@ -15,7 +15,7 @@ rvm rvmrc create 2.1.2
 rvm current           # match=/2.1.0/
 rvm rvmrc trust .rvmrc
 rvm rvmrc load .rvmrc # env[GEM_HOME]=/2.1.2$/ ; env[PATH]=/2.1.2/
-rvm current           # match=/2.1.1/
+rvm current           # match=/2.1.2/
 
 : .rvmrc with use
 rvm_current_rvmrc=""
