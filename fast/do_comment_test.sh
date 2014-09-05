@@ -1,18 +1,18 @@
 source "$rvm_path/scripts/rvm"
 
-rvm use 1.8.7-p374 --install # status=0
+rvm use 2.1.0 --install # status=0
 rvm gemset create test1 # status=0
 rvm gemset create test2 # status=0
-rvm use 1.9.3 --install # status=0
+rvm use 2.1.1 --install # status=0
 
 : do
 rvm 9.9.9 do rvm gemdir # status=1; match=/is not installed/
-rvm 1.8.7-p374 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+/
-rvm 1.8.7-p374@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
-rvm 1.8.7-p374@test1 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test1/
-rvm 1.8.7-p374@test2 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@test2/
+rvm 2.1.0 do rvm gemdir # status=0; match=/2.1.0/
+rvm 2.1.0@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
+rvm 2.1.0@test1 do rvm gemdir # status=0; match=/2.1.0@test1/
+rvm 2.1.0@test2 do rvm gemdir # status=0; match=/2.1.0@test2/
 
-rvm 1.8.7-p374@global,1.8.7-p374 do rvm gemdir # status=0; match=/1.8.7-p[[:digit:]]+@global$/; match=/1.8.7-p[[:digit:]]+$/
+rvm 2.1.0@global,2.1.0 do rvm gemdir # status=0; match=/2.1.0@global$/; match=/2.1.0$/
 
 rvm --force gemset delete test1 # status=0
 rvm --force gemset delete test2 # status=0
@@ -43,41 +43,41 @@ rvm    . do rvm info ruby  # status=1; match=/Could not determine which Ruby to 
 rvm    . do ruby --version # status=1; match=/Could not determine which Ruby to use/
 
 : -----------------------------------------------------------------
-mkdir -p $d/1.8.7
-echo "1.8.7-p374" > $d/1.8.7/.ruby-version
+mkdir -p $d/2.1.0
+echo "2.1.0" > $d/2.1.0/.ruby-version
 
 : absolute directory
-rvm in $d/1.8.7 do rvm info ruby  # status=0; match=/version: *"1.8.7/
-rvm in $d/1.8.7 do ruby --version # status=0; match=/^ruby 1.8.7 /
+rvm in $d/2.1.0 do rvm info ruby  # status=0; match=/version: *"2.1.0/
+rvm in $d/2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0 /
 
 : relative directory
 cd $d
-rvm in 1.8.7 do rvm info ruby  # status=0; match=/version: *"1.8.7/
-rvm in 1.8.7 do ruby --version # status=0; match=/^ruby 1.8.7 /
+rvm in 2.1.0 do rvm info ruby  # status=0; match=/version: *"2.1.0/
+rvm in 2.1.0 do ruby --version # status=0; match=/^ruby 2.1.0 /
 
 : current directory
-cd $d/1.8.7
-rvm . do rvm info ruby  # status=0; match=/version: *"1.8.7/
-rvm . do ruby --version # status=0; match=/^ruby 1.8.7 /
+cd $d/2.1.0
+rvm . do rvm info ruby  # status=0; match=/version: *"2.1.0/
+rvm . do ruby --version # status=0; match=/^ruby 2.1.0 /
 
 : -----------------------------------------------------------------
-ver=1.9.3
-mkdir -p $d/1.9.3
-echo "1.9.3" > $d/1.9.3/.ruby-version
+ver=2.1.1
+mkdir -p $d/2.1.1
+echo "2.1.1" > $d/2.1.1/.ruby-version
 
 : absolute directory
-rvm in $d/1.9.3 do rvm info ruby  # status=0; match=/version: *"1.9.3/
-rvm in $d/1.9.3 do ruby --version # status=0; match=/^ruby 1.9.3p/
+rvm in $d/2.1.1 do rvm info ruby  # status=0; match=/version: *"2.1.1/
+rvm in $d/2.1.1 do ruby --version # status=0; match=/^ruby 2.1.1/
 
 : relative directory
 cd $d
-rvm in 1.9.3 do rvm info ruby  # status=0; match=/version: *"1.9.3/
-rvm in 1.9.3 do ruby --version # status=0; match=/^ruby 1.9.3p/
+rvm in 2.1.1 do rvm info ruby  # status=0; match=/version: *"2.1.1/
+rvm in 2.1.1 do ruby --version # status=0; match=/^ruby 2.1.1/
 
 : current directory
-cd $d/1.9.3
-rvm . do rvm info ruby  # status=0; match=/version: *"1.9.3/
-rvm . do ruby --version # status=0; match=/^ruby 1.9.3p/
+cd $d/2.1.1
+rvm . do rvm info ruby  # status=0; match=/version: *"2.1.1/
+rvm . do ruby --version # status=0; match=/^ruby 2.1.1/
 
 ## cleanup
 rm -rf $d

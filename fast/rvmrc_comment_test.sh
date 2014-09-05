@@ -8,7 +8,7 @@ f=$d/.rvmrc
 mkdir -p $d
 echo "echo loading-rvmrc" > $f
 rvm use 2.0.0-p451 --install # status=0
-rvm use 1.9.3-p448 --install # status=0
+rvm use 2.1.0 --install # status=0
 
 ## simple
 : trust
@@ -40,8 +40,8 @@ rvm rvmrc trusted "$ds"   # match=/is currently trusted/
 rvm rvmrc reset "$ds"     # match=/^Reset/
 
 : prepare for load/cd test
-rvm alias create default 1.9.3-p448
-rvm alias list            # match=/default => ruby-1.9.3-p448/
+rvm alias create default 2.1.0
+rvm alias list            # match=/default => ruby-2.1.0/
 export rvm_project_rvmrc_default=1
 
 ## load default
@@ -52,16 +52,16 @@ rvm rvmrc load            # env[GEM_HOME]!=/^$/
 ## load ruby
 cd
 rvm use 2.0.0-p451
-echo "rvm use 1.9.3-p448" > "$d/.rvmrc"
+echo "rvm use 2.1.0" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
-cd "$d"                   # env[GEM_HOME]=/1.9.3-p448$/
+cd "$d"                   # env[GEM_HOME]=/2.1.0$/
 
 ## load ruby@gemset
 cd
 rvm use 2.0.0-p451
-echo "rvm use 1.9.3-p448@vee --create" > "$d/.rvmrc"
+echo "rvm use 2.1.0@vee --create" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
-cd "$d"                   # env[GEM_HOME]=/1.9.3-p448@vee$/
+cd "$d"                   # env[GEM_HOME]=/2.1.0@vee$/
 
 ## load @gemset
 cd
@@ -75,7 +75,7 @@ cd
 rvm use system
 echo "rvm use @vee --create" > "$d/.rvmrc"
 rvm rvmrc trust "$d"      # match=/ as trusted$/
-cd "$d"                   # env[GEM_HOME]=/1.9.3-p448@vee$/
+cd "$d"                   # env[GEM_HOME]=/2.1.0@vee$/
 
 : clean
 rvm alias delete default  # status=0

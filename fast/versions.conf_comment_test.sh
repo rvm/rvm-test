@@ -9,20 +9,20 @@ rm -f */*
 
 : generate
 mcd $d/a
-rvm use 1.9.3@versions-conf-a --create --versions-conf --install
-rvm current             # match=/^ruby-1.9.3-.*@versions-conf-a$/
+rvm use 2.1.1@versions-conf-a --create --versions-conf --install
+rvm current             # match=/^ruby-2.1.1@versions-conf-a$/
 [[ -f .versions.conf ]] # status=0
 
 mcd $d/b
-rvm use 1.8.7@versions-conf-b --create --versions-conf --install
-rvm current             # match=/^ruby-1.8.7-.*@versions-conf-b$/
+rvm use 2.1.0@versions-conf-b --create --versions-conf --install
+rvm current             # match=/^ruby-2.1.0@versions-conf-b$/
 [[ -f .versions.conf ]] # status=0
 
 : test
 rvm rvmrc load $d/a
-rvm current         # match=/^ruby-1.9.3-.*@versions-conf-a$/
+rvm current         # match=/^ruby-2.1.1@versions-conf-a$/
 rvm rvmrc load $d/b
-rvm current         # match=/^ruby-1.8.7-.*@versions-conf-b$/
+rvm current         # match=/^ruby-2.1.0@versions-conf-b$/
 
 : test installing gem
 mcd $d/a
@@ -43,6 +43,6 @@ rvm rvmrc load . # match=/Installing haml/
 gem list # match=/haml/; match=/bundler/
 
 : clean
-rvm 1.9.3 do rvm --force gemset delete versions-conf-a
-rvm 1.8.7 do rvm --force gemset delete versions-conf-b
+rvm 2.1.1 do rvm --force gemset delete versions-conf-a
+rvm 2.1.0 do rvm --force gemset delete versions-conf-b
 rm -rf $d
