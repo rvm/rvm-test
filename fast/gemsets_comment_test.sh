@@ -40,7 +40,7 @@ rvm 2.1.1 do rvm --force gemset delete test_gemset    # status=0
 \sed -e "/rvm_gems_path=${d//\//\/}/ d" -e "/rvm_create_flag=1/ d" < ~/.rvmrc > ~/.rvmrc.new && \mv -f ~/.rvmrc.new ~/.rvmrc
 rm -rf $d
 
-: export/import/use
+: export/import/use/empty
 rvm gemset create test_gemset
 rvm gemset use test_gemset               # status=0 ; match=/Using /
 rvm gemdir                               # match=/@test_gemset$/
@@ -52,6 +52,10 @@ gem list                                 # match!=/haml/
 rvm gemset import haml.gems              # status=0; match=/Installing /
 rm haml.gems
 gem list                                 # match=/haml/
+rvm gemset use default                   # status=0 ; match=/Using /
+rvm --force --debug gemset empty test_gemset # status=0 ; match=/GEM_HOME=.*ruby-2.1.1@test_gemset/
+rvm gemset use test_gemset               # status=0 ; match=/Using /
+gem list                                 # match!=/haml/
 echo yes | rvm gemset delete test_gemset # status=0
 rvm gemset list                          # match!=/test_gemset/
 
