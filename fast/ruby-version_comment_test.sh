@@ -5,6 +5,7 @@ true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-ruby-version
 f=$d/.ruby-version
 g=$d/.ruby-gemset
+e=$d/.ruby-env
 mkdir -p $d
 cd $d
 rvm use --install 2.1.2
@@ -35,6 +36,14 @@ rvm use .                   # env[GEM_HOME]=/2.1.2/
 rvm use 2.1.0
 echo "veve" > $g            # env[GEM_HOME]=/2.1.0/
 rvm use .                   # env[GEM_HOME]=/2.1.2@veve/
+rm -f $g
+
+: environment
+rvm use 2.1.0
+echo "test_me=3" > $e
+rvm use --trace . 2>&1 |tee ~/tmp/shm/big.log # env[GEM_HOME]=/2.1.2/; env[test_me]=/^3$/
+env | grep -i test
+rvm use 2.1.0               # env[GEM_HOME]=/2.1.0/; env[test_me]=/^$/
 
 : clean
 cd ..
