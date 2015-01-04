@@ -50,6 +50,12 @@ echo 'test_space=test me' > $e
 rvm use .                   # env[GEM_HOME]=/2.1.2/; env[test_space]=/^test me$/
 rvm use 2.1.0               # env[GEM_HOME]=/2.1.0/; env[test_space]=/^$/
 
+: environment quotes and spaces
+rvm use 2.1.0
+echo 'test_space="test me"' > $e
+rvm use .                   # env[GEM_HOME]=/2.1.2/; env[test_space]=/^test me$/
+rvm use 2.1.0               # env[GEM_HOME]=/2.1.0/; env[test_space]=/^$/
+
 : clean
 cd ..
 rm -rf $d
