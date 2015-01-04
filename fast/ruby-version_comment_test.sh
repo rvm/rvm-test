@@ -41,9 +41,14 @@ rm -f $g
 : environment
 rvm use 2.1.0
 echo "test_me=3" > $e
-rvm use --trace . 2>&1 |tee ~/tmp/shm/big.log # env[GEM_HOME]=/2.1.2/; env[test_me]=/^3$/
-env | grep -i test
+rvm use .                   # env[GEM_HOME]=/2.1.2/; env[test_me]=/^3$/
 rvm use 2.1.0               # env[GEM_HOME]=/2.1.0/; env[test_me]=/^$/
+
+: environment spaces
+rvm use 2.1.0
+echo 'test_space=test me' > $e
+rvm use .                   # env[GEM_HOME]=/2.1.2/; env[test_space]=/^test me$/
+rvm use 2.1.0               # env[GEM_HOME]=/2.1.0/; env[test_space]=/^$/
 
 : clean
 cd ..
