@@ -3,7 +3,7 @@ source "$rvm_path/scripts/rvm"
 command rvm install 2.1.0
 command rvm install 2.1.1
 
-rvm use 9.9.9           # status=1; match!=/Using /; env[GEM_HOME]!=/9.9.9/ ; match=/Unknown ruby interpreter version/
+rvm use 8.9.9           # status=1; match!=/Using /; env[GEM_HOME]!=/8.9.9/ ; match=/Unknown ruby interpreter version/
 rvm reset               # env[GEM_HOME]=/^$/
 rvm current             # match=/system/
 rvm use 2.1.0      # status=0; match=/Using / ; env[GEM_HOME]=/2.1.0/

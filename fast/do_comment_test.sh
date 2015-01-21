@@ -6,7 +6,7 @@ rvm gemset create test2 # status=0
 rvm use 2.1.1 --install # status=0
 
 : do
-rvm 9.9.9 do rvm gemdir # status=1; match=/is not installed/
+rvm 8.9.9 do rvm gemdir # status=1; match=/is not installed/
 rvm 2.1.0 do rvm gemdir # status=0; match=/2.1.0/
 rvm 2.1.0@test0 do rvm gemdir # status=2; match=/Gemset .* does not exist/
 rvm 2.1.0@test1 do rvm gemdir # status=0; match=/2.1.0@test1/
