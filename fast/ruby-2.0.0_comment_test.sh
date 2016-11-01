@@ -4,7 +4,7 @@ rvm remove  2.0.0-ntest --gems
 
 ## without gemsets
 
-rvm install 2.0.0-ntest --skip-gemsets
+rvm install 2.0.0-ntest --skip-gemsets --disable-binary
 # status=0
 # match!=/Already installed/
 # match=/Skipped importing default gemsets/
