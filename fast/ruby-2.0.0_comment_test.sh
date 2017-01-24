@@ -60,7 +60,8 @@ rvm remove 2.0.0-ntest --gems
 
 rm -rf $rvm_path/gemsets/ruby/2.0.0/
 
-find -L $rvm_path/environments -name '*2.0.0-ntest*' -print -quit # match=/^$/
-find -L $rvm_path/wrappers     -name '*2.0.0-ntest*' -print -quit # match=/^$/
-find -L $rvm_path/gems         -name '*2.0.0-ntest*' -print -quit # match=/^$/
-find -L $rvm_path/bin          -name '*2.0.0-ntest*' -print -quit # match=/^$/
+ls -1d $rvm_path/environments/*2.0.0-ntest*   # status!=0
+ls -1d $rvm_path/wrappers/*2.0.0-ntest*       # status!=0
+ls -1d $rvm_path/gems/*2.0.0-ntest*           # status!=0
+ls -1d $rvm_path/bin/*2.0.0-ntest*            # status!=0
+
