@@ -24,21 +24,24 @@ rvm current         # match=/^ruby-2.1.1@versions-conf-a$/
 rvm rvmrc load $d/b
 rvm current         # match=/^ruby-2.1.0@versions-conf-b$/
 
-: test installing gem
-mcd $d/a
-gem list         # match!=/haml/
-echo "ruby-gem-install=haml" >> .versions.conf
-rvm_current_rvmrc=""
-rvm rvmrc load . # match!=/moving aside to preserve/
-gem list         # match=/haml/
-
-: test bundler
+: test bundler without flag of doom
 mcd $d/b ## on travis cd hook is disabled ?
 rvm rvmrc load $d/b
 gem list # match!=/haml/
 printf "ruby-gem-install=bundler\nruby-bundle-install=true\n" >> .versions.conf
 printf "source :rubygems\n\ngem 'haml'\n" > Gemfile
 rvm_current_rvmrc=""
+rvm rvmrc load . # match!=/Installing haml/
+gem list # match!=/haml/; match=/bundler/
+
+: test bundler with flag of doom
+mcd $d/b ## on travis cd hook is disabled ?
+rvm rvmrc load $d/b
+gem list # match!=/haml/
+printf "ruby-gem-install=bundler\nruby-bundle-install=true\n" >> .versions.conf
+printf "source :rubygems\n\ngem 'haml'\n" > Gemfile
+rvm_current_rvmrc=""
+rvm_autoinstall_bundler_flag=1
 rvm rvmrc load . # match=/Installing haml/
 gem list # match=/haml/; match=/bundler/
 
