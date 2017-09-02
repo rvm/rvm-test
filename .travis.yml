@@ -7,7 +7,10 @@ before_install:
   - rvm alias delete default
   - hash -r
 install: gem install tf -v '>=0.4.1'
-script: 'NOEXEC=skip tf --text fast/*'
+script: 'NOEXEC=skip tf --text $TEST'
+env:
+  - TEST=fast/*
+  - TEST=long/named_ruby_and_gemsets_comment_test.sh
 notifications:
   irc:
     channels:
