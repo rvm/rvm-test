@@ -5,24 +5,24 @@ true TMPDIR:${TMPDIR:=/tmp}:
 d=$TMPDIR/test-remote
 mkdir $d
 pushd $d
-rvm use 2.1.0 --install # status=0
+rvm use 2.3.4 --install # status=0
 rvm list
-# match=/ruby-2.1.0/
+# match=/ruby-2.3.4/
 
 : tast packaging
-rvm prepare 2.1.0           # status=0
-[[ -f ruby-2.1.0.tar.bz2 ]] # status=0
+rvm prepare 2.3.4           # status=0
+[[ -f ruby-2.3.4.tar.bz2 ]] # status=0
 
 : remove it
-rvm remove --gems 2.1.0     # status=0
+rvm remove --gems 2.3.4     # status=0
 rvm list
-# match!=/ruby-2.1.0/
+# match!=/ruby-2.3.4/
 
 : get local ruby
-rvm mount -r ruby-2.1.0.tar.bz2 # status=0
+rvm mount -r ruby-2.3.4.tar.bz2 # status=0
 rvm list
-# match=/ruby-2.1.0/
-rvm use 2.1.0 # status=0; match[stderr]=/^$/
+# match=/ruby-2.3.4/
+rvm use 2.3.4 # status=0; match[stderr]=/^$/
 
 : clean
 popd
