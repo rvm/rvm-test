@@ -31,16 +31,17 @@ d=$TMPDIR/test-rvm_gemsets_path
 mkdir -p $d
 echo rvm_gems_path=$d  >> ~/.rvmrc
 echo rvm_create_flag=1 >> ~/.rvmrc
-rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/rvm_gemsets_path/
-rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/rvm_gemsets_path/
+rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/test-rvm_gemsets_path/
+rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/test-rvm_gemsets_path/
 rvm --force gemset delete test_gemset    # status=0
-rvm 2.1.1 do rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/rvm_gemsets_path/
-rvm 2.1.1 do rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/rvm_gemsets_path/
+rvm 2.1.1 do rvm gemset create test_gemset            # status=0 ; match=/gemset created/; match=/test-rvm_gemsets_path/
+rvm 2.1.1 do rvm gemset list                          # match=/test_gemset/; match!=/other_gems/; match=/test-rvm_gemsets_path/
 rvm 2.1.1 do rvm --force gemset delete test_gemset    # status=0
-\sed -e "/rvm_gems_path=${d//\//\/}/ d" -e "/rvm_create_flag=1/ d" < ~/.rvmrc > ~/.rvmrc.new && \mv -f ~/.rvmrc.new ~/.rvmrc
+\sed -e "\%rvm_gems_path=$d% d" -e "\%rvm_create_flag=1% d" < ~/.rvmrc > ~/.rvmrc.new && \mv -f ~/.rvmrc.new ~/.rvmrc
 rm -rf $d
 
 : export/import/use/empty
+rvm use 2.1.1
 rvm gemset create test_gemset
 rvm gemset use test_gemset               # status=0 ; match=/Using /
 rvm gemdir                               # match=/@test_gemset$/
