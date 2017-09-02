@@ -4,9 +4,11 @@ rvm remove  1.8.7-p374-ntest --gems
 
 ## without gemsets
 
-rvm install 1.8.7-p374-ntest --skip-gemsets --disable-binary
+rvm install 1.8.7-p374-ntest --skip-gemsets --disable-binary -C --program-suffix=1.8
 # status=0
 # match!=/Already installed/
+# match=/linking ruby1.8 -> ruby/
+# match=/linking gem1.8 -> gem/
 # match=/Skipped importing default gemsets/
 ## match=/WARNING: Please be aware that you just installed a ruby that/
 ## match=/for a list of maintained rubies visit:/
