@@ -36,7 +36,7 @@ mkdir -p $rvm_path/gemsets/ruby/1.8.7/p374/
 printf "gem-wrappers\ntf\n"   > $rvm_path/gemsets/ruby/1.8.7/p374/global.gems
 printf "gem-wrappers\nhaml -v <5\n" > $rvm_path/gemsets/ruby/1.8.7/p374/default.gems
 
-rvm install 1.8.7-p374-ntest
+rvm install 1.8.7-p374-ntest --rubygems 2.0.17
 # status=0
 # match!=/Already installed/
 # match=/importing gemset .*gemsets\/ruby\/1.8.7\/p374\/global.gems/
