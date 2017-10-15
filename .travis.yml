@@ -6,6 +6,7 @@ before_install:
   - rvm get head
   - rvm alias delete default
   - hash -r
+  - rm ~/.rvm/hooks/after_use
 install: gem install tf -v '>=0.4.1'
 script: 'NOEXEC=skip tf --text $TEST'
 env:
