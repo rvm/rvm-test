@@ -13,12 +13,4 @@ env:
   - TEST=fast/*
   - TEST=long/named_ruby_and_gemsets_comment_test.sh
   - TEST=long/truffleruby_comment_test.sh
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#rvm-test"
-  email:
-    recipients:
-      - mpapis@gmail.com
-      - me@deryldoucette.com
-    on_failure: change
+  - TEST=other/run_gemset_separator_tests.sh
