@@ -7,3 +7,4 @@ db/*.db
 config/github.yml
 config/github.rb
 Gemfile.lock
+other/gemset_separator_test_preprocessed

@@ -17,4 +17,3 @@ do
   file="$(basename -- $entry)"
   sed 's/\$RVM_GEMSET_SEPARATOR\$/'$RVM_GEMSET_SEPARATOR'/g' "$entry" > other/gemset_separator_tests_preprocessed/${file}
 done
-tf other/gemset_separator_tests_preprocessed/*
