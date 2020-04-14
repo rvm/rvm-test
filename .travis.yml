@@ -14,3 +14,12 @@ env:
   - TEST=long/named_ruby_and_gemsets_comment_test.sh
   - TEST=long/truffleruby_comment_test.sh
   - TEST=other/gemset_separator_tests_preprocessed/*
+-notifications:
+-  irc:
+-    channels:
+-      - "irc.freenode.org#rvm-test"
+-  email:
+-    recipients:
+-      - mpapis@gmail.com
+-      - me@deryldoucette.com
+-    on_failure: change
