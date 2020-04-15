@@ -7,13 +7,14 @@
 # bash rvm-test/run_gemset_separator_tests.sh
 # sed 's/\$RVM_GEMSET_SEPARATOR\$/'$RVM_GEMSET_SEPARATOR'/g'
 echo "Preprocessing tests..."
+SCRIPT_DIR=`dirname $0`
 export RVM_GEMSET_SEPARATOR='@@'
-if [[ ! -d other/gemset_separator_tests_preprocessed ]]
+if [[ ! -d $SCRIPT_DIR/gemset_separator_tests_preprocessed ]]
 then
-  mkdir other/gemset_separator_tests_preprocessed
+  mkdir $SCRIPT_DIR/gemset_separator_tests_preprocessed
 fi
-for entry in other/gemset_separator_tests/*
+for entry in $SCRIPT_DIR/gemset_separator_tests/*
 do
   file="$(basename -- $entry)"
-  sed 's/\$RVM_GEMSET_SEPARATOR\$/'$RVM_GEMSET_SEPARATOR'/g' "$entry" > other/gemset_separator_tests_preprocessed/${file}
+  sed 's/\$RVM_GEMSET_SEPARATOR\$/'$RVM_GEMSET_SEPARATOR'/g' "$entry" > $SCRIPT_DIR/gemset_separator_tests_preprocessed/${file}
 done
