@@ -13,7 +13,7 @@ env:
   - TEST=fast/*
   - TEST=long/named_ruby_and_gemsets_comment_test.sh
   - TEST=long/truffleruby_comment_test.sh
-  - TEST=other/gemset_separator_tests_preprocessed/*
+  - RVM_GEMSET_SEPARATOR='@@' TEST=other/gemset_separator_tests_preprocessed/*
 -notifications:
 -  irc:
 -    channels:
