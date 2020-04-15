@@ -8,7 +8,7 @@ before_install:
   - hash -r
   - rm ~/.rvm/hooks/after_use
 install: gem install tf -v '>=0.4.1'
-script: 'sh other/preprocess_gemset_separator_tests.sh;  NOEXEC=skip tf --text $TEST'
+script: 'bash other/preprocess_gemset_separator_tests.sh;  NOEXEC=skip tf --text $TEST'
 env:
   - TEST=fast/*
   - TEST=long/named_ruby_and_gemsets_comment_test.sh
