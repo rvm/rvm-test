@@ -2,6 +2,14 @@
 
 Set of tests for [RVM](https://github.com/wayneeseguin/rvm/).
 
+## Status
+
+This repository is no longer used.
+
+Instead, https://github.com/rvm/rvm includes the tests directly to facilitate changes and to ensure the full CI is run.
+
+Please make PRs to `rvm/rvm` instead.
+
 ## Usage
 
     $ gem install tf    # Install testing framework
